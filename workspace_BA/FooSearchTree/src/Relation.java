@@ -27,4 +27,11 @@ public class Relation {
 		System.out.println();
 	}
 
+	public int size() {
+		if (elements != null)
+			return elements.size();
+		else
+			return -1;
+	}
+
 }
