@@ -9,7 +9,7 @@ public class Main {
 
 	static String name;
 	static String[] universe;
-	static HashMap<String,Relation> rels;
+	static HashMap<String, Relation> rels;
 	static Relation solution;
 	static int k_par;
 	static String[] bound_vars;
@@ -19,12 +19,12 @@ public class Main {
 		//parseFormula("vertex-cover.txt");
 		parseFormula("test-thingie.txt");
 		printFormula();
-		
-		System.out.println("Test assignent:");
-		HashMap<String,String> assignment = new HashMap<>();
+
+		System.out.println("Test assignment:");
+		HashMap<String, String> assignment = new HashMap<>();
 		assignment.put("x", "v1");
 		assignment.put("y", "v2");
-		for(String[] s : clauses) {
+		for (String[] s : clauses) {
 			System.out.println(checkClause(s, assignment));
 		}
 	}
@@ -43,30 +43,31 @@ public class Main {
 			// Signature
 			line = br.readLine();
 			String[] relations = line.split(";");
-			rels = new HashMap<String,Relation>();
+			rels = new HashMap<String, Relation>();
 			for (String s : relations) {
-				String identifier = s.substring(0, 1);
-				int arity = Integer.parseInt(s.substring(1, 2));
+				int negation_offset = (s.charAt(0) == '~') ? 1 : 0;
+				String identifier = s.substring(negation_offset, negation_offset + 1);
+				int arity = Integer.parseInt(s.substring(negation_offset + 1, negation_offset + 2));
 				int from = s.indexOf("{") + 1;
 				int to = s.indexOf("}");
 				String content = s.substring(from, to);
 				String[] content_split = content.split(",");
 				String[][] elements = new String[content_split.length][arity];
-				HashSet<String[]> hs = new HashSet<String[]>();
+				HashSet<Tuple> hs = new HashSet<Tuple>();
 				for (int i = 0; i < content_split.length; i++) {
 					String[] element_split = content_split[i].split("\\|");
 					for (int j = 0; j < arity; j++) {
 						elements[i][j] = element_split[j].replaceAll("[()]", "");
 					}
-					hs.add(elements[i]);
+					hs.add(new Tuple(elements[i]));
 				}
-				rels.put(identifier,new Relation(identifier, arity, hs));
+				rels.put(identifier, new Relation(identifier, arity, hs));
 			}
 			// Relation S which will contain the solution
 			line = br.readLine();
 			String s_identifier = line.substring(0, 1);
 			int s_arity = Integer.parseInt(line.substring(1, 2));
-			HashSet<String[]> s_hs = new HashSet<String[]>();
+			HashSet<Tuple> s_hs = new HashSet<Tuple>();
 			solution = new Relation(s_identifier, s_arity, s_hs);
 			rels.put(s_identifier, solution);
 			// Parameter k
@@ -77,7 +78,7 @@ public class Main {
 			bound_vars = line.split(",");
 			// Formula as clauses
 			clauses = new ArrayList<String[]>();
-			while((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				String[] clause = line.split(" ");
 				clauses.add(clause);
 			}
@@ -87,29 +88,38 @@ public class Main {
 	}
 
 	private static boolean checkClause(String[] clause, HashMap<String, String> assignment) {
-		// Check if literals are true or false
-		// TODO handle negation ~
-		for(String l : clause) {
-			String id = l.substring(0,1);
+		// Evaluate literals one at a time
+		for (String l : clause) {
+			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
+			String id = l.substring(negation_offset, negation_offset + 1);
 			Relation r = rels.get(id);
-			if(r != null) {
-				String content = l.substring(1);
+			if (r != null) {
+				String content = l.substring(negation_offset+1);
 				content = content.replaceAll("[()]", "");
 				String[] variables = content.split(",");
 				String[] tmp = new String[variables.length];
-				for(int i = 0; i < variables.length; i++) {
+				for (int i = 0; i < variables.length; i++) {
 					tmp[i] = assignment.get(variables[i]);
 				}
-				// TODO contains() does not work as intended on String arrays
-				if(r.elements.contains(tmp)) {
+				// Test if relation r contains the tuple t or not 
+				Tuple t = new Tuple(tmp);
+				if (r.elements.contains(t) && negation_offset == 0) {
 					// If one literal is correct, we can stop.
 					return true;
+				}
+				// negation case
+				else if (!r.elements.contains(t) && negation_offset == 1) {
+					return true;
+				}
+				// Assignment does not hold
+				else {
+					return false;
 				}
 			} else {
 				System.out.println("Unknown relation symbol.");
 			}
 		}
-		return false;		
+		return false;
 	}
 
 	public static void printFormula() {
@@ -138,8 +148,8 @@ public class Main {
 		}
 		System.out.println(")");
 		System.out.println("Clauses:");
-		for(String[] c : clauses) {
-			for(String l : c) {
+		for (String[] c : clauses) {
+			for (String l : c) {
 				System.out.print(l + " ");
 			}
 			System.out.println();

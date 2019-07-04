@@ -4,4 +4,4 @@ E2 = {(v1|v2),(v2|v3)}
 S1
 1
 x,y
-E(x,y) S(x) S(y)
+~E(x,y) S(x) S(y)
