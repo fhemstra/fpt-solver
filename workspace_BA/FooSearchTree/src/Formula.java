@@ -9,14 +9,17 @@ public class Formula {
 	String name;
 	String[] universe;
 	HashMap<String, Relation> rels;
-	Relation solution;
 	int k_par;
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
+	ArrayList<String[]> assignments = new ArrayList<String[]>();
 
 	public Formula(String path) {
 		parseFormula(path);
+		// Generate all assignments
+		generateAssignments();
+		ArrayList<String> solution = new ArrayList<>();
 	}
 
 	private void parseFormula(String path) {
@@ -55,11 +58,7 @@ public class Formula {
 			}
 			// Relation S which will contain the solution
 			line = br.readLine();
-			String s_identifier = line.substring(0, 1);
-			int s_arity = Integer.parseInt(line.substring(1, 2));
-			HashSet<Tuple> s_hs = new HashSet<Tuple>();
-			solution = new Relation(s_identifier, s_arity, s_hs);
-			rels.put(s_identifier, solution);
+			// TODO delete S from file format
 			// Parameter k
 			line = br.readLine();
 			k_par = Integer.parseInt(line);
@@ -79,23 +78,49 @@ public class Formula {
 		}
 	}
 
-	public boolean searchTree(int k_par) {
-		if (solution.size() > k_par) {
+	public boolean searchTree(int k_par, ArrayList<String> sol) {
+		// TODO schauen, ob solution sich mit sol mitverändert oder nicht
+		if (sol.size() > k_par) {
 			return false;
 		}
-		// Generate all assignments
-		ArrayList<String[]> assignments = generateAssignments();
-		// TODO recursively search for solution S of size k
-
+		// Recursively search for solution S of size k
+		for (int i = 0; i < assignments.size(); i++) {
+			for (int j = 0; j < clauses.size(); j++) {
+				if (!checkClause(clauses.get(j), assignments.get(i), sol)) {
+					HashSet<String> f = new HashSet<String>();
+					for (String s : assignments.get(i)) {
+						if (!sol.contains(s)) {
+							f.add(s);
+						}
+					}
+					if (!f.isEmpty()) {
+						boolean flag = false;
+						for (String y : f) {
+							ArrayList<String> sol_with_y = (ArrayList<String>) sol.clone();
+							sol_with_y.add(y);
+							System.out.print("S: ");
+							for (String s : sol_with_y)
+								System.out.print(s + " ");
+							System.out.println();
+							flag = flag || searchTree(k_par, sol_with_y);
+						}
+						return flag;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
 		return true;
 	}
 
-	public ArrayList<String[]> generateAssignments() {
+	public void generateAssignments() {
 		int[] curr_assi_ind = new int[c_par];
 		ArrayList<int[]> assi_indices = new ArrayList<int[]>();
 		int inc_pos = c_par - 1;
 		boolean overflow = false;
 		// Number of iterations = universe.length ^ c_par
+		// TODO maybe change while to for
 		while (!overflow) {
 			// Add to set of assignments
 			int[] add_this_copy = curr_assi_ind.clone();
@@ -125,9 +150,9 @@ public class Formula {
 			}
 		}
 		// Generate actual assignments from indices
-		ArrayList<String[]> assignments = new ArrayList<String[]>();
 		for (int i = 0; i < assi_indices.size(); i++) {
 			String[] s_arr = new String[c_par];
+			// c_par is equal to bound_vars.lenght
 			for (int j = 0; j < c_par; j++) {
 				// assi_indices.get(i)[j] contains the index of the element in the universe,
 				// that should now be added to the assignment
@@ -135,40 +160,51 @@ public class Formula {
 			}
 			assignments.add(s_arr);
 		}
-
-		return assignments;
 	}
 
-	public boolean checkClause(String[] clause, HashMap<String, String> assignment) {
+	public boolean checkClause(String[] clause, String[] assignment, ArrayList<String> sol) {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
 			String id = l.substring(negation_offset, negation_offset + 1);
-			Relation r = rels.get(id);
-			if (r != null) {
-				String content = l.substring(negation_offset + 1);
-				content = content.replaceAll("[()]", "");
-				String[] variables = content.split(",");
-				String[] tmp = new String[variables.length];
-				for (int i = 0; i < variables.length; i++) {
-					tmp[i] = assignment.get(variables[i]);
+			String content = l.substring(negation_offset + 1);
+			content = content.replaceAll("[()]", "");
+			// [y,x]
+			String[] variables = content.split(",");
+			String[] assi_elements = new String[variables.length];
+			for (int i = 0; i < variables.length; i++) {
+				for (int j = 0; j < universe.length; j++) {
+					if (variables[i].equals(bound_vars[j])) {
+						assi_elements[i] = assignment[j];
+						break;
+					}
 				}
-				// Test if relation r contains the tuple t or not
-				Tuple t = new Tuple(tmp);
-				if (r.elements.contains(t) && negation_offset == 0) {
-					// If one literal is correct, we can stop.
+			}
+			// Handle S(x)
+			if (id.equals("S")) {
+				// check if S contains the element
+				if (sol.contains(assi_elements[0])) {
 					return true;
 				}
-				// negation case
-				else if (!r.elements.contains(t) && negation_offset == 1) {
-					return true;
-				}
-				// Assignment does not hold
-				else {
-					return false;
-				}
+				// Else: continue
 			} else {
-				System.out.println("Unknown relation symbol.");
+				Relation r = rels.get(id);
+				if (r != null) {
+					// Test if relation r contains the tuple t or not
+					// (v1, v2)
+					Tuple t = new Tuple(assi_elements);
+					if (r.elements.contains(t) && negation_offset == 0) {
+						// If one literal is correct, we can stop.
+						return true;
+					}
+					// negation case
+					else if (!r.elements.contains(t) && negation_offset == 1) {
+						return true;
+					}
+					// Else: Assignment does not hold on literal l, continue
+				} else {
+					System.out.println("Unknown relation symbol.");
+				}
 			}
 		}
 		return false;
@@ -188,8 +224,6 @@ public class Formula {
 		for (Entry<String, Relation> r : rels.entrySet()) {
 			r.getValue().printThis();
 		}
-		System.out.print("Solution: ");
-		solution.printThis();
 		System.out.println("Parameter k = " + k_par);
 		System.out.print("Bound varibales: (");
 		for (int i = 0; i < bound_vars.length; i++) {
