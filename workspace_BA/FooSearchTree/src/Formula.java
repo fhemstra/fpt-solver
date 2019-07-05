@@ -103,6 +103,8 @@ public class Formula {
 								System.out.print(s + " ");
 							System.out.println();
 							flag = flag || searchTree(k_par, sol_with_y);
+							if (flag)
+								return flag;
 						}
 						return flag;
 					} else {
