@@ -27,11 +27,11 @@ public class Tuple {
 	}
 	
 	public int hashCode() {
-		int sum = 0;
+		String content = "";
 		for (String s : elements) {
-			sum += s.hashCode();
+			content += s;
 		}
-		return sum;
+		return content.hashCode();
 	}
 	
 	public void printThis() {
