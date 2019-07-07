@@ -1,17 +1,26 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
 
 	public static void main(String[] args) {
-		// Parsing
-		//Formula form = new Formula("vertex-cover.txt");
-		//Formula form = new Formula("test-thingie.txt");
-		Formula form = new Formula("vc-doc-example.txt");
-		//Formula form = new Formula("rbc-doc-example.txt");
-		// TODO add "reflexive" flag to relations (E)
-		form.printFormula();
-		System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<String>()));
+		// Collect and parse all files
+		ArrayList<Formula> formulas = new ArrayList<Formula>();
+		File folder = new File("instances");
+		File[] listOfFiles = folder.listFiles();
+		for (File f: listOfFiles) {
+		  if (f.isFile()) {
+		    formulas.add(new Formula(f.getAbsolutePath()));
+		  }
+		}
+		
+		// Solve each File
+		for(Formula form : formulas) {
+			form.printFormula();
+			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<String>()));
+			System.out.println("-------");
+		}
 	}
 
 }

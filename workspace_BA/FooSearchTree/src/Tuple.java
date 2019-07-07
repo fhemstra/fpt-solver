@@ -1,6 +1,6 @@
 
 /**
- * A Tuple of elements with custom overriden equals() which works element-wise
+ * A Tuple of elements with custom overridden equals() which works element-wise
  */
 public class Tuple {
 	String[] elements;
@@ -9,6 +9,10 @@ public class Tuple {
 		elements = s;
 	}
 
+	/**
+	 * Compares two tuples, returns true if the contains the same elements in the
+	 * same order.
+	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -28,6 +32,9 @@ public class Tuple {
 		return false;
 	}
 
+	/**
+	 * HashCode override to make HashSet.contains() use overridden equals().
+	 */
 	public int hashCode() {
 		String content = "";
 		for (String s : elements) {

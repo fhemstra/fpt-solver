@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+/**
+ * Holds information about a logical formula. Provides methods to parse, solve
+ * and print the formula.
+ */
 public class Formula {
 	String name;
 	String[] universe;
@@ -22,6 +26,9 @@ public class Formula {
 		ArrayList<String> solution = new ArrayList<>();
 	}
 
+	/**
+	 * Parses a file specified by the path parameter into an formula instance.
+	 */
 	private void parseFormula(String path) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
@@ -36,6 +43,7 @@ public class Formula {
 			// Signature
 			line = br.readLine();
 			String[] relations = line.split(";");
+			// Solution S is not contained in rels
 			rels = new HashMap<String, Relation>();
 			for (String s : relations) {
 				int negation_offset = (s.charAt(0) == '~') ? 1 : 0;
@@ -56,9 +64,6 @@ public class Formula {
 				}
 				rels.put(identifier, new Relation(identifier, arity, hs));
 			}
-			// Relation S which will contain the solution
-			line = br.readLine();
-			// TODO delete S from file format
 			// Parameter k
 			line = br.readLine();
 			k_par = Integer.parseInt(line);
@@ -73,41 +78,57 @@ public class Formula {
 				String[] clause = line.split(" ");
 				clauses.add(clause);
 			}
+			// TODO Add flag which states if the solution should be true or not
+			// TODO Add flag which lets Relations be refelxive
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Recursively searches a solution sol of size k_par for the given formula.
+	 * 
+	 * @return True if a solution of size k is found, else false.
+	 */
 	public boolean searchTree(int k_par, ArrayList<String> sol) {
-		// TODO schauen, ob solution sich mit sol mitverändert oder nicht
+		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
 		}
-		// Recursively search for solution S of size k
+		// Check all clauses considering S
 		for (int i = 0; i < assignments.size(); i++) {
 			for (int j = 0; j < clauses.size(); j++) {
+				// If a clause is false, branch over current assignment
 				if (!checkClause(clauses.get(j), assignments.get(i), sol)) {
 					HashSet<String> f = new HashSet<String>();
-					for (String s : assignments.get(i)) {
-						if (!sol.contains(s)) {
-							f.add(s);
+					for (String a : assignments.get(i)) {
+						// TODO check if the literal a even matters to the current clause
+						if (!sol.contains(a)) {
+							f.add(a);
 						}
 					}
+					// If there is anything to branch over
 					if (!f.isEmpty()) {
 						boolean flag = false;
+						// Construct branches with each branch adding one literal to S respectively
 						for (String y : f) {
 							ArrayList<String> sol_with_y = (ArrayList<String>) sol.clone();
 							sol_with_y.add(y);
+							// - print
 							System.out.print("S: ");
 							for (String s : sol_with_y)
 								System.out.print(s + " ");
 							System.out.println();
+							// - print
+							// if one branch is successful we win, else go back through recursion.
 							flag = flag || searchTree(k_par, sol_with_y);
 							if (flag)
-								return flag;
+								return true;
 						}
 						return flag;
-					} else {
+					}
+					// No possible branches, return false
+					else {
 						return false;
 					}
 				}
@@ -116,7 +137,11 @@ public class Formula {
 		return true;
 	}
 
-	public void generateAssignments() {
+	/**
+	 * Generates all possible subsets of the Universe of size c_par and put them
+	 * into the assignments list.
+	 */
+	private void generateAssignments() {
 		int[] curr_assi_ind = new int[c_par];
 		ArrayList<int[]> assi_indices = new ArrayList<int[]>();
 		int inc_pos = c_par - 1;
@@ -164,7 +189,11 @@ public class Formula {
 		}
 	}
 
-	public boolean checkClause(String[] clause, String[] assignment, ArrayList<String> sol) {
+	/**
+	 * Checks if the specified clause holds under the specified assignment with S
+	 * being sol.
+	 */
+	private boolean checkClause(String[] clause, String[] assignment, ArrayList<String> sol) {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
@@ -212,6 +241,9 @@ public class Formula {
 		return false;
 	}
 
+	/**
+	 * Prints info about this into sysout.
+	 */
 	public void printFormula() {
 		System.out.println(name + ":");
 		System.out.print("U = {");

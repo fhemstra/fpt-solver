@@ -1,6 +1,9 @@
 import java.util.HashSet;
 import java.util.Iterator;
 
+/**
+ * Contains one Relation with its name, arity and set of elements.
+ */
 public class Relation {
 	String name;
 	int arity;
@@ -27,6 +30,9 @@ public class Relation {
 		System.out.println();
 	}
 
+	/**
+	 * Returns the number of elements the Relation has.
+	 */
 	public int size() {
 		if (elements != null)
 			return elements.size();
