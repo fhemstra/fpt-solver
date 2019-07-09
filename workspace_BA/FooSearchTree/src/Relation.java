@@ -6,10 +6,10 @@ import java.util.Iterator;
  */
 public class Relation {
 	String name;
-	int arity;
+	String arity;
 	HashSet<Tuple> elements;
 
-	public Relation(String s, int i, HashSet<Tuple> hs) {
+	public Relation(String s, String i, HashSet<Tuple> hs) {
 		name = s;
 		arity = i;
 		elements = hs;
