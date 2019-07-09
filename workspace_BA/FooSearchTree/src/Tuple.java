@@ -46,15 +46,15 @@ public class Tuple {
 		return content.hashCode();
 	}
 
-	public void printThis() {
-		String tmp = "(";
+	public String toOutputString() {
+		String res = "(";
 		for (int j = 0; j < elements.size(); j++) {
 			if (j + 1 != elements.size())
-				tmp += elements.get(j) + ",";
+				res += elements.get(j) + "|";
 			else
-				tmp += elements.get(j);
+				res += elements.get(j);
 		}
-		tmp += ")";
-		System.out.print(tmp);
+		res += ")";
+		return res;
 	}
 }

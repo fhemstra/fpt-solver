@@ -15,19 +15,22 @@ public class Relation {
 		elements = hs;
 	}
 
-	public void printThis() {
-		System.out.print(name + arity + " = ");
+	public String toOutputString() {
+		String res = "";
+		res += name + arity + " = ";
 		if (elements.isEmpty()) {
-			System.out.print("emptyset");
+			res += "emptyset";
 		} else {
+			res += "{";
 			Iterator<Tuple> it = elements.iterator();
 			while (it.hasNext()) {
-				it.next().printThis();
+				res += it.next().toOutputString();
 				if (it.hasNext())
-					System.out.print(",");
+					res += ",";
 			}
+			res += "}";
 		}
-		System.out.println();
+		return res;
 	}
 
 	/**

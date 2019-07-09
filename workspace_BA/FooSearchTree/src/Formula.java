@@ -1,8 +1,13 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
@@ -18,6 +23,10 @@ public class Formula {
 	int c_par;
 	ArrayList<String[]> clauses;
 	ArrayList<String[]> assignments = new ArrayList<String[]>();
+
+	public Formula() {
+		// Do everything yourself.
+	}
 
 	public Formula(String path) {
 		parseFormula(path);
@@ -241,10 +250,13 @@ public class Formula {
 		}
 		return false;
 	}
-	
+
 	public Formula hsReduction() {
-		
-		return null;
+		Formula hs_form = new Formula();
+		hs_form.name = "hitting-set";
+		hs_form.universe = this.universe;
+		// TODO implement reduction
+		return hs_form;
 	}
 
 	/**
@@ -262,7 +274,7 @@ public class Formula {
 		System.out.println("}");
 		System.out.println("Relations:");
 		for (Entry<String, Relation> r : rels.entrySet()) {
-			r.getValue().printThis();
+			System.out.println(r.getValue().toOutputString());
 		}
 		System.out.println("Parameter k = " + k_par);
 		System.out.print("Bound varibales: (");
@@ -279,6 +291,53 @@ public class Formula {
 				System.out.print(l + " ");
 			}
 			System.out.println();
+		}
+	}
+
+	/**
+	 * Saves this Formula to a file.
+	 */
+	public void saveToFile() {
+		try {
+			File out_file = new File("saves" + File.separator + this.name + "-save.txt");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
+			// Name
+			bw.write(name + "\n");
+			// Universe
+			for (int i = 0; i < universe.length; i++) {
+				if (i + 1 != universe.length)
+					bw.write(universe[i] + ",");
+				else
+					bw.write(universe[i] + "\n");
+			}
+			// Relations
+			Iterator<Entry<String, Relation>> it = rels.entrySet().iterator();
+			while (it.hasNext()) {
+				bw.write(it.next().getValue().toOutputString());
+				if (it.hasNext())
+					bw.write(";");
+			}
+			bw.write("\n");
+			// Parameter k
+			bw.write(Integer.toString(k_par));
+			bw.write("\n");
+			// Bound vars
+			for(int i = 0; i < bound_vars.length; i++) {
+				if(i < bound_vars.length - 1) 
+					bw.write(bound_vars[i] + ",");
+				else bw.write(bound_vars[i]);
+			}
+			bw.write("\n");
+			// Formula in clauses
+			for (String[] c : clauses) {
+				for (String l : c) {
+					bw.write(l + " ");
+				}
+				bw.write("\n");
+			}
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
