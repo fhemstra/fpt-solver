@@ -1,12 +1,11 @@
-import java.util.ArrayList;
 
 /**
  * A Tuple of elements with custom overridden equals() which works element-wise
  */
 public class Tuple {
-	ArrayList<String> elements;
+	String[] elements;
 
-	public Tuple(ArrayList<String> s) {
+	public Tuple(String[] s) {
 		elements = s;
 	}
 
@@ -23,15 +22,13 @@ public class Tuple {
 			// cast o to Tuple
 			Tuple t = (Tuple) obj;
 			// All elements shall match
-			if(this.elements.size() == t.elements.size()) {
-				for (int i = 0; i < elements.size(); i++) {
-					if (!this.elements.get(i).equals(t.elements.get(i)))
-						return false;
-				}
-				return true;				
+			for (int i = 0; i < elements.length; i++) {
+				if (!this.elements[i].equals(t.elements[i]))
+					return false;
 			}
+			return true;
 		}
-		// if o is not a tuple or not of same arity
+		// if o is not a tuple
 		return false;
 	}
 
@@ -48,11 +45,11 @@ public class Tuple {
 
 	public String toOutputString() {
 		String res = "(";
-		for (int j = 0; j < elements.size(); j++) {
-			if (j + 1 != elements.size())
-				res += elements.get(j) + "|";
+		for (int j = 0; j < elements.length; j++) {
+			if (j + 1 != elements.length)
+				res += elements[j] + "|";
 			else
-				res += elements.get(j);
+				res += elements[j];
 		}
 		res += ")";
 		return res;

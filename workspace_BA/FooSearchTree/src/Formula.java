@@ -56,20 +56,19 @@ public class Formula {
 			for (String s : relations) {
 				int negation_offset = (s.charAt(0) == '~') ? 1 : 0;
 				String identifier = s.substring(negation_offset, negation_offset + 1);
-				String arity = s.substring(negation_offset + 1, negation_offset + 2);
+				int arity = Integer.parseInt(s.substring(negation_offset + 1, negation_offset + 2));
 				int from = s.indexOf("{") + 1;
 				int to = s.indexOf("}");
 				String content = s.substring(from, to);
 				String[] content_split = content.split(",");
-				ArrayList<ArrayList<String>> elements = new ArrayList<ArrayList<String>>();
+				String[][] elements = new String[content_split.length][arity];
 				HashSet<Tuple> hs = new HashSet<Tuple>();
 				for (int i = 0; i < content_split.length; i++) {
 					String[] element_split = content_split[i].split("\\|");
-					elements.add(new ArrayList<String>());
-					for (int j = 0; j < element_split.length; j++) {
-						elements.get(i).add(element_split[j].replaceAll("[()]", ""));
+					for (int j = 0; j < arity; j++) {
+						elements[i][j] = element_split[j].replaceAll("[()]", "");
 					}
-					hs.add(new Tuple(elements.get(i)));
+					hs.add(new Tuple(elements[i]));
 				}
 				rels.put(identifier, new Relation(identifier, arity, hs));
 			}
@@ -212,11 +211,11 @@ public class Formula {
 			content = content.replaceAll("[()]", "");
 			// [y,x]
 			String[] variables = content.split(",");
-			ArrayList<String> assi_elements = new ArrayList<String>();
+			String[] assi_elements = new String[variables.length];
 			for (int i = 0; i < variables.length; i++) {
 				for (int j = 0; j < universe.length; j++) {
 					if (variables[i].equals(bound_vars[j])) {
-						assi_elements.add(assignment[j]);
+						assi_elements[i] = assignment[j];
 						break;
 					}
 				}
@@ -224,7 +223,7 @@ public class Formula {
 			// Handle S(x)
 			if (id.equals("S")) {
 				// check if S contains the element
-				if (sol.contains(assi_elements.get(0))) {
+				if (sol.contains(assi_elements[0])) {
 					return true;
 				}
 				// Else: continue
@@ -249,16 +248,6 @@ public class Formula {
 			}
 		}
 		return false;
-	}
-
-	public Formula hsReduction() {
-		Formula hs_form = new Formula();
-		hs_form.name = "hitting-set-of-" + this.name;
-		hs_form.universe = this.universe;
-		// TODO Construct Edge Relation
-		// TODO implement reduction
-		hs_form.saveToFile();
-		return hs_form;
 	}
 
 	/**
