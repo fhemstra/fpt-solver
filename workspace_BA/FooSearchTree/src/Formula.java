@@ -95,7 +95,7 @@ public class Formula {
 	}
 	
 	public void reduceToHS() {
-		// TODO Contruct Hypergraph
+		// TODO Construct Hypergraph
 	}
 
 	/**
