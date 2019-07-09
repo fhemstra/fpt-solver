@@ -24,6 +24,22 @@ public class Main {
 			System.out.println("~~~~~~~~~~~~~~~~");
 			form.saveToFile();
 		}
+		
+		int[] nodes = {1,2,3};
+		HashMap<Integer, String[]> hm = new HashMap<Integer, String[]>();
+		ArrayList<String> edges = new ArrayList<String>();
+		edges.add("e0");
+		edges.add("e1");
+		edges.add("e2");
+		edges.add("e3");
+		String[] s1 = {edges.get(0),edges.get(1)};
+		hm.put(1, s1);
+		String[] s2 = {edges.get(1),edges.get(2),edges.get(3)};
+		hm.put(2, s2);
+		String[] s3 = {edges.get(3)};
+		hm.put(3, s3);
+		Hypergraph hyp = new Hypergraph(nodes, edges, hm);
+		System.out.println(hyp.toOutputString());
 	}
 
 }

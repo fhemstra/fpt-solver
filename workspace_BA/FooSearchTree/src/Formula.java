@@ -93,6 +93,10 @@ public class Formula {
 			e.printStackTrace();
 		}
 	}
+	
+	public void reduceToHS() {
+		// TODO Contruct Hypergraph
+	}
 
 	/**
 	 * Recursively searches a solution sol of size k_par for the given formula.
