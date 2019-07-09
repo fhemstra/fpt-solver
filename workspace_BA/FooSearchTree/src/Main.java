@@ -23,6 +23,7 @@ public class Main {
 			System.out.println("Reduction: ");
 			System.out.println("~~~~~~~~~~~~~~~~");
 			form.saveToFile();
+			form.hsReduction();
 		}
 	}
 

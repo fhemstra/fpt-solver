@@ -253,9 +253,11 @@ public class Formula {
 
 	public Formula hsReduction() {
 		Formula hs_form = new Formula();
-		hs_form.name = "hitting-set";
+		hs_form.name = "hitting-set-of-" + this.name;
 		hs_form.universe = this.universe;
+		// TODO Construct Edge Relation
 		// TODO implement reduction
+		hs_form.saveToFile();
 		return hs_form;
 	}
 
