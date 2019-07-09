@@ -20,6 +20,8 @@ public class Main {
 			form.printFormula();
 			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<String>()));
 			System.out.println("-------");
+			System.out.println("Reduction: ");
+			System.out.println("~~~~~~~~~~~~~~~~");
 		}
 	}
 

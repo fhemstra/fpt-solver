@@ -23,7 +23,6 @@ public class Formula {
 		parseFormula(path);
 		// Generate all assignments
 		generateAssignments();
-		ArrayList<String> solution = new ArrayList<>();
 	}
 
 	/**
@@ -78,6 +77,7 @@ public class Formula {
 				String[] clause = line.split(" ");
 				clauses.add(clause);
 			}
+			br.close();
 			// TODO Add flag which states if the solution should be true or not
 			// TODO Add flag which lets Relations be refelxive
 		} catch (Exception e) {
