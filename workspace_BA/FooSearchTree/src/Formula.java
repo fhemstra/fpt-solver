@@ -63,6 +63,11 @@ public class Formula {
 				int arity = Integer.parseInt(s.substring(negation_offset + 1, negation_offset + 2));
 				int from = s.indexOf("{") + 1;
 				int to = s.indexOf("}");
+				// Check if Relation is empty
+				if(!(to > from)) {
+					rels.put(identifier, new Relation(identifier, arity, new HashSet<Tuple>()));
+					continue;
+				}
 				String content = s.substring(from, to);
 				String[] content_split = content.split(",");
 				int[][] elements = new int[content_split.length][arity];

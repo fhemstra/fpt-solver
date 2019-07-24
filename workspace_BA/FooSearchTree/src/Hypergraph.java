@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Hypergraph {
@@ -37,20 +38,16 @@ public class Hypergraph {
 		res += "}\n";
 		res += "mapping:\n";
 		// Loop through all mappings from nodes to edges
-		for (Entry<Integer, ArrayList<Tuple>> e : node_to_edges.entrySet()) {
+		Iterator<Entry<Integer, ArrayList<Tuple>>> it = node_to_edges.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<Integer, ArrayList<Tuple>> e = it.next();
 			res += " " + e.getKey() + " -> ";
 			// Loop through all edges the entry e is contained in
 			for (int i = 0; i < e.getValue().size(); i++) {
-				res += "(";
-				// Loop through all nodes that are in an edge
-				for (int j = 0; j < e.getValue().get(i).elements.length; j++) {
-					res += Integer.toString(e.getValue().get(i).elements[j]);
-					if (j < e.getValue().get(i).elements.length - 1)
-						res += "|";
-				}
-				res += "),";
+				res += e.getValue().get(i).toOutputString();
+				if(i < e.getValue().size() - 1) res += ",";
 			}
-			res += "\n"; // TODO fix this for last iteration
+			if(it.hasNext()) res += "\n"; // TODO fix this for last iteration
 		}
 		return res;
 	}

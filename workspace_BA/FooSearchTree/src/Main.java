@@ -18,8 +18,10 @@ public class Main {
 		// Solve each File
 		for (Formula form : formulas) {
 			form.printFormula();
-			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<Integer>()));
-			System.out.println("-------");
+			System.out.println("----------------");
+			System.out.println("SearchTree:");
+			System.out.println(form.searchTree(form.k_par, new ArrayList<Integer>()));
+			System.out.println("----------------");
 			System.out.println("Reduction to hypergraph: ");
 			Hypergraph tmp = form.reduceToHS();
 			System.out.println(tmp.toOutputString());
