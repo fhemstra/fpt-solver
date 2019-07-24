@@ -94,8 +94,35 @@ public class Formula {
 		}
 	}
 	
-	public void reduceToHS() {
-		// TODO Construct Hypergraph
+	public Hypergraph reduceToHS() {
+		// Nodes of the Hypergraph are derived from the universe of the formula
+		int[] hyp_nodes = new int[universe.length]; 
+		for (int i = 0; i < universe.length; i++) {
+			hyp_nodes[i] = i;
+		}
+		// Edges of the hypergraph are found while checking clauses
+		ArrayList<Integer[]> hyp_edges = new ArrayList<Integer[]>();
+		// The solution S is always empty in this reduction
+		ArrayList<String> empty_sol = new ArrayList<String>();
+		for(int i = 0; i < assignments.size(); i++) {
+			for(int j = 0; j < clauses.size(); j++) {
+				if(!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
+					// Convert assignment to int
+					Integer[] tmp = new Integer[assignments.get(i).length];
+					for(int t = 0; t < assignments.get(i).length; t++) {
+						tmp[t] = t;
+					}
+					// TODO change assignments to int completely
+					if(!hyp_edges.contains(tmp)) {
+						hyp_edges.add(tmp);						
+					}
+				}
+			}
+		}
+		// Contruct HashMap which maps nodes to all edges they are contained in
+		HashMap<Integer, Integer[][]> node_to_edges = new HashMap<Integer, Integer[][]>();
+		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges, node_to_edges);
+		return hyp;
 	}
 
 	/**

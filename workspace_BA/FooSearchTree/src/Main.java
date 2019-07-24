@@ -5,7 +5,6 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String[] args) {
-		/*
 		// Collect and parse all files
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
 		File folder = new File("instances");
@@ -23,9 +22,13 @@ public class Main {
 			System.out.println("-------");
 			System.out.println("Reduction: ");
 			System.out.println("~~~~~~~~~~~~~~~~");
-			form.saveToFile();
+			Hypergraph tmp = form.reduceToHS();
+			// TODO I don't really need this anymore, this was meant to save hypergraphs
+			// back when I planned to express them in Formula instances.
+			// form.saveToFile();
 		}
-		*/
+		System.out.println();
+
 		int[] nodes = { 0, 1, 2, 3 };
 		HashMap<Integer, Integer[][]> hm = new HashMap<Integer, Integer[][]>();
 		ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
@@ -38,7 +41,7 @@ public class Main {
 		edges.add(edge2);
 		Integer[][] edges_of_v0 = { edges.get(0), edges.get(2) };
 		hm.put(0, edges_of_v0);
-		Integer[][] edges_of_v1 = { edges.get(1)};
+		Integer[][] edges_of_v1 = { edges.get(1) };
 		hm.put(1, edges_of_v1);
 		Integer[][] edges_of_v2 = { edges.get(1), edges.get(2) };
 		hm.put(2, edges_of_v2);

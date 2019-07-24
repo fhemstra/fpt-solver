@@ -4,10 +4,12 @@ import java.util.Map.Entry;
 
 public class Hypergraph {
 	int[] nodes;
-	// An edge is a Array of nodes (int)
+	// A hyperedge is a Array of nodes (int)
 	ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
-	// HashMap of nodes to global edges
+	// HashMap of nodes to global hyperedges
 	HashMap<Integer, Integer[][]> node_to_edges = new HashMap<Integer, Integer[][]>();
+	
+	// TODO Change Integer to int
 
 	public Hypergraph(int[] nodes, ArrayList<Integer[]> edges, HashMap<Integer, Integer[][]> node_to_edges) {
 		this.nodes = nodes;
