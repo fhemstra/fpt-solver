@@ -49,8 +49,8 @@ public class Formula {
 			line = br.readLine();
 			String[] universe_line = line.split(",");
 			universe = new int[universe_line.length];
-			for(int i = 0; i < universe_line.length; i++) {
-				universe[i] = Integer.parseInt(universe_line[i]);				
+			for (int i = 0; i < universe_line.length; i++) {
+				universe[i] = Integer.parseInt(universe_line[i]);
 			}
 			// Signature
 			line = br.readLine();
@@ -89,7 +89,7 @@ public class Formula {
 			while ((line = br.readLine()) != null) {
 				String[] clause_split = line.split(" ");
 				String[] clause = new String[clause_split.length];
-				for(int i = 0; i < clause_split.length; i++) {
+				for (int i = 0; i < clause_split.length; i++) {
 					clause[i] = clause_split[i];
 				}
 				clauses.add(clause);
@@ -101,10 +101,10 @@ public class Formula {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Hypergraph reduceToHS() {
 		// Nodes of the Hypergraph are derived from the universe of the formula
-		int[] hyp_nodes = new int[universe.length]; 
+		int[] hyp_nodes = new int[universe.length];
 		for (int i = 0; i < universe.length; i++) {
 			hyp_nodes[i] = universe[i];
 		}
@@ -112,13 +112,13 @@ public class Formula {
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
-		for(int i = 0; i < assignments.size(); i++) {
-			for(int j = 0; j < clauses.size(); j++) {
+		for (int i = 0; i < assignments.size(); i++) {
+			for (int j = 0; j < clauses.size(); j++) {
 				// If clause does not hold, add edge containing current assignment
-				if(!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
+				if (!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
 					// Add edge corresponding to current assignment
 					Tuple edge_to_add = new Tuple(assignments.get(i));
-					if(!hyp_edges.contains(edge_to_add)) {
+					if (!hyp_edges.contains(edge_to_add)) {
 						hyp_edges.add(edge_to_add);
 					}
 				}
@@ -127,11 +127,11 @@ public class Formula {
 		// Contruct HashMap which maps nodes to all edges they are contained in
 		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
 		// First, every node in the universe gets an empty list of edges
-		for(int node : hyp_nodes) {
+		for (int node : hyp_nodes) {
 			node_to_edges.put(node, new ArrayList<Tuple>());
 		}
 		for (Tuple t : hyp_edges) {
-			for(int i = 0; i < t.elements.length; i++) {
+			for (int i = 0; i < t.elements.length; i++) {
 				int curr_node = t.elements[i];
 				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
 				curr_edges.add(t);
@@ -361,10 +361,11 @@ public class Formula {
 			bw.write(Integer.toString(k_par));
 			bw.write("\n");
 			// Bound vars
-			for(int i = 0; i < bound_vars.length; i++) {
-				if(i < bound_vars.length - 1) 
+			for (int i = 0; i < bound_vars.length; i++) {
+				if (i < bound_vars.length - 1)
 					bw.write(bound_vars[i] + ",");
-				else bw.write(bound_vars[i]);
+				else
+					bw.write(bound_vars[i]);
 			}
 			bw.write("\n");
 			// Formula in clauses

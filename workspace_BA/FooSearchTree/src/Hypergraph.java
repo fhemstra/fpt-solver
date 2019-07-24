@@ -16,8 +16,8 @@ public class Hypergraph {
 		this.edges = edges;
 		this.node_to_edges = node_to_edges;
 	}
-	
-	//TODO findSunflower(Hypergraph h), kernelize()
+
+	// TODO findSunflower(Hypergraph h), kernelize()
 
 	public String toOutputString() {
 		String res = "nodes: {";
@@ -32,7 +32,7 @@ public class Hypergraph {
 		for (int i = 0; i < edges.size(); i++) {
 			Tuple t = edges.get(i);
 			res += t.toOutputString();
-			res = (i < edges.size()-1) ? res + "," : res;
+			res = (i < edges.size() - 1) ? res + "," : res;
 		}
 		res += "}\n";
 		res += "mapping:\n";
