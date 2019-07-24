@@ -16,13 +16,13 @@ import java.util.Map.Entry;
  */
 public class Formula {
 	String name;
-	String[] universe;
+	int[] universe;
 	HashMap<String, Relation> rels;
 	int k_par;
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
-	ArrayList<String[]> assignments = new ArrayList<String[]>();
+	ArrayList<int[]> assignments = new ArrayList<int[]>();
 
 	public Formula() {
 		// Do everything yourself.
@@ -47,7 +47,11 @@ public class Formula {
 			name = line;
 			// Universe
 			line = br.readLine();
-			universe = line.split(",");
+			String[] universe_line = line.split(",");
+			universe = new int[universe_line.length];
+			for(int i = 0; i < universe_line.length; i++) {
+				universe[i] = Integer.parseInt(universe_line[i]);				
+			}
 			// Signature
 			line = br.readLine();
 			String[] relations = line.split(";");
@@ -61,12 +65,12 @@ public class Formula {
 				int to = s.indexOf("}");
 				String content = s.substring(from, to);
 				String[] content_split = content.split(",");
-				String[][] elements = new String[content_split.length][arity];
+				int[][] elements = new int[content_split.length][arity];
 				HashSet<Tuple> hs = new HashSet<Tuple>();
 				for (int i = 0; i < content_split.length; i++) {
 					String[] element_split = content_split[i].split("\\|");
 					for (int j = 0; j < arity; j++) {
-						elements[i][j] = element_split[j].replaceAll("[()]", "");
+						elements[i][j] = Integer.parseInt(element_split[j].replaceAll("[()]", ""));
 					}
 					hs.add(new Tuple(elements[i]));
 				}
@@ -83,7 +87,11 @@ public class Formula {
 			// Formula as clauses
 			clauses = new ArrayList<String[]>();
 			while ((line = br.readLine()) != null) {
-				String[] clause = line.split(" ");
+				String[] clause_split = line.split(" ");
+				String[] clause = new String[clause_split.length];
+				for(int i = 0; i < clause_split.length; i++) {
+					clause[i] = clause_split[i];
+				}
 				clauses.add(clause);
 			}
 			br.close();
@@ -103,7 +111,7 @@ public class Formula {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Integer[]> hyp_edges = new ArrayList<Integer[]>();
 		// The solution S is always empty in this reduction
-		ArrayList<String> empty_sol = new ArrayList<String>();
+		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		for(int i = 0; i < assignments.size(); i++) {
 			for(int j = 0; j < clauses.size(); j++) {
 				if(!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
@@ -130,7 +138,7 @@ public class Formula {
 	 * 
 	 * @return True if a solution of size k is found, else false.
 	 */
-	public boolean searchTree(int k_par, ArrayList<String> sol) {
+	public boolean searchTree(int k_par, ArrayList<Integer> sol) {
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -140,8 +148,8 @@ public class Formula {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over current assignment
 				if (!checkClause(clauses.get(j), assignments.get(i), sol)) {
-					HashSet<String> f = new HashSet<String>();
-					for (String a : assignments.get(i)) {
+					HashSet<Integer> f = new HashSet<Integer>();
+					for (int a : assignments.get(i)) {
 						// TODO check if the literal a even matters to the current clause
 						if (!sol.contains(a)) {
 							f.add(a);
@@ -151,12 +159,12 @@ public class Formula {
 					if (!f.isEmpty()) {
 						boolean flag = false;
 						// Construct branches with each branch adding one literal to S respectively
-						for (String y : f) {
-							ArrayList<String> sol_with_y = (ArrayList<String>) sol.clone();
+						for (int y : f) {
+							ArrayList<Integer> sol_with_y = (ArrayList<Integer>) sol.clone();
 							sol_with_y.add(y);
 							// - print
 							System.out.print("S: ");
-							for (String s : sol_with_y)
+							for (int s : sol_with_y)
 								System.out.print(s + " ");
 							System.out.println();
 							// - print
@@ -218,7 +226,7 @@ public class Formula {
 		}
 		// Generate actual assignments from indices
 		for (int i = 0; i < assi_indices.size(); i++) {
-			String[] s_arr = new String[c_par];
+			int[] s_arr = new int[c_par];
 			// c_par is equal to bound_vars.lenght
 			for (int j = 0; j < c_par; j++) {
 				// assi_indices.get(i)[j] contains the index of the element in the universe,
@@ -233,7 +241,7 @@ public class Formula {
 	 * Checks if the specified clause holds under the specified assignment with S
 	 * being sol.
 	 */
-	private boolean checkClause(String[] clause, String[] assignment, ArrayList<String> sol) {
+	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol) {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
@@ -242,7 +250,7 @@ public class Formula {
 			content = content.replaceAll("[()]", "");
 			// [y,x]
 			String[] variables = content.split(",");
-			String[] assi_elements = new String[variables.length];
+			int[] assi_elements = new int[variables.length];
 			for (int i = 0; i < variables.length; i++) {
 				for (int j = 0; j < universe.length; j++) {
 					if (variables[i].equals(bound_vars[j])) {

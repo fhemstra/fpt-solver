@@ -18,7 +18,7 @@ public class Main {
 		// Solve each File
 		for (Formula form : formulas) {
 			form.printFormula();
-			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<String>()));
+			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<Integer>()));
 			System.out.println("-------");
 			System.out.println("Reduction: ");
 			System.out.println("~~~~~~~~~~~~~~~~");

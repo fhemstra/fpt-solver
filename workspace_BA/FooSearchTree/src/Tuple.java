@@ -3,10 +3,10 @@
  * A Tuple of elements with custom overridden equals() which works element-wise
  */
 public class Tuple {
-	String[] elements;
+	int[] elements;
 
-	public Tuple(String[] s) {
-		elements = s;
+	public Tuple(int[] i) {
+		elements = i;
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class Tuple {
 			Tuple t = (Tuple) obj;
 			// All elements shall match
 			for (int i = 0; i < elements.length; i++) {
-				if (!this.elements[i].equals(t.elements[i]))
+				if (!(this.elements[i] == t.elements[i]))
 					return false;
 			}
 			return true;
@@ -37,8 +37,8 @@ public class Tuple {
 	 */
 	public int hashCode() {
 		String content = "";
-		for (String s : elements) {
-			content += s;
+		for (int i : elements) {
+			content += Integer.toString(i);
 		}
 		return content.hashCode();
 	}
