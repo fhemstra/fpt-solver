@@ -119,7 +119,7 @@ public class Formula {
 					// Convert assignment to int
 					int[] tmp = new int[assignments.get(i).length];
 					for(int t = 0; t < assignments.get(i).length; t++) {
-						tmp[t] = t;
+						tmp[t] = assignments.get(i)[t];
 					}
 					Tuple edge_to_add = new Tuple(tmp);
 					if(!hyp_edges.contains(edge_to_add)) {
