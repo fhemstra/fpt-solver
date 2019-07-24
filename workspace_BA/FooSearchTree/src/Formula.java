@@ -109,26 +109,27 @@ public class Formula {
 			hyp_nodes[i] = i;
 		}
 		// Edges of the hypergraph are found while checking clauses
-		ArrayList<Integer[]> hyp_edges = new ArrayList<Integer[]>();
+		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		for(int i = 0; i < assignments.size(); i++) {
 			for(int j = 0; j < clauses.size(); j++) {
+				// If clause does not hold, add edge containing current assignment
 				if(!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
 					// Convert assignment to int
-					Integer[] tmp = new Integer[assignments.get(i).length];
+					int[] tmp = new int[assignments.get(i).length];
 					for(int t = 0; t < assignments.get(i).length; t++) {
 						tmp[t] = t;
 					}
-					// TODO change assignments to int completely
-					if(!hyp_edges.contains(tmp)) {
-						hyp_edges.add(tmp);						
+					Tuple edge_to_add = new Tuple(tmp);
+					if(!hyp_edges.contains(edge_to_add)) {
+						hyp_edges.add(edge_to_add);
 					}
 				}
 			}
 		}
 		// Contruct HashMap which maps nodes to all edges they are contained in
-		HashMap<Integer, Integer[][]> node_to_edges = new HashMap<Integer, Integer[][]>();
+		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
 		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges, node_to_edges);
 		return hyp;
 	}

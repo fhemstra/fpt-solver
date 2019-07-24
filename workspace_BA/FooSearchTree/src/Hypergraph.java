@@ -5,13 +5,13 @@ import java.util.Map.Entry;
 public class Hypergraph {
 	int[] nodes;
 	// A hyperedge is a Array of nodes (int)
-	ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
+	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 	// HashMap of nodes to global hyperedges
-	HashMap<Integer, Integer[][]> node_to_edges = new HashMap<Integer, Integer[][]>();
+	HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
 	
 	// TODO Change Integer to int
 
-	public Hypergraph(int[] nodes, ArrayList<Integer[]> edges, HashMap<Integer, Integer[][]> node_to_edges) {
+	public Hypergraph(int[] nodes, ArrayList<Tuple> edges, HashMap<Integer, ArrayList<Tuple>> node_to_edges) {
 		this.nodes = nodes;
 		this.edges = edges;
 		this.node_to_edges = node_to_edges;
@@ -28,15 +28,15 @@ public class Hypergraph {
 		}
 		res += "edges:\n";
 		// Loop through all mappings from nodes to edges
-		for (Entry<Integer, Integer[][]> e : node_to_edges.entrySet()) {
+		for (Entry<Integer, ArrayList<Tuple>> e : node_to_edges.entrySet()) {
 			res += " v" + e.getKey() + " -> ";
 			// Loop through all edges the entry e is contained in
-			for (int i = 0; i < e.getValue().length; i++) {
+			for (int i = 0; i < e.getValue().size(); i++) {
 				res += "{";
 				// Loop through all nodes that are in an edge
-				for (int j = 0; j < e.getValue()[i].length; j++) {
-					res += Integer.toString(e.getValue()[i][j]);
-					if (j < e.getValue()[i].length - 1)
+				for (int j = 0; j < e.getValue().get(i).elements.length; j++) {
+					res += Integer.toString(e.getValue().get(i).elements[j]);
+					if (j < e.getValue().get(i).elements.length - 1)
 						res += ",";
 				}
 				res += "}; ";
