@@ -16,6 +16,8 @@ public class Hypergraph {
 		this.edges = edges;
 		this.node_to_edges = node_to_edges;
 	}
+	
+	//TODO findSunflower(Hypergraph h), kernelize()
 
 	public String toOutputString() {
 		String res = "nodes: {";

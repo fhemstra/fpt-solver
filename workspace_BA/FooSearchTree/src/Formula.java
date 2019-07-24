@@ -116,12 +116,8 @@ public class Formula {
 			for(int j = 0; j < clauses.size(); j++) {
 				// If clause does not hold, add edge containing current assignment
 				if(!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
-					// Convert assignment to int
-					int[] tmp = new int[assignments.get(i).length];
-					for(int t = 0; t < assignments.get(i).length; t++) {
-						tmp[t] = assignments.get(i)[t];
-					}
-					Tuple edge_to_add = new Tuple(tmp);
+					// Add edge corresponding to current assignment
+					Tuple edge_to_add = new Tuple(assignments.get(i));
 					if(!hyp_edges.contains(edge_to_add)) {
 						hyp_edges.add(edge_to_add);
 					}
