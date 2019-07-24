@@ -106,7 +106,7 @@ public class Formula {
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		int[] hyp_nodes = new int[universe.length]; 
 		for (int i = 0; i < universe.length; i++) {
-			hyp_nodes[i] = i;
+			hyp_nodes[i] = universe[i];
 		}
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
@@ -130,6 +130,18 @@ public class Formula {
 		}
 		// Contruct HashMap which maps nodes to all edges they are contained in
 		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
+		// First, every node in the universe gets an empty list of edges
+		for(int node : hyp_nodes) {
+			node_to_edges.put(node, new ArrayList<Tuple>());
+		}
+		for (Tuple t : hyp_edges) {
+			for(int i = 0; i < t.elements.length; i++) {
+				int curr_node = t.elements[i];
+				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
+				curr_edges.add(t);
+				node_to_edges.put(curr_node, curr_edges);
+			}
+		}
 		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges, node_to_edges);
 		return hyp;
 	}

@@ -8,7 +8,7 @@ public class Hypergraph {
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 	// HashMap of nodes to global hyperedges
 	HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
-	
+
 	// TODO Change Integer to int
 
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges, HashMap<Integer, ArrayList<Tuple>> node_to_edges) {
@@ -18,18 +18,27 @@ public class Hypergraph {
 	}
 
 	public String toOutputString() {
-		String res = "Hypergraph\n" + "nodes: (";
+		String res = "nodes: (";
 		for (int i = 0; i < nodes.length; i++) {
-			res += "v" + nodes[i];
+			res += nodes[i];
 			if (i < nodes.length - 1)
 				res += ",";
 			else
 				res += ")\n";
 		}
-		res += "edges:\n";
+		res += "edges: ";
+		for (int i = 0; i < edges.size(); i++) {
+			Tuple t = edges.get(i);
+			String tmp = t.toOutputString();
+			tmp = tmp.replaceAll("\\(", "\\{").replaceAll("\\)", "\\}").replaceAll("\\|", "\\,");
+			res += tmp;
+			res = (i < edges.size()-1) ? res + ";" : res;
+		}
+		res += "\n";
+		res += "mapping:\n";
 		// Loop through all mappings from nodes to edges
 		for (Entry<Integer, ArrayList<Tuple>> e : node_to_edges.entrySet()) {
-			res += " v" + e.getKey() + " -> ";
+			res += " " + e.getKey() + " -> ";
 			// Loop through all edges the entry e is contained in
 			for (int i = 0; i < e.getValue().size(); i++) {
 				res += "{";
@@ -41,7 +50,7 @@ public class Hypergraph {
 				}
 				res += "}; ";
 			}
-			res += "\n";
+			res += "\n"; // TODO fix this for last iteration
 		}
 		return res;
 	}

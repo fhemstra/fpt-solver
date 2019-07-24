@@ -20,15 +20,20 @@ public class Main {
 			form.printFormula();
 			System.out.println("SearchTree: " + form.searchTree(form.k_par, new ArrayList<Integer>()));
 			System.out.println("-------");
-			System.out.println("Reduction: ");
-			System.out.println("~~~~~~~~~~~~~~~~");
+			System.out.println("Reduction to hypergraph: ");
 			Hypergraph tmp = form.reduceToHS();
+			System.out.println(tmp.toOutputString());
+			System.out.println("~~~~~~~~~~~~~~~~");
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
+			// TODO remove break
+			break;
 		}
 		System.out.println();
 
+		/*
+		System.out.println("Test-hypergraph:");
 		int[] nodes = { 0, 1, 2, 3 };
 		HashMap<Integer, ArrayList<Tuple>> hm = new HashMap<Integer, ArrayList<Tuple>>();
 		ArrayList<Tuple> edges = new ArrayList<Tuple>();
@@ -59,6 +64,7 @@ public class Main {
 		hm.put(3, edges_of_v3);
 		Hypergraph hyp = new Hypergraph(nodes, edges, hm);
 		System.out.println(hyp.toOutputString());
+		*/
 	}
 
 }
