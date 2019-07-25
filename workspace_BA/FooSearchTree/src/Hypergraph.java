@@ -46,7 +46,7 @@ public class Hypergraph {
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
 		if (h.edges.isEmpty()) {
 			System.out.println("Edges are empty.");
-			return null;			
+			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
 		if (f.size() > k_par) {
@@ -67,16 +67,18 @@ public class Hypergraph {
 			}
 			// Print
 			System.out.println("New edges:");
-			if(updated_e.isEmpty()) System.out.println("None.");
-			for(Tuple t : updated_e) {
+			if (updated_e.isEmpty())
+				System.out.println("None.");
+			for (Tuple t : updated_e) {
 				System.out.println(t.toOutputString(showEverything));
 			}
 			System.out.println(">> findSunflower, k = " + k_par);
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
-				// TODO fix this, return what we have gathered until now
-				ArrayList<Integer> updated_core = new ArrayList<Integer>();
-				return new Sunflower(h.edges, updated_core);
+				// TODO I think this is the right thing to return? Gotta check on this again
+				// tho.
+				ArrayList<Integer> empty_core = new ArrayList<Integer>();
+				return new Sunflower(h.edges, empty_core);
 			}
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
@@ -88,6 +90,9 @@ public class Hypergraph {
 		}
 	}
 
+	/**
+	 * Adds node u into the Tuple petal.
+	 */
 	private void reAddU(Tuple petal, int u) {
 		for (int i = 0; i < petal.elements.length; i++) {
 			if (petal.elements[i] == -1) {
@@ -97,6 +102,9 @@ public class Hypergraph {
 		}
 	}
 
+	/**
+	 * Returns elements but without u.
+	 */
 	private int[] arrWithout(int[] elements, int u) {
 		int[] res = elements.clone();
 		for (int i = 0; i < elements.length; i++) {
@@ -106,6 +114,9 @@ public class Hypergraph {
 		return res;
 	}
 
+	/**
+	 * Checks of elements contains u.
+	 */
 	private boolean arrContains(int[] elements, int u) {
 		for (int e : elements) {
 			if (e == u)
@@ -114,6 +125,9 @@ public class Hypergraph {
 		return false;
 	}
 
+	/**
+	 * Returns the node which is contained in the maximum amount of edges. 
+	 */
 	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
 		int max_node = -1;
@@ -135,16 +149,20 @@ public class Hypergraph {
 		return max_node;
 	}
 
+	/**
+	 * Returns a maximal set of edges, so there is no edge to add greedily.
+	 */
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
 		for (Tuple e : edges_to_search) {
-			boolean add_curr_edge =  false;
+			boolean add_curr_edge = false;
 			for (Tuple f : res) {
 				if (e.intersectsWith(f)) {
 					add_curr_edge = false;
 				}
 			}
-			if(add_curr_edge) res.add(e);
+			if (add_curr_edge)
+				res.add(e);
 		}
 		return res;
 	}
