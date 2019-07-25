@@ -59,4 +59,14 @@ public class Tuple {
 		res += ")";
 		return res;
 	}
+
+	public boolean intersectsWith(Tuple f) {
+		boolean res = false;
+		for(int i = 0; i < this.elements.length; i++) {
+			for(int j = 0; j < f.elements.length; j++) {
+				if(this.elements[i] == f.elements[j]) res = true;
+			}
+		}
+		return res;
+	}
 }

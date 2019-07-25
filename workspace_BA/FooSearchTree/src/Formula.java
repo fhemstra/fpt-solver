@@ -130,25 +130,7 @@ public class Formula {
 				}
 			}
 		}
-		// Contruct HashMap which maps nodes to all edges they are contained in
-		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
-		// First, every node in the universe gets an empty list of edges
-		for (int node : hyp_nodes) {
-			node_to_edges.put(node, new ArrayList<Tuple>());
-		}
-		for (Tuple t : hyp_edges) {
-			for (int i = 0; i < t.elements.length; i++) {
-				int curr_node = t.elements[i];
-				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
-				// If a node has no edges, it is the null-node which fills up all edges to c_par
-				// entries.
-				if (curr_edges == null)
-					continue;
-				curr_edges.add(t);
-				node_to_edges.put(curr_node, curr_edges);
-			}
-		}
-		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges, node_to_edges);
+		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges);
 		return hyp;
 	}
 
