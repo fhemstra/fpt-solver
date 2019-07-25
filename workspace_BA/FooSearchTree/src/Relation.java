@@ -24,7 +24,7 @@ public class Relation {
 			res += "{";
 			Iterator<Tuple> it = elements.iterator();
 			while (it.hasNext()) {
-				res += it.next().toOutputString();
+				res += it.next().toOutputString(true);
 				if (it.hasNext())
 					res += ",";
 			}

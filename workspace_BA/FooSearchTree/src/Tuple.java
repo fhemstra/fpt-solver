@@ -46,30 +46,32 @@ public class Tuple {
 	/**
 	 * Returns a String to output for this tuple.
 	 */
-	public String toOutputString() {
+	public String toOutputString(boolean showEverything) {
 		String res = "(";
 		for (int j = 0; j < elements.length; j++) {
 			// Don't print the -1
-			if (elements[j] == -1)
+			if (!showEverything && elements[j] == -1)
 				continue;
-			if (j + 1 != elements.length && elements[j + 1] != -1)
-				res += elements[j] + "|";
-			else
+			if (j + 1 != elements.length) {
+				if (showEverything || elements[j + 1] != -1) {
+					res += elements[j] + "|";
+				}
+			} else {
 				res += elements[j];
+			}
 		}
 		res += ")";
 		return res;
 	}
 
 	public boolean intersectsWith(Tuple f) {
-		boolean res = false;
 		for (int i = 0; i < this.elements.length; i++) {
 			for (int j = 0; j < f.elements.length; j++) {
 				if (this.elements[i] == f.elements[j] && this.elements[i] != -1)
-					res = true;
+					return true;
 			}
 		}
-		return res;
+		return false;
 	}
 
 	public boolean onlyMinusOne() {

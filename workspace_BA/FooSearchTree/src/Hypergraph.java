@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Hypergraph {
+	boolean showEverything = true;
 	int[] nodes;
 	// A hyperedge is a Array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
@@ -43,15 +44,18 @@ public class Hypergraph {
 	}
 
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
-		if (h.edges.isEmpty())
-			return null;
+		if (h.edges.isEmpty()) {
+			System.out.println("Edges are empty.");
+			return null;			
+		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
 		if (f.size() > k_par) {
-			// TODO make another constructor for Tuples
 			// Empty core
+			System.out.println("Empty core");
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
-			int u = findCommonNode(edges);
+			int u = findCommonNode(h.edges);
+			System.out.println("Common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			for (Tuple edge : h.edges) {
 				if (arrContains(edge.elements, u)) {
@@ -61,9 +65,19 @@ public class Hypergraph {
 					}
 				}
 			}
+			// Print
+			System.out.println("New edges:");
+			if(updated_e.isEmpty()) System.out.println("None.");
+			for(Tuple t : updated_e) {
+				System.out.println(t.toOutputString(showEverything));
+			}
+			System.out.println(">> findSunflower, k = " + k_par);
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
-			if (sun == null)
-				return null;
+			if (sun == null) {
+				// TODO fix this, return what we have gathered until now
+				ArrayList<Integer> updated_core = new ArrayList<Integer>();
+				return new Sunflower(h.edges, updated_core);
+			}
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
 				reAddU(petal, u);
@@ -124,12 +138,13 @@ public class Hypergraph {
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
 		for (Tuple e : edges_to_search) {
+			boolean add_curr_edge =  false;
 			for (Tuple f : res) {
 				if (e.intersectsWith(f)) {
-					break;
+					add_curr_edge = false;
 				}
 			}
-			res.add(e);
+			if(add_curr_edge) res.add(e);
 		}
 		return res;
 	}
@@ -149,7 +164,7 @@ public class Hypergraph {
 		res += "edges: {";
 		for (int i = 0; i < edges.size(); i++) {
 			Tuple t = edges.get(i);
-			res += t.toOutputString();
+			res += t.toOutputString(showEverything);
 			res = (i < edges.size() - 1) ? res + "," : res;
 		}
 		res += "}\n";
@@ -164,7 +179,7 @@ public class Hypergraph {
 				res += "iso";
 			// Loop through all edges the entry e is contained in
 			for (int i = 0; i < e.getValue().size(); i++) {
-				res += e.getValue().get(i).toOutputString();
+				res += e.getValue().get(i).toOutputString(showEverything);
 				if (i < e.getValue().size() - 1)
 					res += ",";
 			}
