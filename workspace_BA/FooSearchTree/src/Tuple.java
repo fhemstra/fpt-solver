@@ -50,8 +50,9 @@ public class Tuple {
 		String res = "(";
 		for (int j = 0; j < elements.length; j++) {
 			// Don't print the -1
-			if(elements[j] == -1) continue;
-			if (j + 1 != elements.length && elements[j+1] != -1)
+			if (elements[j] == -1)
+				continue;
+			if (j + 1 != elements.length && elements[j + 1] != -1)
 				res += elements[j] + "|";
 			else
 				res += elements[j];
@@ -62,11 +63,20 @@ public class Tuple {
 
 	public boolean intersectsWith(Tuple f) {
 		boolean res = false;
-		for(int i = 0; i < this.elements.length; i++) {
-			for(int j = 0; j < f.elements.length; j++) {
-				if(this.elements[i] == f.elements[j]) res = true;
+		for (int i = 0; i < this.elements.length; i++) {
+			for (int j = 0; j < f.elements.length; j++) {
+				if (this.elements[i] == f.elements[j] && this.elements[i] != -1)
+					res = true;
 			}
 		}
 		return res;
+	}
+
+	public boolean onlyMinusOne() {
+		for (int i : elements) {
+			if (i != -1)
+				return false;
+		}
+		return true;
 	}
 }

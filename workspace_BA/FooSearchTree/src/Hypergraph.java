@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 
 public class Hypergraph {
 	int[] nodes;
-	int k_par;
 	// A hyperedge is a Array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 	// HashMap of nodes to global hyperedges
@@ -19,7 +18,7 @@ public class Hypergraph {
 		this.node_to_edges = computeHashmap();
 	}
 
-	// TODO findSunflower(Hypergraph h), kernelize()
+	// TODO kernelize()
 
 	private HashMap<Integer, ArrayList<Tuple>> computeHashmap() {
 		// Contruct HashMap which maps nodes to all edges they are contained in
@@ -43,12 +42,83 @@ public class Hypergraph {
 		return node_to_edges;
 	}
 
-	public Hypergraph findSunflower(Hypergraph h) {
+	public Sunflower findSunflower(Hypergraph h, int k_par) {
 		if (h.edges.isEmpty())
 			return null;
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
-		// TODO fortsetzen
-		return null;
+		if (f.size() > k_par) {
+			// TODO make another constructor for Tuples
+			// Empty core
+			return new Sunflower(f, new ArrayList<Integer>());
+		} else {
+			int u = findCommonNode(edges);
+			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
+			for (Tuple edge : h.edges) {
+				if (arrContains(edge.elements, u)) {
+					Tuple removed_u = new Tuple(arrWithout(edge.elements, u));
+					if (!removed_u.onlyMinusOne()) {
+						updated_e.add(new Tuple(arrWithout(edge.elements, u)));
+					}
+				}
+			}
+			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
+			if (sun == null)
+				return null;
+			ArrayList<Tuple> petals_with_u = sun.petals;
+			for (Tuple petal : petals_with_u) {
+				reAddU(petal, u);
+			}
+			ArrayList<Integer> core_with_u = sun.core;
+			core_with_u.add(u);
+			return new Sunflower(petals_with_u, core_with_u);
+		}
+	}
+
+	private void reAddU(Tuple petal, int u) {
+		for (int i = 0; i < petal.elements.length; i++) {
+			if (petal.elements[i] == -1) {
+				petal.elements[i] = u;
+				return;
+			}
+		}
+	}
+
+	private int[] arrWithout(int[] elements, int u) {
+		int[] res = elements.clone();
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i] == u)
+				res[i] = -1;
+		}
+		return res;
+	}
+
+	private boolean arrContains(int[] elements, int u) {
+		for (int e : elements) {
+			if (e == u)
+				return true;
+		}
+		return false;
+	}
+
+	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
+		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
+		int max_node = -1;
+		occurences.put(max_node, 0);
+		for (int i = 0; i < edges_to_search.size(); i++) {
+			for (int node : edges_to_search.get(i).elements) {
+				// Don't count -1 occurences
+				if (node == -1)
+					continue;
+				if (occurences.get(node) == null) {
+					occurences.put(node, 1);
+				} else {
+					occurences.put(node, occurences.get(node) + 1);
+				}
+				if (occurences.get(node) > occurences.get(max_node))
+					max_node = node;
+			}
+		}
+		return max_node;
 	}
 
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {

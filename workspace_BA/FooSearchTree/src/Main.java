@@ -23,9 +23,12 @@ public class Main {
 			System.out.println(form.searchTree(form.k_par, new ArrayList<Integer>()));
 			System.out.println("----------------");
 			System.out.println("Reduction to hypergraph: ");
-			Hypergraph tmp = form.reduceToHS();
-			System.out.println(tmp.toOutputString());
+			Hypergraph hyp = form.reduceToHS();
+			System.out.println(hyp.toOutputString());
 			System.out.println("~~~~~~~~~~~~~~~~");
+			System.out.println("Sunflower:");
+			Sunflower sun = hyp.findSunflower(hyp, form.k_par);
+			System.out.println("++++++++++++++++");
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
