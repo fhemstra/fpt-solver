@@ -64,7 +64,7 @@ public class Formula {
 				int from = s.indexOf("{") + 1;
 				int to = s.indexOf("}");
 				// Check if Relation is empty
-				if(!(to > from)) {
+				if (!(to > from)) {
 					rels.put(identifier, new Relation(identifier, arity, new HashSet<Tuple>()));
 					continue;
 				}
@@ -119,10 +119,11 @@ public class Formula {
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		for (int i = 0; i < assignments.size(); i++) {
 			for (int j = 0; j < clauses.size(); j++) {
+				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment
-				if (!checkClause(clauses.get(j), assignments.get(i), empty_sol)) {
-					// Add edge corresponding to current assignment
-					Tuple edge_to_add = new Tuple(assignments.get(i));
+				if (!checkClause(curr_clause, assignments.get(i), empty_sol)) {
+					// Find elements that are bound to S in this clause
+					Tuple edge_to_add = findCandidates(curr_clause, assignments.get(i));
 					if (!hyp_edges.contains(edge_to_add)) {
 						hyp_edges.add(edge_to_add);
 					}
@@ -139,12 +140,65 @@ public class Formula {
 			for (int i = 0; i < t.elements.length; i++) {
 				int curr_node = t.elements[i];
 				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
+				// If a node has no edges, it is the null-node which fills up all edges to c_par
+				// entries.
+				if (curr_edges == null)
+					continue;
 				curr_edges.add(t);
 				node_to_edges.put(curr_node, curr_edges);
 			}
 		}
 		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges, node_to_edges);
 		return hyp;
+	}
+
+	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
+		// All edges have length c_par, but can contain null
+		int[] candidates = new int[c_par];
+		for(int i = 0; i < candidates.length; i++) {
+			candidates[i] = -1;
+		}
+		int i = 0;
+		for (String s : curr_clause) {
+			if (s.charAt(0) == 'S') {
+				candidates[i] = assign(s, assignment)[0];
+				i++;
+			}
+		}
+		return new Tuple(candidates);
+	}
+
+	/**
+	 * Assigns a literal wit the given assignment. Given ~R(y,x) and assignment
+	 * x=2,y=1 this returns [2,1].
+	 */
+	private int[] assign(String literal, int[] assignment) {
+		// s = ~R(y,x)
+		// assignment = [1,2] (x=1,y=2)
+		// Extract variables
+		int negation_offset = (literal.charAt(0) == '~') ? 1 : 0;
+		String id = literal.substring(negation_offset, negation_offset + 1);
+		// id = "R"
+		String content = literal.substring(negation_offset + 1);
+		// content = "(y,x)"
+		content = content.replaceAll("[()]", "");
+		// content = "y,x"
+		String[] variables = content.split(",");
+		// variables = ["y","x"]
+		int[] assi_elements = new int[variables.length];
+		// assi_elements = [0,0]
+		for (int i = 0; i < variables.length; i++) {
+			for (int j = 0; j < universe.length; j++) {
+				// bound_vars = ["x","y","z"]
+				// y: i = 0, j = 1
+				if (variables[i].equals(bound_vars[j])) {
+					assi_elements[i] = assignment[j];
+					// assi = [2,0]
+					break;
+				}
+			}
+		}
+		return assi_elements;
 	}
 
 	/**
@@ -259,20 +313,8 @@ public class Formula {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
-			String id = l.substring(negation_offset, negation_offset + 1);
-			String content = l.substring(negation_offset + 1);
-			content = content.replaceAll("[()]", "");
-			// [y,x]
-			String[] variables = content.split(",");
-			int[] assi_elements = new int[variables.length];
-			for (int i = 0; i < variables.length; i++) {
-				for (int j = 0; j < universe.length; j++) {
-					if (variables[i].equals(bound_vars[j])) {
-						assi_elements[i] = assignment[j];
-						break;
-					}
-				}
-			}
+			String id = (negation_offset == 1) ? l.substring(1,2) : l.substring(0,1); 
+			int[] assi_elements = assign(l, assignment);
 			// Handle S(x)
 			if (id.equals("S")) {
 				// check if S contains the element

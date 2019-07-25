@@ -20,6 +20,9 @@ public class Hypergraph {
 
 	// TODO findSunflower(Hypergraph h), kernelize()
 
+	/**
+	 * Return a String to output for this hypergraph. The node 0 is a placeholder.
+	 */
 	public String toOutputString() {
 		String res = "nodes: {";
 		for (int i = 0; i < nodes.length; i++) {
@@ -42,12 +45,14 @@ public class Hypergraph {
 		while (it.hasNext()) {
 			Entry<Integer, ArrayList<Tuple>> e = it.next();
 			res += " " + e.getKey() + " -> ";
+			// If a node is isolated
+			if(e.getValue().size() == 0) res += "iso";
 			// Loop through all edges the entry e is contained in
 			for (int i = 0; i < e.getValue().size(); i++) {
 				res += e.getValue().get(i).toOutputString();
 				if(i < e.getValue().size() - 1) res += ",";
 			}
-			if(it.hasNext()) res += "\n"; // TODO fix this for last iteration
+			if(it.hasNext()) res += "\n";
 		}
 		return res;
 	}

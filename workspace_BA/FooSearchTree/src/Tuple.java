@@ -43,10 +43,15 @@ public class Tuple {
 		return content.hashCode();
 	}
 
+	/**
+	 * Returns a String to output for this tuple.
+	 */
 	public String toOutputString() {
 		String res = "(";
 		for (int j = 0; j < elements.length; j++) {
-			if (j + 1 != elements.length)
+			// Don't print the -1
+			if(elements[j] == -1) continue;
+			if (j + 1 != elements.length && elements[j+1] != -1)
 				res += elements[j] + "|";
 			else
 				res += elements[j];
