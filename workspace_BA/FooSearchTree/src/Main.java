@@ -26,6 +26,11 @@ public class Main {
 			Hypergraph hyp = form.reduceToHS();
 			System.out.println(hyp.toOutputString());
 			System.out.println("~~~~~~~~~~~~~~~~");
+			// Kernelization
+			Hypergraph kernel = hyp.kernelize(hyp, form.k_par);
+			System.out.println(kernel.toOutputString());
+			System.out.println("++++++++++++++++");
+			/*
 			// Sunflower tests
 			System.out.println("Sunflower:");
 			Sunflower sun = hyp.findSunflower(hyp, form.k_par);
@@ -33,11 +38,12 @@ public class Main {
 			if(sun != null) System.out.println(sun.toOutputString());
 			else System.out.println("null");
 			System.out.println("++++++++++++++++");
+			*/
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
 			// TODO remove break
-			//break;
+			break;
 		}
 		System.out.println();
 

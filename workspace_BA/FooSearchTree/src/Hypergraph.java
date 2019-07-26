@@ -44,6 +44,7 @@ public class Hypergraph {
 	}
 
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
+		System.out.println(">> findSunflower, k = " + k_par);
 		if (h.edges.isEmpty()) {
 			System.out.println("Edges are empty.");
 			return null;
@@ -58,7 +59,7 @@ public class Hypergraph {
 			System.out.println("Common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			for (Tuple edge : h.edges) {
-				if (arrContains(edge.elements, u)) {
+				if (edge.arrContains(u)) {
 					Tuple removed_u = new Tuple(arrWithout(edge.elements, u));
 					if (!removed_u.onlyMinusOne()) {
 						updated_e.add(new Tuple(arrWithout(edge.elements, u)));
@@ -72,7 +73,6 @@ public class Hypergraph {
 			for (Tuple t : updated_e) {
 				System.out.println(t.toOutputString(showEverything));
 			}
-			System.out.println(">> findSunflower, k = " + k_par);
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
 				// TODO I think this is the right thing to return? Gotta check on this again
@@ -82,23 +82,11 @@ public class Hypergraph {
 			}
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
-				reAddU(petal, u);
+				petal.addElement(u);
 			}
 			ArrayList<Integer> core_with_u = sun.core;
 			core_with_u.add(u);
 			return new Sunflower(petals_with_u, core_with_u);
-		}
-	}
-
-	/**
-	 * Adds node u into the Tuple petal.
-	 */
-	private void reAddU(Tuple petal, int u) {
-		for (int i = 0; i < petal.elements.length; i++) {
-			if (petal.elements[i] == -1) {
-				petal.elements[i] = u;
-				return;
-			}
 		}
 	}
 
@@ -112,17 +100,6 @@ public class Hypergraph {
 				res[i] = -1;
 		}
 		return res;
-	}
-
-	/**
-	 * Checks of elements contains u.
-	 */
-	private boolean arrContains(int[] elements, int u) {
-		for (int e : elements) {
-			if (e == u)
-				return true;
-		}
-		return false;
 	}
 
 	/**
@@ -165,6 +142,54 @@ public class Hypergraph {
 				res.add(e);
 		}
 		return res;
+	}
+	
+	public Hypergraph kernelize(Hypergraph hyp, int k) {
+		System.out.println(">> kernelize");
+		Sunflower sun = findSunflower(hyp, k);
+		while(sun != null) { // TODO This is still wrong, fix it.
+			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
+			// Check for every edge if the edge is also a petal
+			for (Tuple edge : hyp.edges) {
+				boolean add_edge = true;
+				for(Tuple petal : sun.petals) {
+					if(petal.equals(edge)) {
+						add_edge = false;
+						break;
+					}
+				}
+				// If break is not reached, add edge.
+				if(add_edge) updated_e.add(edge);
+			}
+			// Convert core to int[]
+			int[] int_core = new int[sun.core.size()];
+			for(int i = 0; i < sun.core.size(); i++) {
+				int_core[i] = sun.core.get(i);
+			}
+			// Add core
+			Tuple core = new Tuple(int_core);
+			updated_e.add(core);
+			// Update nodes
+			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
+			for(Tuple edge : hyp.edges) {
+				for(int e : edge.elements) {
+					if(!updated_nodes.contains(e)) updated_nodes.add(e);					
+				}
+			}
+			// Change to int[]
+			int[] int_nodes = new int[updated_nodes.size()];
+			for(int i = 0; i < updated_nodes.size(); i++) {
+				int_nodes[i] = updated_nodes.get(i);
+			}
+			// Construct updated graph 
+			hyp.nodes = int_nodes;
+			hyp.edges = updated_e;
+			hyp.node_to_edges = hyp.computeHashmap();
+			// Repeat
+			sun = findSunflower(hyp, k);
+			System.out.println(">> Again.");
+		}
+		return hyp;
 	}
 
 	/**

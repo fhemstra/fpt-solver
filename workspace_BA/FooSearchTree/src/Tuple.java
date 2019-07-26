@@ -81,4 +81,27 @@ public class Tuple {
 		}
 		return true;
 	}
+	
+	/**
+	 * Adds an element to the tuple.
+	 */
+	public void addElement(int u) {
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i] == -1) {
+				elements[i] = u;
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * Checks of elements contains u.
+	 */
+	public boolean arrContains(int u) {
+		for (int e : elements) {
+			if (e == u)
+				return true;
+		}
+		return false;
+	}
 }
