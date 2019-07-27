@@ -28,6 +28,7 @@ public class Main {
 			System.out.println("~~~~~~~~~~~~~~~~");
 			// Kernelization
 			Hypergraph kernel = hyp.kernelize(hyp, form.k_par);
+			System.out.println("<< Main\nKernel:");
 			System.out.println(kernel.toOutputString());
 			System.out.println("++++++++++++++++");
 			/*
