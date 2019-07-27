@@ -22,8 +22,9 @@ public class Tuple {
 			// cast o to Tuple
 			Tuple t = (Tuple) obj;
 			// Remove -1
-			int[] t_trimmed = trimArray(t.elements);
-			int[] this_trimmed = trimArray(this.elements);
+			int common_size = Math.max(t.elements.length, this.elements.length);
+			int[] t_trimmed = trimArray(t.elements, common_size);
+			int[] this_trimmed = trimArray(this.elements, common_size);
 			// All elements shall match
 			for(int i = 0; i < this_trimmed.length; i++) {
 				if (!(this_trimmed[i] == t_trimmed[i]))
@@ -35,8 +36,8 @@ public class Tuple {
 		return false;
 	}
 	
-	private int[] trimArray(int[] arr) {
-		int[] res = new int[arr.length];
+	private int[] trimArray(int[] arr, int common_size) {
+		int[] res = new int[common_size];
 		int it_1 = 0;
 		int it_2 = 0;
 		while (it_2 < arr.length) {
