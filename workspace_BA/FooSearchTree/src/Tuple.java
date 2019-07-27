@@ -11,7 +11,7 @@ public class Tuple {
 
 	/**
 	 * Compares two tuples, returns true if the contains the same elements in the
-	 * same order.
+	 * same order. Ignores entries that are -1.
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -21,15 +21,32 @@ public class Tuple {
 		if (obj instanceof Tuple) {
 			// cast o to Tuple
 			Tuple t = (Tuple) obj;
+			// Remove -1
+			int[] t_trimmed = trimArray(t.elements);
+			int[] this_trimmed = trimArray(this.elements);
 			// All elements shall match
-			for (int i = 0; i < elements.length; i++) {
-				if (!(this.elements[i] == t.elements[i]))
+			for(int i = 0; i < this_trimmed.length; i++) {
+				if (!(this_trimmed[i] == t_trimmed[i]))
 					return false;
 			}
 			return true;
 		}
 		// if o is not a tuple
 		return false;
+	}
+	
+	private int[] trimArray(int[] arr) {
+		int[] res = new int[arr.length];
+		int it_1 = 0;
+		int it_2 = 0;
+		while (it_2 < arr.length) {
+			if(arr[it_2] != -1) {
+				res[it_1] = arr[it_2];
+				it_1++;
+			}
+			it_2++;
+		}
+		return res;
 	}
 
 	/**
