@@ -27,8 +27,15 @@ public class Tuple {
 			int[] this_trimmed = trimArray(this.elements, common_size);
 			// All elements shall match
 			for(int i = 0; i < this_trimmed.length; i++) {
-				if (!(this_trimmed[i] == t_trimmed[i]))
-					return false;
+				// Order is not important (1,2) == (2,1)
+				boolean curr_element_matches = false;
+				for(int j = 0; j < t_trimmed.length; j++) {
+					if(this_trimmed[i] == t_trimmed[j]) {
+						curr_element_matches = true;
+						break;
+					}
+				}
+				if(!curr_element_matches) return false;
 			}
 			return true;
 		}
@@ -70,12 +77,11 @@ public class Tuple {
 			// Don't print the -1
 			if (!showEverything && elements[j] == -1)
 				continue;
+			res += elements[j];
 			if (j + 1 != elements.length) {
 				if (showEverything || elements[j + 1] != -1) {
-					res += elements[j] + "|";
+					res += "|";
 				}
-			} else {
-				res += elements[j];
 			}
 		}
 		res += ")";
