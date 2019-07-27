@@ -56,6 +56,10 @@ public class Hypergraph {
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
 			int u = findCommonNode(h.edges);
+			if(u == -1) {
+				System.out.println("Can't find common node. nodes.length: " + h.nodes.length);
+				return null; // TODO Correct?
+			}
 			System.out.println("Found common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			for (Tuple edge : h.edges) {
@@ -76,6 +80,7 @@ public class Hypergraph {
 			System.out.println(">> Find another sunflower");
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
+				System.out.println("Sunflower is null, return current edges with empty core.");
 				// TODO I think this is the right thing to return? Gotta check on this again
 				// tho.
 				ArrayList<Integer> empty_core = new ArrayList<Integer>();
@@ -188,8 +193,9 @@ public class Hypergraph {
 			hyp.node_to_edges = hyp.computeHashmap();
 			// Repeat
 			sun = findSunflower(hyp, k);
-			System.out.println(">> loop kernelize.");
+			System.out.println(">> LOOP KERNELIZE.");
 		}
+		System.out.println(">> END KERNELIZE");
 		return hyp;
 	}
 
