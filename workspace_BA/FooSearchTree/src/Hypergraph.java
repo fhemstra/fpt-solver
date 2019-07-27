@@ -44,19 +44,19 @@ public class Hypergraph {
 	}
 
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
-		System.out.println(">> findSunflower, k = " + k_par);
+		System.out.println("---\n>> findSunflower, k = " + k_par);
 		if (h.edges.isEmpty()) {
-			System.out.println("Edges are empty.");
+			System.out.println("<< Hyp without edges, return null.");
 			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
 		if (f.size() > k_par) {
 			// Empty core
-			System.out.println("Empty core");
+			System.out.println("Found more than k petals, sunflower with empty core.");
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
 			int u = findCommonNode(h.edges);
-			System.out.println("Common node: " + u);
+			System.out.println("Found common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			for (Tuple edge : h.edges) {
 				if (edge.arrContains(u)) {
@@ -67,12 +67,13 @@ public class Hypergraph {
 				}
 			}
 			// Print
-			System.out.println("New edges:");
+			System.out.println("Edges that are left after removing u from petals:");
 			if (updated_e.isEmpty())
-				System.out.println("None.");
+				System.out.println("No edges left."); // TODO Do something?
 			for (Tuple t : updated_e) {
 				System.out.println(t.toOutputString(showEverything));
 			}
+			System.out.println(">> Find another sunflower");
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
 				// TODO I think this is the right thing to return? Gotta check on this again
@@ -187,7 +188,7 @@ public class Hypergraph {
 			hyp.node_to_edges = hyp.computeHashmap();
 			// Repeat
 			sun = findSunflower(hyp, k);
-			System.out.println(">> Again.");
+			System.out.println(">> loop kernelize.");
 		}
 		return hyp;
 	}
