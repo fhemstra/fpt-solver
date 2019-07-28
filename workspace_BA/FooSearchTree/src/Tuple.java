@@ -26,29 +26,30 @@ public class Tuple {
 			int[] t_trimmed = trimArray(t.elements, common_size);
 			int[] this_trimmed = trimArray(this.elements, common_size);
 			// All elements shall match
-			for(int i = 0; i < this_trimmed.length; i++) {
+			for (int i = 0; i < this_trimmed.length; i++) {
 				// Order is not important (1,2) == (2,1)
 				boolean curr_element_matches = false;
-				for(int j = 0; j < t_trimmed.length; j++) {
-					if(this_trimmed[i] == t_trimmed[j]) {
+				for (int j = 0; j < t_trimmed.length; j++) {
+					if (this_trimmed[i] == t_trimmed[j]) {
 						curr_element_matches = true;
 						break;
 					}
 				}
-				if(!curr_element_matches) return false;
+				if (!curr_element_matches)
+					return false;
 			}
 			return true;
 		}
 		// if o is not a tuple
 		return false;
 	}
-	
+
 	private int[] trimArray(int[] arr, int common_size) {
 		int[] res = new int[common_size];
 		int it_1 = 0;
 		int it_2 = 0;
 		while (it_2 < arr.length) {
-			if(arr[it_2] != -1) {
+			if (arr[it_2] != -1) {
 				res[it_1] = arr[it_2];
 				it_1++;
 			}
@@ -73,14 +74,18 @@ public class Tuple {
 	 */
 	public String toOutputString(boolean showEverything) {
 		String res = "(";
-		for (int j = 0; j < elements.length; j++) {
-			// Don't print the -1
-			if (!showEverything && elements[j] == -1)
-				continue;
-			res += elements[j];
-			if (j + 1 != elements.length) {
-				if (showEverything || elements[j + 1] != -1) {
-					res += "|";
+		if (elements.length == 0) {
+			res += "empty";
+		} else {
+			for (int j = 0; j < elements.length; j++) {
+				// Don't print the -1
+				if (!showEverything && elements[j] == -1)
+					continue;
+				res += elements[j];
+				if (j + 1 != elements.length) {
+					if (showEverything || elements[j + 1] != -1) {
+						res += "|";
+					}
 				}
 			}
 		}
@@ -105,7 +110,7 @@ public class Tuple {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Adds an element to the tuple.
 	 */
@@ -117,7 +122,7 @@ public class Tuple {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks of elements contains u.
 	 */

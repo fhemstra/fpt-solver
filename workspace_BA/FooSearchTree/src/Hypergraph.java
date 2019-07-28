@@ -19,8 +19,6 @@ public class Hypergraph {
 		this.node_to_edges = computeHashmap();
 	}
 
-	// TODO kernelize()
-
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
 		System.out.println("---\n>> findSunflower, k = " + k_par);
 		if (h.edges.isEmpty()) {
@@ -31,11 +29,11 @@ public class Hypergraph {
 		System.out.println("MaxDisjointEdges f.size(): " + f.size());
 		if (f.size() > k_par) {
 			// Empty core
-			System.out.println("Found more than k petals, sunflower with empty core.");
+			System.out.println("Found more than " + k_par + " petals, sunflower with empty core.");
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
 			int u = findCommonNode(h.edges);
-			if(u == -1) {
+			if (u == -1) {
 				System.out.println("Can't find common node. nodes.length: " + h.nodes.length);
 				return null; // TODO Correct?
 			}
@@ -75,27 +73,38 @@ public class Hypergraph {
 			return new Sunflower(petals_with_u, core_with_u);
 		}
 	}
-	
+
 	public Hypergraph kernelize(Hypergraph hyp, int k) {
 		System.out.println(">> kernelize");
 		Sunflower sun = findSunflower(hyp, k);
-		while(sun != null) { // TODO This is still wrong, fix it.
+		while (sun != null) { // TODO not sure if this is right
+			System.out.println(">> KERNELIZE received following SUNFLOWER:");
+			System.out.println(sun.toOutputString());
+			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
+			if (!(sun.petals.size() >= k + 1)) {
+				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
+						+ " or bigger, break kernelize().");
+				break;
+			}
+			// Only kernelize, if the sunflower has enough petals? Look it up in
+			// "Parametrized Algorithms".
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			// Check for every edge if the edge is also a petal
 			for (Tuple edge : hyp.edges) {
 				boolean add_edge = true;
-				for(Tuple petal : sun.petals) {
-					if(petal.equals(edge)) {
+				for (Tuple petal : sun.petals) {
+					if (petal.equals(edge)) {
 						add_edge = false;
 						break;
 					}
 				}
 				// If break is not reached, add edge.
-				if(add_edge) updated_e.add(edge);
+				if (add_edge)
+					updated_e.add(edge);
 			}
 			// Convert core to int[]
 			int[] int_core = new int[sun.core.size()];
-			for(int i = 0; i < sun.core.size(); i++) {
+			for (int i = 0; i < sun.core.size(); i++) {
 				int_core[i] = sun.core.get(i);
 			}
 			// Add core
@@ -103,17 +112,18 @@ public class Hypergraph {
 			updated_e.add(core);
 			// Update nodes
 			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
-			for(Tuple edge : hyp.edges) {
-				for(int e : edge.elements) {
-					if(!updated_nodes.contains(e)) updated_nodes.add(e);					
+			for (Tuple edge : updated_e) {
+				for (int e : edge.elements) {
+					if (!updated_nodes.contains(e))
+						updated_nodes.add(e);
 				}
 			}
 			// Change to int[]
 			int[] int_nodes = new int[updated_nodes.size()];
-			for(int i = 0; i < updated_nodes.size(); i++) {
+			for (int i = 0; i < updated_nodes.size(); i++) {
 				int_nodes[i] = updated_nodes.get(i);
 			}
-			// Construct updated graph 
+			// Construct updated graph
 			hyp.nodes = int_nodes;
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
@@ -141,7 +151,7 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns the node which is contained in the maximum amount of edges. 
+	 * Returns the node which is contained in the maximum amount of edges.
 	 */
 	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
@@ -181,7 +191,7 @@ public class Hypergraph {
 		}
 		return res;
 	}
-	
+
 	private HashMap<Integer, ArrayList<Tuple>> computeHashmap() {
 		// Contruct HashMap which maps nodes to all edges they are contained in
 		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
@@ -209,6 +219,9 @@ public class Hypergraph {
 	 */
 	public String toOutputString() {
 		String res = "nodes: {";
+		if(nodes.length == 0) {
+			res += "}\n";
+		}
 		for (int i = 0; i < nodes.length; i++) {
 			res += nodes[i];
 			if (i < nodes.length - 1)

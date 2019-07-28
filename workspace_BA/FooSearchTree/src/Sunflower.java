@@ -16,6 +16,7 @@ public class Sunflower {
 			res += t.toOutputString(true) + " ";
 		}
 		res += "\nCore: ";
+		if(core.isEmpty()) res += "empty";
 		for(int c : core) {
 			res += c + " ";
 		}
