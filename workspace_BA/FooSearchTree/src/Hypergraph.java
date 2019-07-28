@@ -50,6 +50,7 @@ public class Hypergraph {
 			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
+		System.out.println("MaxDisjointEdges f.size(): " + f.size());
 		if (f.size() > k_par) {
 			// Empty core
 			System.out.println("Found more than k petals, sunflower with empty core.");
@@ -62,6 +63,7 @@ public class Hypergraph {
 			}
 			System.out.println("Found common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
+			// Remove u from edges that contain u
 			for (Tuple edge : h.edges) {
 				if (edge.arrContains(u)) {
 					Tuple removed_u = new Tuple(arrWithout(edge.elements, u));
@@ -138,7 +140,7 @@ public class Hypergraph {
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
 		for (Tuple e : edges_to_search) {
-			boolean add_curr_edge = false;
+			boolean add_curr_edge = true;
 			for (Tuple f : res) {
 				if (e.intersectsWith(f)) {
 					add_curr_edge = false;
@@ -191,6 +193,9 @@ public class Hypergraph {
 			hyp.nodes = int_nodes;
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
+			// print new, kernelized hyp
+			System.out.println("KERNELIZED hyp:");
+			System.out.println(hyp.toOutputString());
 			// Repeat
 			sun = findSunflower(hyp, k);
 			System.out.println(">> LOOP KERNELIZE.");
