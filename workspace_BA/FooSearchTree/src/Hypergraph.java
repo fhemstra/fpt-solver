@@ -21,28 +21,6 @@ public class Hypergraph {
 
 	// TODO kernelize()
 
-	private HashMap<Integer, ArrayList<Tuple>> computeHashmap() {
-		// Contruct HashMap which maps nodes to all edges they are contained in
-		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
-		// First, every node in the universe gets an empty list of edges
-		for (int node : nodes) {
-			node_to_edges.put(node, new ArrayList<Tuple>());
-		}
-		for (Tuple t : edges) {
-			for (int i = 0; i < t.elements.length; i++) {
-				int curr_node = t.elements[i];
-				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
-				// If a node has no edges, it is the null-node which fills up all edges to c_par
-				// entries.
-				if (curr_edges == null)
-					continue;
-				curr_edges.add(t);
-				node_to_edges.put(curr_node, curr_edges);
-			}
-		}
-		return node_to_edges;
-	}
-
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
 		System.out.println("---\n>> findSunflower, k = " + k_par);
 		if (h.edges.isEmpty()) {
@@ -96,6 +74,58 @@ public class Hypergraph {
 			core_with_u.add(u);
 			return new Sunflower(petals_with_u, core_with_u);
 		}
+	}
+	
+	public Hypergraph kernelize(Hypergraph hyp, int k) {
+		System.out.println(">> kernelize");
+		Sunflower sun = findSunflower(hyp, k);
+		while(sun != null) { // TODO This is still wrong, fix it.
+			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
+			// Check for every edge if the edge is also a petal
+			for (Tuple edge : hyp.edges) {
+				boolean add_edge = true;
+				for(Tuple petal : sun.petals) {
+					if(petal.equals(edge)) {
+						add_edge = false;
+						break;
+					}
+				}
+				// If break is not reached, add edge.
+				if(add_edge) updated_e.add(edge);
+			}
+			// Convert core to int[]
+			int[] int_core = new int[sun.core.size()];
+			for(int i = 0; i < sun.core.size(); i++) {
+				int_core[i] = sun.core.get(i);
+			}
+			// Add core
+			Tuple core = new Tuple(int_core);
+			updated_e.add(core);
+			// Update nodes
+			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
+			for(Tuple edge : hyp.edges) {
+				for(int e : edge.elements) {
+					if(!updated_nodes.contains(e)) updated_nodes.add(e);					
+				}
+			}
+			// Change to int[]
+			int[] int_nodes = new int[updated_nodes.size()];
+			for(int i = 0; i < updated_nodes.size(); i++) {
+				int_nodes[i] = updated_nodes.get(i);
+			}
+			// Construct updated graph 
+			hyp.nodes = int_nodes;
+			hyp.edges = updated_e;
+			hyp.node_to_edges = hyp.computeHashmap();
+			// print new, kernelized hyp
+			System.out.println("KERNELIZED hyp:");
+			System.out.println(hyp.toOutputString());
+			// Repeat
+			sun = findSunflower(hyp, k);
+			System.out.println(">> LOOP KERNELIZE.");
+		}
+		System.out.println(">> END KERNELIZE");
+		return hyp;
 	}
 
 	/**
@@ -152,56 +182,26 @@ public class Hypergraph {
 		return res;
 	}
 	
-	public Hypergraph kernelize(Hypergraph hyp, int k) {
-		System.out.println(">> kernelize");
-		Sunflower sun = findSunflower(hyp, k);
-		while(sun != null) { // TODO This is still wrong, fix it.
-			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
-			// Check for every edge if the edge is also a petal
-			for (Tuple edge : hyp.edges) {
-				boolean add_edge = true;
-				for(Tuple petal : sun.petals) {
-					if(petal.equals(edge)) {
-						add_edge = false;
-						break;
-					}
-				}
-				// If break is not reached, add edge.
-				if(add_edge) updated_e.add(edge);
-			}
-			// Convert core to int[]
-			int[] int_core = new int[sun.core.size()];
-			for(int i = 0; i < sun.core.size(); i++) {
-				int_core[i] = sun.core.get(i);
-			}
-			// Add core
-			Tuple core = new Tuple(int_core);
-			updated_e.add(core);
-			// Update nodes
-			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
-			for(Tuple edge : hyp.edges) {
-				for(int e : edge.elements) {
-					if(!updated_nodes.contains(e)) updated_nodes.add(e);					
-				}
-			}
-			// Change to int[]
-			int[] int_nodes = new int[updated_nodes.size()];
-			for(int i = 0; i < updated_nodes.size(); i++) {
-				int_nodes[i] = updated_nodes.get(i);
-			}
-			// Construct updated graph 
-			hyp.nodes = int_nodes;
-			hyp.edges = updated_e;
-			hyp.node_to_edges = hyp.computeHashmap();
-			// print new, kernelized hyp
-			System.out.println("KERNELIZED hyp:");
-			System.out.println(hyp.toOutputString());
-			// Repeat
-			sun = findSunflower(hyp, k);
-			System.out.println(">> LOOP KERNELIZE.");
+	private HashMap<Integer, ArrayList<Tuple>> computeHashmap() {
+		// Contruct HashMap which maps nodes to all edges they are contained in
+		HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
+		// First, every node in the universe gets an empty list of edges
+		for (int node : nodes) {
+			node_to_edges.put(node, new ArrayList<Tuple>());
 		}
-		System.out.println(">> END KERNELIZE");
-		return hyp;
+		for (Tuple t : edges) {
+			for (int i = 0; i < t.elements.length; i++) {
+				int curr_node = t.elements[i];
+				ArrayList<Tuple> curr_edges = node_to_edges.get(curr_node);
+				// If a node has no edges, it is the null-node which fills up all edges to c_par
+				// entries.
+				if (curr_edges == null)
+					continue;
+				curr_edges.add(t);
+				node_to_edges.put(curr_node, curr_edges);
+			}
+		}
+		return node_to_edges;
 	}
 
 	/**
