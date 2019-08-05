@@ -114,7 +114,7 @@ public class Hypergraph {
 		System.out.println(">> kernelize");
 		Sunflower sun = findSunflower(hyp, k);
 		while (sun != null) { // TODO not sure if this is right
-			System.out.println(">> KERNELIZE received a SUNFLOWER of size:" + sun.petals.size());
+			System.out.println(">> KERNELIZE received a SUNFLOWER of size: " + sun.petals.size());
 			//System.out.println(sun.toOutputString());
 			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
 			if (!(sun.petals.size() >= k + 1)) {
