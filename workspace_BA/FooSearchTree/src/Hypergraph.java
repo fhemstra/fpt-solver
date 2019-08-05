@@ -48,6 +48,7 @@ public class Hypergraph {
 				edges.add(new Tuple(tuple_nodes));
 			}
 			br.close();
+			node_to_edges = computeHashmap();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -113,8 +114,8 @@ public class Hypergraph {
 		System.out.println(">> kernelize");
 		Sunflower sun = findSunflower(hyp, k);
 		while (sun != null) { // TODO not sure if this is right
-			System.out.println(">> KERNELIZE received following SUNFLOWER:");
-			System.out.println(sun.toOutputString());
+			System.out.println(">> KERNELIZE received a SUNFLOWER of size:" + sun.petals.size());
+			//System.out.println(sun.toOutputString());
 			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
 			if (!(sun.petals.size() >= k + 1)) {
 				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
@@ -165,8 +166,8 @@ public class Hypergraph {
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
 			// print new, kernelized hyp
-			System.out.println("KERNELIZED hyp:");
-			System.out.println(hyp.toOutputString());
+			//System.out.println("KERNELIZED hyp:");
+			//System.out.println(hyp.toOutputString());
 			// Repeat
 			sun = findSunflower(hyp, k);
 			System.out.println(">> LOOP KERNELIZE.");

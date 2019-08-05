@@ -5,6 +5,24 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String[] args) {
+		// Test PACE parser
+		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
+		File pace_folder = new File("pace");
+		File[] listOfPaceFiles = pace_folder.listFiles();
+		for (File f : listOfPaceFiles) {
+			if (f.isFile()) {
+				System.out.println(f.getName());
+				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
+				//System.out.println(graph_to_add.toOutputString());
+				graphs.add(graph_to_add);
+			}
+			break;
+		}
+		System.out.println("Loaded PACE successfully.");
+		System.out.flush();
+		graphs.get(0).kernelize(graphs.get(0), 1000);
+		
+		
 		// Collect and parse all files
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
 		File folder = new File("instances");
@@ -43,6 +61,7 @@ public class Main {
 			System.out.println("++++++++++++++++");
 			*/
 			
+			/*
 			// Hypergraph doc example
 			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 			ArrayList<Tuple> ex_edges = new ArrayList<Tuple>();
@@ -61,6 +80,7 @@ public class Main {
 			System.out.println("doc_ex:\n" + doc_ex.toOutputString() + "\n");
 			Hypergraph ex_kernel = doc_ex.kernelize(doc_ex, 3);
 			System.out.println("+++\nex_kernel:\n" + ex_kernel.toOutputString());
+			*/
 			
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
