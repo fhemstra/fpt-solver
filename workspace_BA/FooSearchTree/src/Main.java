@@ -17,6 +17,7 @@ public class Main {
 
 		// Solve each File
 		for (Formula form : formulas) {
+			/*
 			form.printFormula();
 			System.out.println("----------------");
 			System.out.println("SearchTree:");
@@ -31,6 +32,7 @@ public class Main {
 			System.out.println("<< Main\nKernel:");
 			System.out.println(kernel.toOutputString());
 			System.out.println("++++++++++++++++");
+			*/
 			/*
 			// Sunflower tests
 			System.out.println("Sunflower:");
@@ -40,6 +42,26 @@ public class Main {
 			else System.out.println("null");
 			System.out.println("++++++++++++++++");
 			*/
+			
+			// Hypergraph doc example
+			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+			ArrayList<Tuple> ex_edges = new ArrayList<Tuple>();
+			ex_edges.add(new Tuple(new int[]{1,4}));
+			ex_edges.add(new Tuple(new int[]{2,4,5}));
+			ex_edges.add(new Tuple(new int[]{3,4}));
+			ex_edges.add(new Tuple(new int[]{4}));
+			ex_edges.add(new Tuple(new int[]{4,6}));
+			ex_edges.add(new Tuple(new int[]{6,8,9,11}));
+			ex_edges.add(new Tuple(new int[]{7,8,9}));
+			ex_edges.add(new Tuple(new int[]{8,9,10,11}));
+			ex_edges.add(new Tuple(new int[]{8,9,13}));
+			ex_edges.add(new Tuple(new int[]{11,12,14,15}));
+			ex_edges.add(new Tuple(new int[]{13,15}));
+			Hypergraph doc_ex = new Hypergraph(ex_nodes, ex_edges);
+			System.out.println("doc_ex:\n" + doc_ex.toOutputString() + "\n");
+			Hypergraph ex_kernel = doc_ex.kernelize(doc_ex, 3);
+			System.out.println("+++\nex_kernel:\n" + ex_kernel.toOutputString());
+			
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();

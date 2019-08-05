@@ -22,7 +22,7 @@ public class Hypergraph {
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
 		System.out.println("---\n>> findSunflower, k = " + k_par);
 		if (h.edges.isEmpty()) {
-			System.out.println("<< Hyp without edges, return null.");
+			System.out.println("<< Hyp without edges, return null.\n---");
 			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
