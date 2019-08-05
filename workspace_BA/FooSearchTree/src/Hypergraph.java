@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +21,37 @@ public class Hypergraph {
 		this.nodes = nodes;
 		this.edges = edges;
 		this.node_to_edges = computeHashmap();
+	}
+	
+	/**
+	 * Generates a hypergraph from the vertex cover file format used by the PACE Challenge. 
+	 */
+	public Hypergraph(String vc_file_path) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(vc_file_path)));
+			// First line is the descriptor
+			String first_line = br.readLine();
+			String[] first_split_line = first_line.split(" ");
+			int num_nodes = Integer.parseInt(first_split_line[2]);
+			int num_edges = Integer.parseInt(first_split_line[3]);
+			nodes = new int[num_nodes];
+			// nodes are labeled from 1 to num_nodes
+			for(int i = 0; i < num_nodes; i++) {
+				nodes[i] = i+1;
+			}
+			String line = "";
+			while((line = br.readLine()) != null) {
+				String[] split_line = line.split(" ");
+				int[] tuple_nodes = new int[2];
+				tuple_nodes[0] = Integer.parseInt(split_line[0]);
+				tuple_nodes[1] = Integer.parseInt(split_line[1]);
+				edges.add(new Tuple(tuple_nodes));
+			}
+			br.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public Sunflower findSunflower(Hypergraph h, int k_par) {
