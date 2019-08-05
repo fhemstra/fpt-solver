@@ -85,6 +85,8 @@ public class Hypergraph {
 				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
 						+ " or bigger, break kernelize().");
 				break;
+				// TODO break is to radical, we need to keep looking for other sunflowers
+				// without getting stuck on small ones.
 			}
 			// Only kernelize, if the sunflower has enough petals? Look it up in
 			// "Parametrized Algorithms".
@@ -118,7 +120,7 @@ public class Hypergraph {
 						updated_nodes.add(e);
 				}
 			}
-			// Change to int[]
+			// Change nodes to int[]
 			int[] int_nodes = new int[updated_nodes.size()];
 			for (int i = 0; i < updated_nodes.size(); i++) {
 				int_nodes[i] = updated_nodes.get(i);
@@ -219,7 +221,7 @@ public class Hypergraph {
 	 */
 	public String toOutputString() {
 		String res = "nodes: {";
-		if(nodes.length == 0) {
+		if (nodes.length == 0) {
 			res += "}\n";
 		}
 		for (int i = 0; i < nodes.length; i++) {
