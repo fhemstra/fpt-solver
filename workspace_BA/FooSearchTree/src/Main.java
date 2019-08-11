@@ -36,6 +36,7 @@ public class Main {
 
 		// Solve each File
 		for (Formula form : formulas) {
+			/*
 			form.printFormula();
 			System.out.println("----------------");
 			System.out.println("SearchTree:");
@@ -50,6 +51,7 @@ public class Main {
 			System.out.println("<< Main\nKernel:");
 			System.out.println(kernel.toOutputString());
 			System.out.println("++++++++++++++++");
+			*/
 			
 			/*
 			// Sunflower tests
@@ -61,7 +63,7 @@ public class Main {
 			System.out.println("++++++++++++++++");
 			*/
 			
-			/*
+			
 			// Hypergraph doc example
 			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 			ArrayList<Tuple> ex_edges = new ArrayList<Tuple>();
@@ -80,13 +82,13 @@ public class Main {
 			System.out.println("doc_ex:\n" + doc_ex.toOutputString() + "\n");
 			Hypergraph ex_kernel = doc_ex.kernelize(doc_ex, 3);
 			System.out.println("+++\nex_kernel:\n" + ex_kernel.toOutputString());
-			*/
+			
 			
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
 			// TODO remove break
-			//break;
+			break;
 		}
 		System.out.println();
 

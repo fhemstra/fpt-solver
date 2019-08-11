@@ -94,7 +94,7 @@ public class Hypergraph {
 			for (Tuple t : updated_e) {
 				System.out.println(t.toOutputString(showEverything));
 			}
-			System.out.println(">> Find another sunflower");
+			System.out.println(">> Go into recursion, find core.");
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
 				System.out.println("<< sun is null, return null.");
@@ -150,7 +150,9 @@ public class Hypergraph {
 			}
 			// Add core
 			Tuple core = new Tuple(int_core);
-			updated_e.add(core);
+			if(!updated_e.contains(core)) {
+				updated_e.add(core);				
+			}
 			// Update nodes
 			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
 			for (Tuple edge : updated_e) {
