@@ -63,7 +63,7 @@ public class Main {
 			System.out.println("++++++++++++++++");
 			*/
 			
-			
+			/*
 			// Hypergraph doc example
 			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 			ArrayList<Tuple> ex_edges = new ArrayList<Tuple>();
@@ -80,9 +80,23 @@ public class Main {
 			ex_edges.add(new Tuple(new int[]{13,15}));
 			Hypergraph doc_ex = new Hypergraph(ex_nodes, ex_edges);
 			System.out.println("doc_ex:\n" + doc_ex.toOutputString() + "\n");
+			// k = 3
 			Hypergraph ex_kernel = doc_ex.kernelize(doc_ex, 3);
 			System.out.println("+++\nex_kernel:\n" + ex_kernel.toOutputString());
+			*/
 			
+			// College block example
+			int[] col_nodes = {1,2,3,4,5,6,7};
+			ArrayList<Tuple> col_edges = new ArrayList<Tuple>();
+			col_edges.add(new Tuple(new int[]{1,2,4,6}));
+			col_edges.add(new Tuple(new int[]{2,3}));
+			col_edges.add(new Tuple(new int[]{4,5}));
+			col_edges.add(new Tuple(new int[]{6,7}));
+			Hypergraph col_ex = new Hypergraph(col_nodes, col_edges);
+			System.out.println("col_ex:\n" + col_ex.toOutputString() + "\n");
+			// k = 2
+			Hypergraph col_kernel = col_ex.kernelize(col_ex, 2);
+			System.out.println("+++\ncol_ex_kernel:\n" + col_kernel.toOutputString());
 			
 			// TODO I don't really need this anymore, this was meant to save hypergraphs
 			// back when I planned to express them in Formula instances.
