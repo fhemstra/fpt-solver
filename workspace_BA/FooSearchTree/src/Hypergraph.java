@@ -70,8 +70,9 @@ public class Hypergraph {
 		} else {
 			int u = findCommonNode(h.edges);
 			if (u == -1) {
+				// Successful sunflowers reach this at the bottom of recursion
 				System.out.println("Can't find common node. nodes.length: " + h.nodes.length);
-				return null; // TODO Correct?
+				return null;
 			}
 			System.out.println("Found common node: " + u);
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
@@ -86,19 +87,18 @@ public class Hypergraph {
 			}
 			// Print
 			System.out.println("Edges that are left after removing u from petals:");
-			if (updated_e.isEmpty())
-				System.out.println("No edges left."); // TODO Do something?
+			if (updated_e.isEmpty()) {
+				System.out.println("<< No edges left, returning null.");
+				return null;
+			}
 			for (Tuple t : updated_e) {
 				System.out.println(t.toOutputString(showEverything));
 			}
 			System.out.println(">> Find another sunflower");
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
-				System.out.println("Sunflower is null, return current edges with empty core.");
-				// TODO I think this is the right thing to return? Gotta check on this again
-				// tho.
-				ArrayList<Integer> empty_core = new ArrayList<Integer>();
-				return new Sunflower(h.edges, empty_core);
+				System.out.println("<< sun is null, return null.");
+				return null;
 			}
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
@@ -113,9 +113,12 @@ public class Hypergraph {
 	public Hypergraph kernelize(Hypergraph hyp, int k) {
 		System.out.println(">> kernelize");
 		Sunflower sun = findSunflower(hyp, k);
+		if(sun == null) {
+			System.out.println("Initial sunflower is already null, nothing to kernelize.");
+		}
 		while (sun != null) { // TODO not sure if this is right
 			System.out.println(">> KERNELIZE received a SUNFLOWER of size " + sun.petals.size());
-			//System.out.println(sun.toOutputString());
+			System.out.println(sun.toOutputString());
 			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
 			if (!(sun.petals.size() >= k + 1)) {
 				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
@@ -127,7 +130,7 @@ public class Hypergraph {
 			// Only kernelize, if the sunflower has enough petals? Look it up in
 			// "Parametrized Algorithms".
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
-			// Check for every edge if the edge is also a petal
+			// Remove petals from graph
 			for (Tuple edge : hyp.edges) {
 				boolean add_edge = true;
 				for (Tuple petal : sun.petals) {
@@ -166,13 +169,13 @@ public class Hypergraph {
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
 			// print new, kernelized hyp
-			//System.out.println("KERNELIZED hyp:");
-			//System.out.println(hyp.toOutputString());
+			System.out.println("KERNELIZED hyp:");
+			System.out.println(hyp.toOutputString());
 			// Repeat
 			sun = findSunflower(hyp, k);
 			System.out.println(">> LOOP KERNELIZE.");
 		}
-		System.out.println(">> END KERNELIZE");
+		System.out.println("<< END KERNELIZE, there should be no sufficient sunflowers left.");
 		return hyp;
 	}
 

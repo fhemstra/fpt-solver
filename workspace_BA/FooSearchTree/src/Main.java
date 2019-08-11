@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String[] args) {
+		/*
 		// Test PACE parser
 		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
 		File pace_folder = new File("pace");
@@ -21,7 +22,7 @@ public class Main {
 		System.out.println("Loaded PACE successfully.");
 		System.out.flush();
 		graphs.get(0).kernelize(graphs.get(0), 1000);
-		
+		*/
 		
 		// Collect and parse all files
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
@@ -35,7 +36,6 @@ public class Main {
 
 		// Solve each File
 		for (Formula form : formulas) {
-			/*
 			form.printFormula();
 			System.out.println("----------------");
 			System.out.println("SearchTree:");
@@ -50,7 +50,7 @@ public class Main {
 			System.out.println("<< Main\nKernel:");
 			System.out.println(kernel.toOutputString());
 			System.out.println("++++++++++++++++");
-			*/
+			
 			/*
 			// Sunflower tests
 			System.out.println("Sunflower:");
@@ -86,7 +86,7 @@ public class Main {
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
 			// TODO remove break
-			break;
+			//break;
 		}
 		System.out.println();
 
