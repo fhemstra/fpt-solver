@@ -70,7 +70,6 @@ public class Hypergraph {
 		} else {
 			int u = findCommonNode(h.edges);
 			if (u == -1) {
-				// Successful sunflowers reach this at the bottom of recursion
 				System.out.println("Can't find common node. nodes.length: " + h.nodes.length);
 				return null;
 			}

@@ -72,7 +72,7 @@ public class Main {
 			ex_edges.add(new Tuple(new int[]{3,4}));
 			ex_edges.add(new Tuple(new int[]{4}));
 			ex_edges.add(new Tuple(new int[]{4,6}));
-			ex_edges.add(new Tuple(new int[]{6,8,9,11}));
+			ex_edges.add(new Tuple(new int[]{6,8,9}));
 			ex_edges.add(new Tuple(new int[]{7,8,9}));
 			ex_edges.add(new Tuple(new int[]{8,9,10,11}));
 			ex_edges.add(new Tuple(new int[]{8,9,13}));
