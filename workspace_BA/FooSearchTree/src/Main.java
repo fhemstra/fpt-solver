@@ -5,39 +5,39 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String[] args) {
-		// Test PACE parser
-		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
-		File pace_folder = new File("pace");
-		File[] listOfPaceFiles = pace_folder.listFiles();
-		for (int i = 0; i < listOfPaceFiles.length; i++) {
-			// Set how many graphs should be loaded.
-			if (i > 10)
-				break;
-			File f = listOfPaceFiles[i];
-			if (f.isFile()) {
-				System.out.println(f.getName());
-				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
-				// System.out.println(graph_to_add.toOutputString());
-				graphs.add(graph_to_add);
-			}
-		}
-		System.out.println("Loaded PACE successfully.\n");
-		System.out.flush();
-		for (int i = 0; i < graphs.size(); i++) {
-			Hypergraph current_graph = graphs.get(i);
-			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\" ---");
-			System.out.println(
-					"Graph has " + current_graph.edges.size() + " edges and " + current_graph.nodes.length + " nodes.");
-			int edges_before = current_graph.edges.size();
-			int nodes_before = current_graph.nodes.length;
-			current_graph.kernelize(current_graph, 1000);
-			int edges_removed = edges_before - current_graph.edges.size();
-			int nodes_removed = nodes_before - current_graph.nodes.length;
-			System.out.println("Kernelization removed " + edges_removed + " edges and " + nodes_removed + " nodes.");
-			System.out.println("The kernel has " + current_graph.edges.size() + " edges and "
-					+ current_graph.nodes.length + " nodes.");
-			System.out.println();
-		}
+//		// Test PACE parser
+//		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
+//		File pace_folder = new File("pace");
+//		File[] listOfPaceFiles = pace_folder.listFiles();
+//		for (int i = 0; i < listOfPaceFiles.length; i++) {
+//			// TODO Set how many graphs should be loaded.
+//			if (i > 10)
+//				break;
+//			File f = listOfPaceFiles[i];
+//			if (f.isFile()) {
+//				System.out.println(f.getName());
+//				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
+//				// System.out.println(graph_to_add.toOutputString());
+//				graphs.add(graph_to_add);
+//			}
+//		}
+//		System.out.println("Loaded PACE successfully.\n");
+//		System.out.flush();
+//		for (int i = 0; i < graphs.size(); i++) {
+//			Hypergraph current_graph = graphs.get(i);
+//			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\" ---");
+//			System.out.println(
+//					"Graph has " + current_graph.edges.size() + " edges and " + current_graph.nodes.length + " nodes.");
+//			int edges_before = current_graph.edges.size();
+//			int nodes_before = current_graph.nodes.length;
+//			current_graph.kernelize(current_graph, 1000);
+//			int edges_removed = edges_before - current_graph.edges.size();
+//			int nodes_removed = nodes_before - current_graph.nodes.length;
+//			System.out.println("Kernelization removed " + edges_removed + " edges and " + nodes_removed + " nodes.");
+//			System.out.println("The kernel has " + current_graph.edges.size() + " edges and "
+//					+ current_graph.nodes.length + " nodes.");
+//			System.out.println();
+//		}
 
 		// Collect and parse all files
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
@@ -64,14 +64,6 @@ public class Main {
 			System.out.println("<< Main\nKernel:");
 			System.out.println(hyp.toOutputString());
 			System.out.println("--- END FORMULA ---\n");
-
-//			// Sunflower tests
-//			System.out.println("Sunflower:");
-//			Sunflower sun =	hyp.findSunflower(hyp, form.k_par);
-//			System.out.println("<< Return:");
-//			if(sun != null) System.out.println(sun.toOutputString());
-//			else System.out.println("null");
-//			System.out.println("++++++++++++++++");
 			
 //			// Hypergraph doc example
 //			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
@@ -92,7 +84,7 @@ public class Main {
 //			doc_ex.kernelize(doc_ex, 3);
 //			System.out.println("+++\nex_kernel:\n" + doc_ex.toOutputString());
 			
-//			// College block example
+//			// College block hypergraph example (non-optimal kernel)
 //			int[] col_nodes = {1,2,3,4,5,6,7};
 //			ArrayList<Tuple> col_edges = new ArrayList<Tuple>();
 //			col_edges.add(new Tuple(new	int[]{1,2,4,6}));
@@ -108,26 +100,9 @@ public class Main {
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
 			// TODO remove break
-			break;
+			//break;
 		}
-		System.out.println();
-
-//		System.out.println("Test-hypergraph:");
-//		int[] nodes = { 0, 1, 2, 3 };
-//		// TODO all edges should have size d, so deletions and additions are easy
-//		ArrayList<Tuple> edges = new ArrayList<Tuple>();
-//		int[] e0 = { 0 };
-//		int[] e1 = { 1, 2, 3 };
-//		int[] e2 = { 0, 2, 3 };
-//		Tuple t0 = new Tuple(e0);
-//		Tuple t1 = new Tuple(e1);
-//		Tuple t2 = new Tuple(e2);
-//		edges.add(t0);
-//		edges.add(t1);
-//		edges.add(t2);
-//		Hypergraph hyp = new Hypergraph(nodes, edges);
-//		System.out.println(hyp.toOutputString());
-		
+		System.out.println();		
 	}
 
 }
