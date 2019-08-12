@@ -104,11 +104,13 @@ public class Hypergraph {
 				System.out.println("* hidden *");
 			}
 			System.out.println("Go into recursion, find core.");
+			// recur
 			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
 			if (sun == null) {
 				System.out.println("<< sun is null, return null.");
 				return null;
 			}
+			// re-add u
 			System.out.println("Got sunflower, re-adding " + u + ":");
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
@@ -122,6 +124,7 @@ public class Hypergraph {
 			} else {
 				System.out.println("* hidden *");
 			}
+			// return
 			System.out.println("<< Returning sunflower of size " + updated_sun.petals.size() + ".");
 			return updated_sun;
 		}
@@ -149,13 +152,12 @@ public class Hypergraph {
 				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
 						+ " or bigger, break kernelize().");
 				break;
-				// TODO break is to radical, we need to keep looking for other sunflowers
+				// TODO break is too radical, we need to keep looking for other sunflowers
 				// without getting stuck on small ones.
+				// TODO Not sure tho, find it out.
 			}
-			// Only kernelize, if the sunflower has enough petals? Look it up in
-			// "Parametrized Algorithms".
-			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			// Remove petals from graph
+			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			for (Tuple edge : hyp.edges) {
 				boolean add_edge = true;
 				for (Tuple petal : sun.petals) {
@@ -191,7 +193,7 @@ public class Hypergraph {
 			for (int i = 0; i < updated_nodes.size(); i++) {
 				int_nodes[i] = updated_nodes.get(i);
 			}
-			// Construct updated graph
+			// Update graph
 			hyp.nodes = int_nodes;
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
