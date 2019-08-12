@@ -96,10 +96,10 @@ public class Hypergraph {
 				return null;
 			}
 			System.out.println(updated_e.size() + " edges that are left after removing " + u + ":");
-			if(printGraphs) {
+			if (printGraphs) {
 				for (Tuple t : updated_e) {
 					System.out.println(t.toOutputString(showEverything));
-				}				
+				}
 			} else {
 				System.out.println("* hidden *");
 			}
@@ -117,21 +117,21 @@ public class Hypergraph {
 			ArrayList<Integer> core_with_u = sun.core;
 			core_with_u.add(u);
 			Sunflower updated_sun = new Sunflower(petals_with_u, core_with_u);
-			if(printGraphs) {
-				System.out.println(updated_sun.toOutputString());				
+			if (printGraphs) {
+				System.out.println(updated_sun.toOutputString());
 			} else {
 				System.out.println("* hidden *");
 			}
-			System.out.println("<< Returning sunflower of size " + updated_sun.petals.size() +".");
+			System.out.println("<< Returning sunflower of size " + updated_sun.petals.size() + ".");
 			return updated_sun;
 		}
 	}
 
 	/**
-	 * Kernelizes hypergraph hyp wit parameter k using the sunflower lemma. Returns
-	 * the kernelized graph.
+	 * Kernelizes hypergraph hyp wit parameter k using the sunflower lemma. Changes
+	 * are made to the handed graph hyp.
 	 */
-	public Hypergraph kernelize(Hypergraph hyp, int k) {
+	public void kernelize(Hypergraph hyp, int k) {
 		System.out.println(">> kernelize()");
 		Sunflower sun = findSunflower(hyp, k);
 		if (sun == null) {
@@ -139,8 +139,8 @@ public class Hypergraph {
 		}
 		while (sun != null) { // TODO not sure if this is right
 			System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
-			if(printGraphs) {
-				System.out.println(sun.toOutputString());				
+			if (printGraphs) {
+				System.out.println(sun.toOutputString());
 			} else {
 				System.out.println("* hidden *");
 			}
@@ -197,8 +197,8 @@ public class Hypergraph {
 			hyp.node_to_edges = hyp.computeHashmap();
 			// print new, kernelized hyp
 			System.out.println("KERNELIZED hyp:");
-			if(printGraphs) {
-				System.out.println(hyp.toOutputString());				
+			if (printGraphs) {
+				System.out.println(hyp.toOutputString());
 			} else {
 				System.out.println("* hidden *");
 			}
@@ -208,7 +208,6 @@ public class Hypergraph {
 			System.out.println("LOOP KERNELIZE.");
 		}
 		System.out.println("<< END KERNELIZE, there should be no sufficient sunflowers left.");
-		return hyp;
 	}
 
 	/**
@@ -313,7 +312,7 @@ public class Hypergraph {
 			res = (i < edges.size() - 1) ? res + "," : res;
 		}
 		res += "}\n";
-		if(node_to_edges.isEmpty()) {
+		if (node_to_edges.isEmpty()) {
 			res += "mapping: none";
 			return res;
 		}
