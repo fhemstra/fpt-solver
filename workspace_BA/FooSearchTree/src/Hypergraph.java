@@ -60,26 +60,26 @@ public class Hypergraph {
 	/**
 	 * Returns a sunflower in hypergraph h with parameter k.
 	 */
-	public Sunflower findSunflower(Hypergraph h, int k_par) {
-		System.out.println(">> findSunflower()");
+	public Sunflower findSunflower(Hypergraph h, int k_par, boolean mute) {
+		if(!mute) System.out.println(">> findSunflower()");
 		if (h.edges.isEmpty()) {
-			System.out.println("<< Graph has no edges, return null.\n---");
+			if(!mute) System.out.println("<< Graph has no edges, return null.\n---");
 			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(h.edges);
-		System.out.println("Found f of size " + f.size() + ".");
+		if(!mute) System.out.println("Found f of size " + f.size() + ".");
 		if (f.size() > k_par) {
 			// Empty core
-			System.out.println("<< Found more than k (" + k_par + ") petals, return sunflower with empty core.");
+			if(!mute) System.out.println("<< Found more than k (" + k_par + ") petals, return sunflower with empty core.");
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
-			System.out.println("f.size() <= k, (" + f.size() + " <= " + k_par + "). Look for most common node.");
+			if(!mute) System.out.println("f.size() <= k, (" + f.size() + " <= " + k_par + "). Look for most common node.");
 			int u = findCommonNode(h.edges);
 			if (u == -1) {
-				System.out.println("<< Common node is -1 (only edge left is empty), return null.");
+				if(!mute) System.out.println("<< Common node is -1 (only edge left is empty), return null.");
 				return null;
 			}
-			System.out.println("Found common node u: " + u + ". Removing " + u + " from edges.");
+			if(!mute) System.out.println("Found common node u: " + u + ". Removing " + u + " from edges.");
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			// Remove u from edges that contain u
 			for (Tuple edge : h.edges) {
@@ -92,26 +92,28 @@ public class Hypergraph {
 			}
 			// Print
 			if (updated_e.isEmpty()) {
-				System.out.println("<< No edges left, returning null.");
+				if(!mute) System.out.println("<< No edges left, returning null.");
 				return null;
 			}
-			System.out.println(updated_e.size() + " edges that are left after removing " + u + ":");
-			if (printGraphs) {
-				for (Tuple t : updated_e) {
-					System.out.println(t.toOutputString(showEverything));
+			if(!mute) {
+				System.out.println(updated_e.size() + " edges that are left after removing " + u + ":");
+				if (printGraphs) {
+					for (Tuple t : updated_e) {
+						System.out.println(t.toOutputString(showEverything));
+					}
+				} else {
+					System.out.println("* hidden *");
 				}
-			} else {
-				System.out.println("* hidden *");
+				System.out.println("Go into recursion, find core.");
 			}
-			System.out.println("Go into recursion, find core.");
 			// recur
-			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par);
+			Sunflower sun = findSunflower(new Hypergraph(h.nodes, updated_e), k_par, mute);
 			if (sun == null) {
-				System.out.println("<< sun is null, return null.");
+				if(!mute) System.out.println("<< sun is null, return null.");
 				return null;
 			}
 			// re-add u
-			System.out.println("Got sunflower, re-adding " + u + ":");
+			if(!mute) System.out.println("Got sunflower, re-adding " + u + ":");
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
 				petal.addElement(u);
@@ -119,13 +121,14 @@ public class Hypergraph {
 			ArrayList<Integer> core_with_u = sun.core;
 			core_with_u.add(u);
 			Sunflower updated_sun = new Sunflower(petals_with_u, core_with_u);
-			if (printGraphs) {
-				System.out.println(updated_sun.toOutputString());
-			} else {
-				System.out.println("* hidden *");
+			if(!mute) {
+				if (printGraphs) {
+					System.out.println(updated_sun.toOutputString());
+				} else {
+					System.out.println("* hidden *");
+				}
+				System.out.println("<< Returning sunflower of size " + updated_sun.petals.size() + ".");
 			}
-			// return
-			System.out.println("<< Returning sunflower of size " + updated_sun.petals.size() + ".");
 			return updated_sun;
 		}
 	}
@@ -134,22 +137,24 @@ public class Hypergraph {
 	 * Kernelizes hypergraph hyp wit parameter k using the sunflower lemma. Changes
 	 * are made to the handed graph hyp.
 	 */
-	public void kernelize(Hypergraph hyp, int k) {
-		System.out.println(">> kernelize()");
-		Sunflower sun = findSunflower(hyp, k);
+	public void kernelize(Hypergraph hyp, int k, boolean mute) {
+		if(!mute) System.out.println(">> kernelize()");
+		Sunflower sun = findSunflower(hyp, k, mute);
 		if (sun == null) {
-			System.out.println("Initial sunflower is already null, nothing to kernelize.");
+			if(!mute) System.out.println("Initial sunflower is already null, nothing to kernelize.");
 		}
 		while (sun != null) { // TODO not sure if this is right
-			System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
-			if (printGraphs) {
-				System.out.println(sun.toOutputString());
-			} else {
-				System.out.println("* hidden *");
+			if(!mute) System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
+			if(!mute)  {
+				if (printGraphs) {
+					System.out.println(sun.toOutputString());
+				} else {
+					System.out.println("* hidden *");
+				}
 			}
 			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
 			if (!(sun.petals.size() >= k + 1)) {
-				System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
+				if(!mute) System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
 						+ " or bigger, break kernelize().");
 				break;
 				// TODO break is too radical, we need to keep looking for other sunflowers
@@ -198,18 +203,20 @@ public class Hypergraph {
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
 			// print new, kernelized hyp
-			System.out.println("KERNELIZED hyp:");
-			if (printGraphs) {
-				System.out.println(hyp.toOutputString());
-			} else {
-				System.out.println("* hidden *");
+			if(!mute) System.out.println("KERNELIZED hyp:");
+			if(!mute) {
+				if (printGraphs) {
+					System.out.println(hyp.toOutputString());
+				} else {
+					System.out.println("* hidden *");
+				}
 			}
 			// Repeat
-			System.out.println("Go find another sunflower.");
-			sun = findSunflower(hyp, k);
-			System.out.println("LOOP KERNELIZE.");
+			if(!mute) System.out.println("Go find another sunflower.");
+			sun = findSunflower(hyp, k, mute);
+			if(!mute) System.out.println("LOOP KERNELIZE.");
 		}
-		System.out.println("<< END KERNELIZE, there should be no sufficient sunflowers left.");
+		if(!mute) System.out.println("<< END KERNELIZE.");
 	}
 
 	/**
