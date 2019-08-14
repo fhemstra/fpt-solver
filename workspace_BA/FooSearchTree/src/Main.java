@@ -52,7 +52,8 @@ public class Main {
 
 		// Collect and parse all formulas
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
-		File folder = new File("instances");
+//		File folder = new File("../instances"); // Use this for execution in windows cmd
+		File folder = new File("instances"); // Use this inside eclipse
 		File[] listOfFiles = folder.listFiles();
 		for (File f : listOfFiles) {
 			if (f.isFile()) {
