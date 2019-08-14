@@ -9,15 +9,17 @@ public class Main {
 	public static void main(String[] args) {
 		// Test PACE parser
 		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
-		File pace_folder = new File("pace");
+//		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
+		File pace_folder = new File("pace"); // Use this inside of eclipse
 		File[] listOfPaceFiles = pace_folder.listFiles();
 		for (int i = 0; i < listOfPaceFiles.length; i++) {
 			// TODO Set how many graphs should be loaded.
-			if (i > 20)
-				break;
+//			if (i > 20)
+//				break;
 			File f = listOfPaceFiles[i];
 			if (f.isFile()) {
-				System.out.println(f.getName());
+				System.out.print(f.getName() + "\r");
+				if(i == listOfPaceFiles.length-1) System.out.println("\n");
 				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
 				// System.out.println(graph_to_add.toOutputString());
 				graphs.add(graph_to_add);
@@ -28,16 +30,17 @@ public class Main {
 		for (int i = 0; i < graphs.size(); i++) {
 			Hypergraph current_graph = graphs.get(i);
 			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\" ---");
-			System.out.println(
-					"Graph has " + current_graph.edges.size() + " edges and " + current_graph.nodes.length + " nodes.");
+			System.out.println("edges:         " + current_graph.edges.size());
+			System.out.println("nodes:         " + current_graph.nodes.length);
 			int edges_before = current_graph.edges.size();
 			int nodes_before = current_graph.nodes.length;
 			current_graph.kernelize(current_graph, 1000, mute);
 			int edges_removed = edges_before - current_graph.edges.size();
 			int nodes_removed = nodes_before - current_graph.nodes.length;
-			System.out.println("Kernelization removed " + edges_removed + " edges and " + nodes_removed + " nodes.");
-			System.out.println("The kernel has " + current_graph.edges.size() + " edges and "
-					+ current_graph.nodes.length + " nodes.");
+			System.out.println("edges removed: " + edges_removed);
+			System.out.println("nodes removed: " + nodes_removed);
+			System.out.println("kernel edges:  " + current_graph.edges.size());
+			System.out.println("kernel nodes:  " + current_graph.nodes.length);
 			System.out.println();
 		}
 

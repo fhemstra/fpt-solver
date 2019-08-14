@@ -138,6 +138,7 @@ public class Hypergraph {
 	 * are made to the handed graph hyp.
 	 */
 	public void kernelize(Hypergraph hyp, int k, boolean mute) {
+		int sf_counter = 0;
 		if(!mute) System.out.println(">> kernelize()");
 		Sunflower sun = findSunflower(hyp, k, mute);
 		if (sun == null) {
@@ -202,6 +203,8 @@ public class Hypergraph {
 			hyp.nodes = int_nodes;
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
+			sf_counter++;
+			System.out.print("SFs removed:   " + sf_counter + "\r");
 			// print new, kernelized hyp
 			if(!mute) System.out.println("KERNELIZED hyp:");
 			if(!mute) {
@@ -216,6 +219,7 @@ public class Hypergraph {
 			sun = findSunflower(hyp, k, mute);
 			if(!mute) System.out.println("LOOP KERNELIZE.");
 		}
+		if(sf_counter > 0) System.out.println();
 		if(!mute) System.out.println("<< END KERNELIZE.");
 	}
 
