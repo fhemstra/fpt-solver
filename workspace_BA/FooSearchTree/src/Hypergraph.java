@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 public class Hypergraph {
 	boolean showEverything = true;
 	boolean printGraphs = false;
+	int d_par;
 	int[] nodes;
 	// A hyperedge is a Array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
@@ -22,6 +23,7 @@ public class Hypergraph {
 		this.nodes = nodes;
 		this.edges = edges;
 		this.node_to_edges = computeHashmap();
+		this.d_par = computeD();
 	}
 
 	/**
@@ -51,6 +53,7 @@ public class Hypergraph {
 			}
 			br.close();
 			node_to_edges = computeHashmap();
+			d_par = computeD();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -301,6 +304,14 @@ public class Hypergraph {
 			}
 		}
 		return node_to_edges;
+	}
+
+	private int computeD() {
+		int max = 0;
+		for(Tuple e : edges) {
+			if(max < e.elements.length) max = e.elements.length;
+		}
+		return max;
 	}
 
 	/**

@@ -29,18 +29,24 @@ public class Main {
 		System.out.flush();
 		for (int i = 0; i < graphs.size(); i++) {
 			Hypergraph current_graph = graphs.get(i);
-			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\" ---");
-			System.out.println("edges:         " + current_graph.edges.size());
-			System.out.println("nodes:         " + current_graph.nodes.length);
 			int edges_before = current_graph.edges.size();
 			int nodes_before = current_graph.nodes.length;
+			int chosen_k = edges_before/10;
+			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\", k = " + chosen_k + ", d = " + current_graph.d_par + " ---");
+			System.out.println("edges:         " + edges_before);
+			System.out.println("nodes:         " + nodes_before);
+			long start_time = System.currentTimeMillis();
 			current_graph.kernelize(current_graph, 1000, mute);
+			long stop_time = System.currentTimeMillis();
 			int edges_removed = edges_before - current_graph.edges.size();
 			int nodes_removed = nodes_before - current_graph.nodes.length;
 			System.out.println("edges removed: " + edges_removed);
 			System.out.println("nodes removed: " + nodes_removed);
 			System.out.println("kernel edges:  " + current_graph.edges.size());
 			System.out.println("kernel nodes:  " + current_graph.nodes.length);
+			long sf_lemma_boundary = factorial(current_graph.d_par) * (long) Math.pow(chosen_k, current_graph.d_par);
+			System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
+			System.out.println("Time elapsed:  " + (stop_time-start_time)/1000 + " seconds");
 			System.out.println();
 		}
 
@@ -108,6 +114,14 @@ public class Main {
 			//break;
 		}
 		System.out.println();		
+	}
+
+	private static long factorial(int var) {
+		long res = 1;
+		for(int i = 2; i <= var; i++) {
+			res *= i;
+		}
+		return res;
 	}
 
 }
