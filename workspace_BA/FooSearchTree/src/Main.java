@@ -8,62 +8,62 @@ public class Main {
 	
 	public static void main(String[] args) {
 		// Test PACE parser
-		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
-//		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
-		File pace_folder = new File("pace"); // Use this inside of eclipse
-		File[] listOfPaceFiles = pace_folder.listFiles();
-		for (int i = 0; i < listOfPaceFiles.length; i++) {
-			// TODO Set how many graphs should be loaded.
-//			if (i > 20)
-//				break;
-			File f = listOfPaceFiles[i];
-			if (f.isFile()) {
-				System.out.print(f.getName() + "\r");
-				if(i == listOfPaceFiles.length-1) System.out.println("\n");
-				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
-				// System.out.println(graph_to_add.toOutputString());
-				graphs.add(graph_to_add);
-			}
-		}
-		System.out.println("Loaded PACE successfully.\n");
-		System.out.flush();
-		for (int i = 0; i < graphs.size(); i++) {
-			Hypergraph current_graph = graphs.get(i);
-			int edges_before = current_graph.edges.size();
-			int nodes_before = current_graph.nodes.length;
-			int chosen_k = edges_before/10;
-			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\", k = " + chosen_k + ", d = " + current_graph.d_par + " ---");
-			System.out.println("edges:         " + edges_before);
-			System.out.println("nodes:         " + nodes_before);
-			long start_time = System.currentTimeMillis();
-			current_graph.kernelize(current_graph, chosen_k, mute);
-			long stop_time = System.currentTimeMillis();
-			int edges_removed = edges_before - current_graph.edges.size();
-			int nodes_removed = nodes_before - current_graph.nodes.length;
-			System.out.println("edges removed: " + edges_removed);
-			System.out.println("nodes removed: " + nodes_removed);
-			System.out.println("kernel edges:  " + current_graph.edges.size());
-			System.out.println("kernel nodes:  " + current_graph.nodes.length);
-			long sf_lemma_boundary = factorial(current_graph.d_par) * (long) Math.pow(chosen_k, current_graph.d_par);
-			System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
-			System.out.println("Time elapsed:  " + (stop_time-start_time)/1000 + " seconds");
-			System.out.println();
-		}
+//		ArrayList<Hypergraph> graphs = new ArrayList<Hypergraph>();
+////		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
+//		File pace_folder = new File("pace"); // Use this inside of eclipse
+//		File[] listOfPaceFiles = pace_folder.listFiles();
+//		for (int i = 0; i < listOfPaceFiles.length; i++) {
+//			// TODO Set how many graphs should be loaded.
+////			if (i > 20)
+////				break;
+//			File f = listOfPaceFiles[i];
+//			if (f.isFile()) {
+//				System.out.print(f.getName() + "\r");
+//				if(i == listOfPaceFiles.length-1) System.out.println("\n");
+//				Hypergraph graph_to_add = new Hypergraph(f.getAbsolutePath());
+//				// System.out.println(graph_to_add.toOutputString());
+//				graphs.add(graph_to_add);
+//			}
+//		}
+//		System.out.println("Loaded PACE successfully.\n");
+//		System.out.flush();
+//		for (int i = 0; i < graphs.size(); i++) {
+//			Hypergraph current_graph = graphs.get(i);
+//			int edges_before = current_graph.edges.size();
+//			int nodes_before = current_graph.nodes.length;
+//			int chosen_k = edges_before/10;
+//			System.out.println("--- GRAPH \"" + listOfPaceFiles[i] + "\", k = " + chosen_k + ", d = " + current_graph.d_par + " ---");
+//			System.out.println("edges:         " + edges_before);
+//			System.out.println("nodes:         " + nodes_before);
+//			long start_time = System.currentTimeMillis();
+//			current_graph.kernelize(current_graph, chosen_k, mute);
+//			long stop_time = System.currentTimeMillis();
+//			int edges_removed = edges_before - current_graph.edges.size();
+//			int nodes_removed = nodes_before - current_graph.nodes.length;
+//			System.out.println("edges removed: " + edges_removed);
+//			System.out.println("nodes removed: " + nodes_removed);
+//			System.out.println("kernel edges:  " + current_graph.edges.size());
+//			System.out.println("kernel nodes:  " + current_graph.nodes.length);
+//			long sf_lemma_boundary = factorial(current_graph.d_par) * (long) Math.pow(chosen_k, current_graph.d_par);
+//			System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
+//			System.out.println("Time elapsed:  " + (stop_time-start_time)/1000 + " seconds");
+//			System.out.println();
+//		}
 
 		// Collect and parse all formulas
-		ArrayList<Formula> formulas = new ArrayList<Formula>();
-//		File folder = new File("../instances"); // Use this for execution in windows cmd
-		File folder = new File("instances"); // Use this inside eclipse
-		File[] listOfFiles = folder.listFiles();
-		for (File f : listOfFiles) {
-			if (f.isFile()) {
-				formulas.add(new Formula(f.getAbsolutePath()));
-			}
-		}
+//		ArrayList<Formula> formulas = new ArrayList<Formula>();
+////		File folder = new File("../instances"); // Use this for execution in windows cmd
+//		File folder = new File("instances"); // Use this inside eclipse
+//		File[] listOfFiles = folder.listFiles();
+//		for (File f : listOfFiles) {
+//			if (f.isFile()) {
+//				formulas.add(new Formula(f.getAbsolutePath()));
+//			}
+//		}
 
 		// Solve each File
-		for (Formula form : formulas) {
-
+//		for (Formula form : formulas) {
+//
 //			System.out.println("--- FORMULA ---");
 //			form.printFormula();
 //			System.out.println("\n--- SEARCH TREE ---");
@@ -72,7 +72,7 @@ public class Main {
 //			Hypergraph hyp = form.reduceToHS();
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
-//			hyp.kernelize(hyp, form.k_par);
+//			hyp.kernelize(hyp, form.k_par, mute);
 //			System.out.println("<< Main\nKernel:");
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("--- END FORMULA ---\n");
@@ -112,9 +112,15 @@ public class Main {
 			// back when I planned to express them in Formula instances.
 			// form.saveToFile();
 			// TODO remove break
-			//break;
-		}
-		System.out.println();		
+//			break;
+//		}
+//		System.out.println();
+		
+		// Test formulas from PACE files
+		Formula pace_form = new Formula("C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\instances\\5_vc_doc_example.txt", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\pace\\vc-exact_005.gr");
+		pace_form.printFormula();
+		Hypergraph pace_red_graph = pace_form.reduceToHS();
+		System.out.println(pace_red_graph.toOutputString());
 	}
 
 	private static long factorial(int var) {

@@ -29,15 +29,113 @@ public class Formula {
 	}
 
 	public Formula(String path) {
-		parseFormula(path);
+		parseInternalFormula(path);
 		// Generate all assignments
 		generateAssignments();
+	}
+	
+	public Formula(String form_path, String graph_path) {
+		parseExternalFormula(form_path, graph_path);
+		generateAssignments();
+	}
+
+	private void parseExternalFormula(String form_path, String graph_path) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(form_path));
+			String line = "";
+
+			// Name of the formula
+			line = br.readLine();
+			name = line;
+			// Universe
+			// External graph from .gr file -> skip two lines
+			line = br.readLine();
+			line = br.readLine();
+			universe = getPaceUniverse(graph_path);
+			rels = new HashMap<String, Relation>();
+			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
+			Relation edge_relation = new Relation("E", 2, edge_set);
+			rels.put("E", edge_relation);
+			// Solution S is not contained in rels
+			// Parameter k
+			line = br.readLine();
+			k_par = Integer.parseInt(line);
+			// Bound variables
+			line = br.readLine();
+			bound_vars = line.split(",");
+			// Parameter c
+			c_par = bound_vars.length;
+			// Formula as clauses
+			clauses = new ArrayList<String[]>();
+			while ((line = br.readLine()) != null) {
+				String[] clause_split = line.split(" ");
+				String[] clause = new String[clause_split.length];
+				for (int i = 0; i < clause_split.length; i++) {
+					clause[i] = clause_split[i];
+				}
+				clauses.add(clause);
+			}
+			br.close();
+			// TODO Add flag which states if the solution should be true or not
+			// TODO Add flag which lets Relations be refelxive
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private int[] getPaceUniverse(String graph_path) {
+		int arr_lenght = -1;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
+			// First line is the descriptor
+			String first_line = br.readLine();
+			String[] first_split_line = first_line.split(" ");
+			arr_lenght = Integer.parseInt(first_split_line[2]);
+			br.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(arr_lenght > -1) {
+			int[] universe = new int[arr_lenght];
+			for(int i = 0; i < arr_lenght; i++) {
+				universe[i] = i;
+			}
+			return universe;
+		} else {
+			return null;			
+		}
+	}
+
+	private HashSet<Tuple> parsePaceGraph(String graph_path) {
+		HashSet<Tuple> edge_set = new HashSet<Tuple>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
+			// First line is the descriptor 
+			String line = br.readLine();
+			while ((line = br.readLine()) != null) {
+				String[] split_line = line.split(" ");
+				int[] tuple_nodes = new int[2];
+				tuple_nodes[0] = Integer.parseInt(split_line[0]);
+				tuple_nodes[1] = Integer.parseInt(split_line[1]);
+				edge_set.add(new Tuple(tuple_nodes));
+				int[] tuple_nodes_reversed = new int[2];
+				tuple_nodes_reversed[0] = tuple_nodes[1];
+				tuple_nodes_reversed[1] = tuple_nodes[0];
+				edge_set.add(new Tuple(tuple_nodes_reversed));
+			}
+			br.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return edge_set;
 	}
 
 	/**
 	 * Parses a file specified by the path parameter into an formula instance.
 	 */
-	private void parseFormula(String path) {
+	private void parseInternalFormula(String path) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
 			String line = "";
@@ -120,7 +218,7 @@ public class Formula {
 		for (int i = 0; i < assignments.size(); i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
-				// If clause does not hold, add edge containing current assignment
+				// If clause does not hold, add edge containing current assignment (only elements bound to S)
 				if (!checkClause(curr_clause, assignments.get(i), empty_sol)) {
 					// Find elements that are bound to S in this clause
 					Tuple edge_to_add = findCandidates(curr_clause, assignments.get(i));
