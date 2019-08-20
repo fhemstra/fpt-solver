@@ -33,7 +33,7 @@ public class Formula {
 		// Generate all assignments
 		generateAssignments();
 	}
-	
+
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
 		generateAssignments();
@@ -96,14 +96,14 @@ public class Formula {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(arr_lenght > -1) {
+		if (arr_lenght > -1) {
 			int[] universe = new int[arr_lenght];
-			for(int i = 0; i < arr_lenght; i++) {
+			for (int i = 0; i < arr_lenght; i++) {
 				universe[i] = i;
 			}
 			return universe;
 		} else {
-			return null;			
+			return null;
 		}
 	}
 
@@ -111,7 +111,7 @@ public class Formula {
 		HashSet<Tuple> edge_set = new HashSet<Tuple>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
-			// First line is the descriptor 
+			// First line is the descriptor
 			String line = br.readLine();
 			int num_nodes = Integer.parseInt(line.split(" ")[2]);
 			int counter = 1;
@@ -224,7 +224,8 @@ public class Formula {
 			System.out.print("Reduction: Testing assignment " + i + "\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
-				// If clause does not hold, add edge containing current assignment (only elements bound to S)
+				// If clause does not hold, add edge containing current assignment (only
+				// elements bound to S)
 				if (!checkClause(curr_clause, assignments.get(i), empty_sol)) {
 					// Find elements that are bound to S in this clause
 					Tuple edge_to_add = findCandidates(curr_clause, assignments.get(i));
@@ -242,7 +243,7 @@ public class Formula {
 	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
 		// All edges have length c_par, but can contain null
 		int[] candidates = new int[c_par];
-		for(int i = 0; i < candidates.length; i++) {
+		for (int i = 0; i < candidates.length; i++) {
 			candidates[i] = -1;
 		}
 		int i = 0;
@@ -318,7 +319,7 @@ public class Formula {
 							ArrayList<Integer> sol_with_y = (ArrayList<Integer>) sol.clone();
 							sol_with_y.add(y);
 							// print
-							if(mute) {
+							if (mute) {
 								String prnt = "";
 								prnt += "S: ";
 								for (int s : sol_with_y)
@@ -349,21 +350,20 @@ public class Formula {
 	 */
 	private void generateAssignments() {
 		int[] curr_assi_ind = new int[c_par];
-		ArrayList<int[]> assi_indices = new ArrayList<int[]>();
 		int inc_pos = c_par - 1;
 		boolean overflow = false;
 		int counter = 0;
+		int number_of_nodes = universe.length;
 		// Number of iterations = universe.length ^ c_par
 		// TODO there are universe.length^c_par possible assignments
-		while (!overflow) {
+		for(int i = 0; i < Math.pow(number_of_nodes,c_par); i++) {
 			// Add to set of assignments
-			int[] add_this_copy = curr_assi_ind.clone();
-			assi_indices.add(add_this_copy);
-			String tmp = "";
-			for(int u : add_this_copy) {
-				tmp += u + " ";
+			assignments.add(getActualAssignment(curr_assi_ind));
+			String print_str = "";
+			for (int u : curr_assi_ind) {
+				print_str += u + " ";
 			}
-			System.out.print("Generating index " + counter + ": " + tmp + "\r");
+			System.out.print("Generating assignment " + counter + ": " + print_str + "\r");
 			counter++;
 			// Move to the right until there is something to increment
 			while (inc_pos + 1 < curr_assi_ind.length && curr_assi_ind[inc_pos + 1] < universe.length) {
@@ -380,35 +380,24 @@ public class Formula {
 					// Also set everything back to 0 on the way
 					curr_assi_ind[inc_pos] = 0;
 					inc_pos--;
-					// If we reached far left and can not increment further, we are done.
-					if (inc_pos == 0 && curr_assi_ind[inc_pos] == universe.length - 1) {
-						overflow = true;
-					}
 				}
 				// After moving left far enough, increment
 				curr_assi_ind[inc_pos]++;
 			}
 		}
 		System.out.println();
-		// Generate actual assignments from indices
-		counter = 0;
-		for (int i = 0; i < assi_indices.size(); i++) {
-			int[] s_arr = new int[c_par];
-			// c_par is equal to bound_vars.lenght
-			for (int j = 0; j < c_par; j++) {
-				// assi_indices.get(i)[j] contains the index of the element in the universe,
-				// that should now be added to the assignment
-				s_arr[j] = universe[assi_indices.get(i)[j]];
-			}
-			assignments.add(s_arr);
-			String tmp = "";
-			for(int u : s_arr) {
-				tmp += u + " ";
-			}
-			System.out.print("Init: Generating assignment " + counter + ": " + tmp + "\r");
-			counter++;
+	}
+
+	private int[] getActualAssignment(int[] add_this_copy) {
+		// Generate actual assignment from indices
+		int[] s_arr = new int[c_par];
+		// c_par is equal to bound_vars.lenght
+		for (int j = 0; j < c_par; j++) {
+			// assi_indices.get(i)[j] contains the index of the element in the universe,
+			// that should now be added to the assignment
+			s_arr[j] = universe[add_this_copy[j]];
 		}
-		System.out.println();
+		return s_arr;
 	}
 
 	/**
@@ -419,7 +408,7 @@ public class Formula {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
-			String id = (negation_offset == 1) ? l.substring(1,2) : l.substring(0,1); 
+			String id = (negation_offset == 1) ? l.substring(1, 2) : l.substring(0, 1);
 			int[] assi_elements = assign(l, assignment);
 			// Handle S(x)
 			if (id.equals("S")) {
