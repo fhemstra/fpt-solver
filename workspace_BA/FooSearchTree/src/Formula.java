@@ -351,19 +351,23 @@ public class Formula {
 	private void generateAssignments() {
 		int[] curr_assi_ind = new int[c_par];
 		int inc_pos = c_par - 1;
-		boolean overflow = false;
 		int counter = 0;
 		int number_of_nodes = universe.length;
+		System.out.println("Assignments to generate: " + (int) Math.pow(number_of_nodes, c_par));
 		// Number of iterations = universe.length ^ c_par
 		// TODO there are universe.length^c_par possible assignments
-		for(int i = 0; i < Math.pow(number_of_nodes,c_par); i++) {
+		for (int i = 0; i < (int) Math.pow(number_of_nodes, c_par); i++) {
 			// Add to set of assignments
 			assignments.add(getActualAssignment(curr_assi_ind));
+			// print
 			String print_str = "";
 			for (int u : curr_assi_ind) {
 				print_str += u + " ";
 			}
-			System.out.print("Generating assignment " + counter + ": " + print_str + "\r");
+			double progress = counter/(Math.pow(number_of_nodes, c_par)-1);
+			progress *= 100;
+			String tmp = String.format("%.2f", progress);
+			System.out.print("Generating assignments, Progress: " + tmp + "%, " + print_str + "\r");
 			counter++;
 			// Move to the right until there is something to increment
 			while (inc_pos + 1 < curr_assi_ind.length && curr_assi_ind[inc_pos + 1] < universe.length) {
