@@ -351,7 +351,7 @@ public class Formula {
 		boolean overflow = false;
 		int counter = 0;
 		// Number of iterations = universe.length ^ c_par
-		// TODO maybe change while to for
+		// TODO there are universe.length^c_par possible assignments
 		while (!overflow) {
 			// Add to set of assignments
 			int[] add_this_copy = curr_assi_ind.clone();
