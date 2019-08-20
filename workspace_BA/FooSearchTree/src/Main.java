@@ -36,7 +36,7 @@ public class Main {
 			System.out.println("edges:         " + edges_before);
 			System.out.println("nodes:         " + nodes_before);
 			long start_time = System.currentTimeMillis();
-			current_graph.kernelize(current_graph, 1000, mute);
+			current_graph.kernelize(current_graph, chosen_k, mute);
 			long stop_time = System.currentTimeMillis();
 			int edges_removed = edges_before - current_graph.edges.size();
 			int nodes_removed = nodes_before - current_graph.nodes.length;
