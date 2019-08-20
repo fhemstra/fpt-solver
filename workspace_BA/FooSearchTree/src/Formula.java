@@ -293,7 +293,7 @@ public class Formula {
 	 * 
 	 * @return True if a solution of size k is found, else false.
 	 */
-	public boolean searchTree(int k_par, ArrayList<Integer> sol) {
+	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -317,14 +317,17 @@ public class Formula {
 						for (int y : f) {
 							ArrayList<Integer> sol_with_y = (ArrayList<Integer>) sol.clone();
 							sol_with_y.add(y);
-							// - print
-							System.out.print("S: ");
-							for (int s : sol_with_y)
-								System.out.print(s + " ");
-							System.out.println();
-							// - print
+							// print
+							if(mute) {
+								String prnt = "";
+								prnt += "S: ";
+								for (int s : sol_with_y)
+									prnt += s + " ";
+								prnt += "\r";
+								System.out.print(prnt);
+							}
 							// if one branch is successful we win, else go back through recursion.
-							flag = flag || searchTree(k_par, sol_with_y);
+							flag = flag || searchTree(k_par, sol_with_y, mute);
 							if (flag)
 								return true;
 						}
