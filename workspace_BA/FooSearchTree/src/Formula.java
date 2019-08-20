@@ -113,6 +113,8 @@ public class Formula {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
 			// First line is the descriptor 
 			String line = br.readLine();
+			int num_nodes = Integer.parseInt(line.split(" ")[2]);
+			int counter = 1;
 			while ((line = br.readLine()) != null) {
 				String[] split_line = line.split(" ");
 				int[] tuple_nodes = new int[2];
@@ -123,7 +125,10 @@ public class Formula {
 				tuple_nodes_reversed[0] = tuple_nodes[1];
 				tuple_nodes_reversed[1] = tuple_nodes[0];
 				edge_set.add(new Tuple(tuple_nodes_reversed));
+				System.out.print("Reading line " + counter + " of graph with " + num_nodes + " nodes.\r");
+				counter++;
 			}
+			System.out.println();
 			br.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -216,6 +221,7 @@ public class Formula {
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		for (int i = 0; i < assignments.size(); i++) {
+			System.out.print("Reduction: Testing assignment " + i + "\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only elements bound to S)
@@ -228,6 +234,7 @@ public class Formula {
 				}
 			}
 		}
+		System.out.println();
 		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges);
 		return hyp;
 	}
@@ -342,12 +349,19 @@ public class Formula {
 		ArrayList<int[]> assi_indices = new ArrayList<int[]>();
 		int inc_pos = c_par - 1;
 		boolean overflow = false;
+		int counter = 0;
 		// Number of iterations = universe.length ^ c_par
 		// TODO maybe change while to for
 		while (!overflow) {
 			// Add to set of assignments
 			int[] add_this_copy = curr_assi_ind.clone();
 			assi_indices.add(add_this_copy);
+			String tmp = "";
+			for(int u : add_this_copy) {
+				tmp += u + " ";
+			}
+			System.out.print("Generating index " + counter + ": " + tmp + "\r");
+			counter++;
 			// Move to the right until there is something to increment
 			while (inc_pos + 1 < curr_assi_ind.length && curr_assi_ind[inc_pos + 1] < universe.length) {
 				inc_pos++;
@@ -372,7 +386,9 @@ public class Formula {
 				curr_assi_ind[inc_pos]++;
 			}
 		}
+		System.out.println();
 		// Generate actual assignments from indices
+		counter = 0;
 		for (int i = 0; i < assi_indices.size(); i++) {
 			int[] s_arr = new int[c_par];
 			// c_par is equal to bound_vars.lenght
@@ -382,7 +398,14 @@ public class Formula {
 				s_arr[j] = universe[assi_indices.get(i)[j]];
 			}
 			assignments.add(s_arr);
+			String tmp = "";
+			for(int u : s_arr) {
+				tmp += u + " ";
+			}
+			System.out.print("Init: Generating assignment " + counter + ": " + tmp + "\r");
+			counter++;
 		}
+		System.out.println();
 	}
 
 	/**

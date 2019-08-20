@@ -117,10 +117,28 @@ public class Main {
 //		System.out.println();
 		
 		// Test formulas from PACE files
-		Formula pace_form = new Formula("C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\instances\\5_vc_doc_example.txt", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\pace\\vc-exact_005.gr");
-		pace_form.printFormula();
-		Hypergraph pace_red_graph = pace_form.reduceToHS();
-		System.out.println(pace_red_graph.toOutputString());
+		Formula pace_form = new Formula("C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\instances\\5_vc_doc_example.txt", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\pace\\vc-exact_001.gr");
+		Hypergraph pace_reduced_graph = pace_form.reduceToHS();
+		// Kernelize
+		int edges_before = pace_reduced_graph.edges.size();
+		int nodes_before = pace_reduced_graph.nodes.length;
+		int chosen_k = edges_before/100;
+		System.out.println("--- GRAPH \"" + "001" + "\", k = " + chosen_k + ", d = " + pace_reduced_graph.d_par + " ---");
+		System.out.println("edges:         " + edges_before);
+		System.out.println("nodes:         " + nodes_before);
+		long start_time = System.currentTimeMillis();
+		pace_reduced_graph.kernelize(pace_reduced_graph, chosen_k, mute);
+		long stop_time = System.currentTimeMillis();
+		int edges_removed = edges_before - pace_reduced_graph.edges.size();
+		int nodes_removed = nodes_before - pace_reduced_graph.nodes.length;
+		System.out.println("edges removed: " + edges_removed);
+		System.out.println("nodes removed: " + nodes_removed);
+		System.out.println("kernel edges:  " + pace_reduced_graph.edges.size());
+		System.out.println("kernel nodes:  " + pace_reduced_graph.nodes.length);
+		long sf_lemma_boundary = factorial(pace_reduced_graph.d_par) * (long) Math.pow(chosen_k, pace_reduced_graph.d_par);
+		System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
+		System.out.println("Time elapsed:  " + (stop_time-start_time)/1000 + " seconds");
+		System.out.println();
 	}
 
 	private static long factorial(int var) {
