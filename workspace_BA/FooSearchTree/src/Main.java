@@ -119,7 +119,7 @@ public class Main {
 		// Test formulas from PACE files
 		Formula pace_form = new Formula("C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\instances\\5_vc_doc_example.txt", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\pace\\vc-exact_005.gr");
 		boolean st_res = pace_form.searchTree(10, new ArrayList<Integer>(), mute);
-		System.out.print("                                                                     \r");
+		System.out.println();
 		System.out.println("SearchTree result: " + st_res);
 		Hypergraph pace_reduced_graph = pace_form.reduceToHS();
 		// Kernelize
@@ -142,6 +142,11 @@ public class Main {
 		long sf_lemma_boundary = factorial(pace_reduced_graph.d_par) * (long) Math.pow(chosen_k, pace_reduced_graph.d_par);
 		System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
 		System.out.println("Time elapsed:  " + (stop_time-start_time)/1000 + " seconds");
+		// Search Tree after kernelize
+		System.out.println("HS-SearchTree ");
+		boolean hs_str_res = pace_reduced_graph.hsSearchTree(pace_reduced_graph, chosen_k, new ArrayList<Integer>(), mute);
+		System.out.println();
+		System.out.println(hs_str_res);
 	}
 
 	private static long factorial(int var) {

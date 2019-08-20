@@ -220,8 +220,12 @@ public class Formula {
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
+		double progress = 0;
 		for (int i = 0; i < assignments.size(); i++) {
-			System.out.print("Reduction: Testing assignment " + i + "\r");
+			progress = (double)i/assignments.size();
+			progress *= 100;
+			String tmp = String.format("%.2f", progress);
+			System.out.print("Reduction: Testing assignments, Progress " + tmp + "%\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
@@ -354,8 +358,7 @@ public class Formula {
 		int counter = 0;
 		int number_of_nodes = universe.length;
 		System.out.println("Assignments to generate: " + (int) Math.pow(number_of_nodes, c_par));
-		// Number of iterations = universe.length ^ c_par
-		// TODO there are universe.length^c_par possible assignments
+		// There are universe.length ^ c_par possible assignments
 		for (int i = 0; i < (int) Math.pow(number_of_nodes, c_par); i++) {
 			// Add to set of assignments
 			assignments.add(getActualAssignment(curr_assi_ind));

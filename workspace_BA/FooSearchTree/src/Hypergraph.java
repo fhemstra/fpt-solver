@@ -360,4 +360,50 @@ public class Hypergraph {
 		}
 		return res;
 	}
+
+	public boolean hsSearchTree(Hypergraph graph, int k_par, ArrayList<Integer> sol, boolean mute) {
+		// TODO check for empty edges at the start?
+		int[] local_nodes = graph.nodes;
+		ArrayList<Tuple> local_edges = graph.edges;
+		HashMap<Integer, ArrayList<Tuple>> local_map = graph.node_to_edges;
+		for(int i = 0; i < local_edges.size(); i++) {
+			Tuple curr_edge = local_edges.get(i);
+			// TODO fix empty edge, should just be (-1,-1)
+			if(curr_edge.elements.length == 0) {
+				return false;
+			}
+			// Check if any node in the solution covers the current edge
+			boolean edge_is_covered = false;
+			for(int j = 0; j < graph.d_par; j++) {
+				if(sol.contains(curr_edge.elements[j])) {
+					edge_is_covered = true;
+				}
+			}
+			if(!edge_is_covered) {
+				boolean flag = false;
+				if(sol.size() <= k_par) {
+					// branch into d branches, adding every element of the edge
+					for(int j = 0; j < graph.d_par; j++) {
+						sol.add(curr_edge.elements[j]);
+						// print
+						String prnt = "";
+						prnt += "sol: ";
+						for(int e : sol) {
+							prnt += e + " ";
+						}
+						prnt += "\r";
+						System.out.print(prnt);
+						flag = flag || hsSearchTree(graph, k_par, sol, mute);
+						if(flag) {
+							return true;
+						}
+					}
+					return flag;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
