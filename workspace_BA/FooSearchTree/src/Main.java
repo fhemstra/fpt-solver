@@ -99,6 +99,31 @@ public class Main {
 //			break;
 //		}
 		
+		// Hypergraph doc example
+		// Test HS Search Tree (works)
+//		int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+//		ArrayList<Tuple> ex_edges = new	ArrayList<Tuple>();
+//		ex_edges.add(new Tuple(new int[]{1,4,-1,-1}));
+//		ex_edges.add(new Tuple(new int[]{2,4,5,-1}));
+//		ex_edges.add(new Tuple(new int[]{3,4,-1,-1}));
+//		ex_edges.add(new Tuple(new int[]{4,-1,-1,-1}));
+//		ex_edges.add(new Tuple(new int[]{4,6,-1,-1}));
+//		ex_edges.add(new Tuple(new int[]{6,8,9,-1}));
+//		ex_edges.add(new Tuple(new int[]{7,8,9,-1}));
+//		ex_edges.add(new Tuple(new int[]{8,9,10,11}));
+//		ex_edges.add(new Tuple(new int[]{8,9,13,-1}));
+//		ex_edges.add(new Tuple(new int[]{11,12,14,15}));
+//		ex_edges.add(new Tuple(new int[]{13,15,-1,-1}));
+//		Hypergraph doc_ex = new Hypergraph(ex_nodes, ex_edges);
+//		boolean hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
+//		System.out.println();
+//		System.out.println(hs_st_result);
+//		doc_ex.kernelize(doc_ex, 3, mute);
+//		System.out.println("After kernelize:");
+//		hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
+//		System.out.println();
+//		System.out.println(hs_st_result);
+		
 		// Test formulas from PACE files
 		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
@@ -117,7 +142,6 @@ public class Main {
 			}	
 		}
 		
-		// TODO Test HS Search Tree
 	}
 	
 	private static void testFile(File form_file, File graph_file, int k_par) {

@@ -179,10 +179,14 @@ public class Hypergraph {
 				if (add_edge)
 					updated_e.add(edge);
 			}
-			// Convert core to int[]
-			int[] int_core = new int[sun.core.size()];
-			for (int i = 0; i < sun.core.size(); i++) {
-				int_core[i] = sun.core.get(i);
+			// Convert core to int[] and fill up with -1
+			int[] int_core = new int[hyp.d_par];
+			for (int i = 0; i < hyp.d_par; i++) {
+				if(i < sun.core.size()) {
+					int_core[i] = sun.core.get(i);
+				} else {
+					int_core[i] = -1;
+				}
 			}
 			// Add core
 			Tuple core = new Tuple(int_core);
@@ -388,9 +392,12 @@ public class Hypergraph {
 			}
 			if(!edge_is_covered) {
 				boolean flag = false;
-				if(sol.size() <= k_par) {
+				if(sol.size() < k_par) {
 					// branch into d branches, adding every element of the edge
 					for(int j = 0; j < graph.d_par; j++) {
+						// Don't add -1
+						if(curr_edge.elements[j] == -1)
+							continue;
 						// Try adding this
 						sol.add(curr_edge.elements[j]);
 						// print
