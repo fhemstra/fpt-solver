@@ -16,7 +16,8 @@ public class Hypergraph {
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 	// HashMap of nodes to global hyperedges
 	HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
-
+	// TODO use map to improve performance
+	
 	// TODO Change Integer to int?
 
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges) {
@@ -242,6 +243,7 @@ public class Hypergraph {
 	 * Returns the most common node in edges_to_search.
 	 */
 	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
+		// TODO Use map to iterate over nodes and count occurences there
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
 		int max_node = -1;
 		occurences.put(max_node, 0);
