@@ -207,7 +207,7 @@ public class Hypergraph {
 			hyp.edges = updated_e;
 			hyp.node_to_edges = hyp.computeHashmap();
 			sf_counter++;
-			System.out.print("SFs removed:   " + sf_counter + "\r");
+			System.out.print("  SFs removed:   " + sf_counter + "\r");
 			// print new, kernelized hyp
 			if(!mute) System.out.println("KERNELIZED hyp:");
 			if(!mute) {
@@ -368,7 +368,7 @@ public class Hypergraph {
 		// check for empty edges at the start
 		for(Tuple edge : local_edges) {
 			if(edge.elements.length == 0) {
-				System.out.println("Empty edge.");
+				System.out.println("Empty edge."); // should not be reached
 				return false;
 			}
 		}
@@ -391,7 +391,7 @@ public class Hypergraph {
 						// Try adding this
 						sol.add(curr_edge.elements[j]);
 						// print
-						System.out.print("Sol size: " + sol.size() + "\r");
+						System.out.print("  Sol size: " + sol.size() + "\r");
 						flag = flag || hsSearchTree(graph, k_par, sol, mute);
 						if(flag) {
 							return true;

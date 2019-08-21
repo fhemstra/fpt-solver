@@ -166,7 +166,7 @@ public class Main {
 		boolean st_res = pace_form.searchTree(k_par, new ArrayList<Integer>(), mute);
 		stop_time = System.currentTimeMillis();
 		System.out.println();
-		System.out.println("SearchTree result: " + st_res);
+		System.out.println("  SearchTree result: " + st_res);
 		double st_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(st_time);
 		
@@ -182,19 +182,19 @@ public class Main {
 		System.out.println("> Kernelization, k = " + k_par + ", d = " + pace_reduced_graph.d_par);
 		int edges_before = pace_reduced_graph.edges.size();
 		int nodes_before = pace_reduced_graph.nodes.length;
-		System.out.println("edges:         " + edges_before);
-		System.out.println("nodes:         " + nodes_before);
+		System.out.println("  edges:         " + edges_before);
+		System.out.println("  nodes:         " + nodes_before);
 		start_time = System.currentTimeMillis();
 		pace_reduced_graph.kernelize(pace_reduced_graph, k_par, mute);
 		stop_time = System.currentTimeMillis();
 		int edges_removed = edges_before - pace_reduced_graph.edges.size();
 		int nodes_removed = nodes_before - pace_reduced_graph.nodes.length;
-		System.out.println("edges removed: " + edges_removed);
-		System.out.println("nodes removed: " + nodes_removed);
-		System.out.println("kernel edges:  " + pace_reduced_graph.edges.size());
-		System.out.println("kernel nodes:  " + pace_reduced_graph.nodes.length);
+		System.out.println("  edges removed: " + edges_removed);
+		System.out.println("  nodes removed: " + nodes_removed);
+		System.out.println("  kernel edges:  " + pace_reduced_graph.edges.size());
+		System.out.println("  kernel nodes:  " + pace_reduced_graph.nodes.length);
 		long sf_lemma_boundary = factorial(pace_reduced_graph.d_par) * (long) Math.pow(k_par, pace_reduced_graph.d_par);
-		System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
+		System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 		double kern_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(kern_time);
 		
@@ -204,7 +204,7 @@ public class Main {
 		boolean hs_str_res = pace_reduced_graph.hsSearchTree(pace_reduced_graph, k_par, new ArrayList<Integer>(), mute);
 		stop_time = System.currentTimeMillis();
 		System.out.println();
-		System.out.println(hs_str_res);
+		System.out.println("  result: " + hs_str_res);
 		double hs_st_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(hs_st_time);		
 		// compare times: SearchTree <-> Reduction + Kernel + hsSearchTree
@@ -216,7 +216,7 @@ public class Main {
 	}
 
 	private static void printTime(double time) {
-		System.out.println("- Time elapsed:  " + time + " seconds");
+		System.out.println("- Time elapsed:  " + String.format("%.3f", time) + " sec");
 	}
 
 	private static long factorial(int var) {

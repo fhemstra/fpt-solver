@@ -218,7 +218,7 @@ public class Formula {
 			progress = (double)i/(assignments.size()-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
-			System.out.print("Testing assignments, Progress " + tmp + "%\r");
+			System.out.print("  Testing assignments, Progress " + tmp + "%\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
@@ -318,7 +318,7 @@ public class Formula {
 							sol_with_y.add(y);
 							// print
 							if (mute) {
-								String prnt = "";
+								String prnt = "  ";
 								prnt += "S: ";
 								for (int s : sol_with_y)
 									prnt += s + " ";
@@ -351,7 +351,7 @@ public class Formula {
 		int inc_pos = c_par - 1;
 		int counter = 0;
 		int number_of_nodes = universe.length;
-		System.out.println("Assignments to generate: " + (int) Math.pow(number_of_nodes, c_par));
+		System.out.println("  Assignments to generate: " + (int) Math.pow(number_of_nodes, c_par));
 		// There are universe.length ^ c_par possible assignments
 		for (int i = 0; i < (int) Math.pow(number_of_nodes, c_par); i++) {
 			// Add to set of assignments
@@ -364,7 +364,7 @@ public class Formula {
 			double progress = counter/(Math.pow(number_of_nodes, c_par)-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
-			System.out.print("Generating assignments, Progress: " + tmp + "%, " + print_str + "\r");
+			System.out.print("  Generating assignments, Progress: " + tmp + "%, " + print_str + "\r");
 			counter++;
 			// Move to the right until there is something to increment
 			while (inc_pos + 1 < curr_assi_ind.length && curr_assi_ind[inc_pos + 1] < universe.length) {
