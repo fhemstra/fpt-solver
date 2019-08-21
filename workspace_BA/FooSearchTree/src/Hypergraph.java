@@ -362,10 +362,16 @@ public class Hypergraph {
 	}
 
 	public boolean hsSearchTree(Hypergraph graph, int k_par, ArrayList<Integer> sol, boolean mute) {
-		// TODO check for empty edges at the start?
 		int[] local_nodes = graph.nodes;
 		ArrayList<Tuple> local_edges = graph.edges;
 		HashMap<Integer, ArrayList<Tuple>> local_map = graph.node_to_edges;
+		// check for empty edges at the start
+		for(Tuple edge : local_edges) {
+			if(edge.elements.length == 0) {
+				System.out.println("Empty edge.");
+				return false;
+			}
+		}
 		for(int i = 0; i < local_edges.size(); i++) {
 			Tuple curr_edge = local_edges.get(i);
 			// TODO fix empty edge, should just be (-1,-1)

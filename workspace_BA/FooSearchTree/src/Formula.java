@@ -222,10 +222,10 @@ public class Formula {
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		double progress = 0;
 		for (int i = 0; i < assignments.size(); i++) {
-			progress = (double)i/assignments.size();
+			progress = (double)i/(assignments.size()-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
-			System.out.print("Reduction: Testing assignments, Progress " + tmp + "%\r");
+			System.out.print("Testing assignments, Progress " + tmp + "%\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
@@ -328,7 +328,7 @@ public class Formula {
 								prnt += "S: ";
 								for (int s : sol_with_y)
 									prnt += s + " ";
-								prnt += "\r";
+								prnt += "                                 \r";
 								System.out.print(prnt);
 							}
 							// if one branch is successful we win, else go back through recursion.
@@ -440,7 +440,7 @@ public class Formula {
 					}
 					// Else: Assignment does not hold on literal l, continue
 				} else {
-					System.out.println("Unknown relation symbol.");
+					System.out.println("Unknown relation symbol: " + id);
 				}
 			}
 		}
