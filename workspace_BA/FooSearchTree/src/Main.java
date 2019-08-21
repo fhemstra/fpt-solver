@@ -118,14 +118,15 @@ public class Main {
 		
 		// Test formulas from PACE files
 		Formula pace_form = new Formula("C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\instances\\5_vc_doc_example.txt", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\FooSearchTree\\pace\\vc-exact_005.gr");
-		boolean st_res = pace_form.searchTree(10, new ArrayList<Integer>(), mute);
+		boolean st_res = pace_form.searchTree(12, new ArrayList<Integer>(), mute);
 		System.out.println();
 		System.out.println("SearchTree result: " + st_res);
 		Hypergraph pace_reduced_graph = pace_form.reduceToHS();
 		// Kernelize
 		int edges_before = pace_reduced_graph.edges.size();
 		int nodes_before = pace_reduced_graph.nodes.length;
-		int chosen_k = edges_before/100;
+//		int chosen_k = edges_before/100;
+		int chosen_k = 12;
 		System.out.println("--- GRAPH \"" + "005" + "\", k = " + chosen_k + ", d = " + pace_reduced_graph.d_par + " ---");
 		System.out.println("edges:         " + edges_before);
 		System.out.println("nodes:         " + nodes_before);

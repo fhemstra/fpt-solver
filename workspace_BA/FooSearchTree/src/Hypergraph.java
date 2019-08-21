@@ -370,6 +370,7 @@ public class Hypergraph {
 			Tuple curr_edge = local_edges.get(i);
 			// TODO fix empty edge, should just be (-1,-1)
 			if(curr_edge.elements.length == 0) {
+				// TODO Also, we can terminate on empty edge
 				return false;
 			}
 			// Check if any node in the solution covers the current edge
@@ -384,18 +385,16 @@ public class Hypergraph {
 				if(sol.size() <= k_par) {
 					// branch into d branches, adding every element of the edge
 					for(int j = 0; j < graph.d_par; j++) {
+						// Try adding this
 						sol.add(curr_edge.elements[j]);
 						// print
-						String prnt = "";
-						prnt += "sol: ";
-						for(int e : sol) {
-							prnt += e + " ";
-						}
-						prnt += "\r";
-						System.out.print(prnt);
+						System.out.print("Sol size: " + sol.size() + "\r");
 						flag = flag || hsSearchTree(graph, k_par, sol, mute);
 						if(flag) {
 							return true;
+						} else {
+							// This branch failed, remove element again, to clean up for next branch 
+							sol.remove((Object) curr_edge.elements[j]);							
 						}
 					}
 					return flag;
