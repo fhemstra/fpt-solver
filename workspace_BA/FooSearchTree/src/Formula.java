@@ -93,7 +93,6 @@ public class Formula {
 			arr_lenght = Integer.parseInt(first_split_line[2]);
 			br.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (arr_lenght > -1) {
@@ -113,8 +112,6 @@ public class Formula {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
 			// First line is the descriptor
 			String line = br.readLine();
-			int num_nodes = Integer.parseInt(line.split(" ")[2]);
-			int counter = 1;
 			while ((line = br.readLine()) != null) {
 				String[] split_line = line.split(" ");
 				int[] tuple_nodes = new int[2];
@@ -125,13 +122,9 @@ public class Formula {
 				tuple_nodes_reversed[0] = tuple_nodes[1];
 				tuple_nodes_reversed[1] = tuple_nodes[0];
 				edge_set.add(new Tuple(tuple_nodes_reversed));
-				System.out.print("Reading line " + counter + " of graph with " + num_nodes + " nodes.\r");
-				counter++;
 			}
-			System.out.println();
 			br.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return edge_set;
@@ -306,13 +299,14 @@ public class Formula {
 		// Check all clauses considering S
 		for (int i = 0; i < assignments.size(); i++) {
 			for (int j = 0; j < clauses.size(); j++) {
-				// If a clause is false, branch over current assignment
+				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), assignments.get(i), sol)) {
 					HashSet<Integer> f = new HashSet<Integer>();
-					for (int a : assignments.get(i)) {
-						// TODO check if the literal a even matters to the current clause
-						if (!sol.contains(a)) {
-							f.add(a);
+					// Find variables that are bound to S in this clause
+					Tuple candidates = findCandidates(clauses.get(j), assignments.get(i));
+					for (int c : candidates.elements) {
+						if (!sol.contains(c)) {
+							f.add(c);
 						}
 					}
 					// If there is anything to branch over

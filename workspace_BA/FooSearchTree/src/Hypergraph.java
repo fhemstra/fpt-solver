@@ -17,7 +17,7 @@ public class Hypergraph {
 	// HashMap of nodes to global hyperedges
 	HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
 
-	// TODO Change Integer to int
+	// TODO Change Integer to int?
 
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges) {
 		this.nodes = nodes;
@@ -55,7 +55,6 @@ public class Hypergraph {
 			node_to_edges = computeHashmap();
 			d_par = computeD();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -161,9 +160,6 @@ public class Hypergraph {
 				if(!mute) System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k + 1)
 						+ " or bigger, break kernelize().");
 				break;
-				// TODO break is too radical, we need to keep looking for other sunflowers
-				// without getting stuck on small ones.
-				// TODO Not sure tho, find it out.
 			}
 			// Remove petals from graph
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
@@ -378,12 +374,6 @@ public class Hypergraph {
 		}
 		for(int i = 0; i < local_edges.size(); i++) {
 			Tuple curr_edge = local_edges.get(i);
-			// TODO fix empty edge, should just be (-1,-1)
-			if(curr_edge.elements.length == 0) {
-				// TODO Also, we can terminate on empty edge
-				return false;
-			}
-			// Check if any node in the solution covers the current edge
 			boolean edge_is_covered = false;
 			for(int j = 0; j < graph.d_par; j++) {
 				if(sol.contains(curr_edge.elements[j])) {

@@ -13,7 +13,7 @@ public class Main {
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
 //		File[] listOfPaceFiles = pace_folder.listFiles();
 //		for (int i = 0; i < listOfPaceFiles.length; i++) {
-//			// TODO Set how many graphs should be loaded.
+//			// Set how many graphs should be loaded.
 ////			if (i > 20)
 ////				break;
 //			File f = listOfPaceFiles[i];
@@ -128,12 +128,14 @@ public class Main {
 		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
+//		File form_folder = new File("instances"); // Use this for execution inside of eclipse
 		File[] pace_files = pace_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		// TODO Iterate over this
 		int k_par = 10;
 		for( int i = 0; i < form_files.length; i++) {
 			File curr_form_file = form_files[i];
+			// TODO change back to j = 0
 			for (int j = 2; j < pace_files.length; j++) {
 				File curr_pace_file = pace_files[j];
 				if (curr_form_file.isFile() && curr_pace_file.isFile()) {
@@ -156,7 +158,8 @@ public class Main {
 		start_time = System.currentTimeMillis();
 		Formula pace_form = new Formula(form_path, graph_path);
 		stop_time = System.currentTimeMillis();
-		printTime(start_time, stop_time);
+		double constr_time = (double)(stop_time-start_time)/(double)1000;
+		printTime(constr_time);
 		
 		System.out.println("> SearchTree, k = " + k_par);
 		start_time = System.currentTimeMillis();
@@ -164,14 +167,16 @@ public class Main {
 		stop_time = System.currentTimeMillis();
 		System.out.println();
 		System.out.println("SearchTree result: " + st_res);
-		printTime(start_time, stop_time);
+		double st_time = (double)(stop_time-start_time)/(double)1000;
+		printTime(st_time);
 		
 		// TODO outsource reduction, only needs to be done once for all values of k
 		System.out.println("> Reduction");
 		start_time = System.currentTimeMillis();
 		Hypergraph pace_reduced_graph = pace_form.reduceToHS();
 		stop_time = System.currentTimeMillis();
-		printTime(start_time, stop_time);
+		double red_time = (double)(stop_time-start_time)/(double)1000;
+		printTime(red_time);
 		
 		// Kernelize
 		System.out.println("> Kernelization, k = " + k_par + ", d = " + pace_reduced_graph.d_par);
@@ -190,7 +195,8 @@ public class Main {
 		System.out.println("kernel nodes:  " + pace_reduced_graph.nodes.length);
 		long sf_lemma_boundary = factorial(pace_reduced_graph.d_par) * (long) Math.pow(k_par, pace_reduced_graph.d_par);
 		System.out.println("Lemma d!*k^d:  " + sf_lemma_boundary);
-		printTime(start_time, stop_time);
+		double kern_time = (double)(stop_time-start_time)/(double)1000;
+		printTime(kern_time);
 		
 		// Search Tree after kernelize
 		System.out.println("> HS-SearchTree ");
@@ -199,12 +205,18 @@ public class Main {
 		stop_time = System.currentTimeMillis();
 		System.out.println();
 		System.out.println(hs_str_res);
-		printTime(start_time, stop_time);
+		double hs_st_time = (double)(stop_time-start_time)/(double)1000;
+		printTime(hs_st_time);		
+		// compare times: SearchTree <-> Reduction + Kernel + hsSearchTree
+		System.out.println("- Assignments time    : " + String.format("%.3f", constr_time) + " sec");
+		System.out.println("- Force time          : " + String.format("%.3f", st_time) + " sec");
+		double case_two_time = red_time + kern_time + hs_st_time;
+		System.out.println("- Redu + Kern + Force : " + String.format("%.3f", case_two_time) + " sec");
 		System.out.println();
 	}
 
-	private static void printTime(long start_time, long stop_time) {
-		System.out.println("- Time elapsed:  " + (double)(stop_time-start_time)/(double)1000 + " seconds");
+	private static void printTime(double time) {
+		System.out.println("- Time elapsed:  " + time + " seconds");
 	}
 
 	private static long factorial(int var) {
