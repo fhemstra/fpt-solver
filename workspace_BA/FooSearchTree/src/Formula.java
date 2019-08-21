@@ -22,7 +22,8 @@ public class Formula {
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
-	ArrayList<int[]> assignments = new ArrayList<int[]>();
+//	ArrayList<int[]> assignments = new ArrayList<int[]>();
+	int[][] assignments;
 
 	public Formula() {
 		// Do everything yourself.
@@ -214,8 +215,8 @@ public class Formula {
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		double progress = 0;
-		for (int i = 0; i < assignments.size(); i++) {
-			progress = (double)i/(assignments.size()-1);
+		for (int i = 0; i < assignments.length; i++) {
+			progress = (double)i/(assignments.length-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
 			System.out.print("  Testing assignments, Progress " + tmp + "%\r");
@@ -223,9 +224,9 @@ public class Formula {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
 				// elements bound to S)
-				if (!checkClause(curr_clause, assignments.get(i), empty_sol)) {
+				if (!checkClause(curr_clause, assignments[i], empty_sol)) {
 					// Find elements that are bound to S in this clause
-					Tuple edge_to_add = findCandidates(curr_clause, assignments.get(i));
+					Tuple edge_to_add = findCandidates(curr_clause, assignments[i]);
 					if (!hyp_edges.contains(edge_to_add)) {
 						hyp_edges.add(edge_to_add);
 					}
@@ -297,13 +298,13 @@ public class Formula {
 			return false;
 		}
 		// Check all clauses considering S
-		for (int i = 0; i < assignments.size(); i++) {
+		for (int i = 0; i < assignments.length; i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
-				if (!checkClause(clauses.get(j), assignments.get(i), sol)) {
+				if (!checkClause(clauses.get(j), assignments[i], sol)) {
 					HashSet<Integer> f = new HashSet<Integer>();
 					// Find variables that are bound to S in this clause
-					Tuple candidates = findCandidates(clauses.get(j), assignments.get(i));
+					Tuple candidates = findCandidates(clauses.get(j), assignments[i]);
 					for (int c : candidates.elements) {
 						if (!sol.contains(c)) {
 							f.add(c);
@@ -351,11 +352,13 @@ public class Formula {
 		int inc_pos = c_par - 1;
 		int counter = 0;
 		int number_of_nodes = universe.length;
-		System.out.println("  Assignments to generate: " + (int) Math.pow(number_of_nodes, c_par));
+		int nr_of_assignments = (int) Math.pow(number_of_nodes, c_par);
+		assignments = new int[nr_of_assignments][c_par];
+		System.out.println("  Assignments to generate: " + nr_of_assignments);
 		// There are universe.length ^ c_par possible assignments
-		for (int i = 0; i < (int) Math.pow(number_of_nodes, c_par); i++) {
+		for (int i = 0; i < nr_of_assignments; i++) {
 			// Add to set of assignments
-			assignments.add(getActualAssignment(curr_assi_ind));
+			assignments[i] = getActualAssignment(curr_assi_ind);
 			// print
 			String print_str = "";
 			for (int u : curr_assi_ind) {

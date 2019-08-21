@@ -136,7 +136,7 @@ public class Main {
 		for( int i = 0; i < form_files.length; i++) {
 			File curr_form_file = form_files[i];
 			// TODO change back to j = 0
-			for (int j = 2; j < pace_files.length; j++) {
+			for (int j = 0; j < pace_files.length; j++) {
 				File curr_pace_file = pace_files[j];
 				if (curr_form_file.isFile() && curr_pace_file.isFile()) {
 					testFile(curr_form_file, curr_pace_file, k_par);
