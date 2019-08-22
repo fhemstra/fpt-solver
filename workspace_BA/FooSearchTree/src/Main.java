@@ -51,31 +51,31 @@ public class Main {
 //		}
 
 		// Collect and parse all formulas
-		ArrayList<Formula> formulas = new ArrayList<Formula>();
-//		File folder = new File("../instances"); // Use this for execution in windows cmd
-		File folder = new File("instances"); // Use this inside eclipse
-		File[] listOfFiles = folder.listFiles();
-		for (File f : listOfFiles) {
-			if (f.isFile()) {
-				formulas.add(new Formula(f.getAbsolutePath()));
-			}
-		}
-
-		// Solve each File
-		for (Formula form : formulas) {
-
-			System.out.println("--- FORMULA ---");
-			form.printFormula();
-			System.out.println("\n--- SEARCH TREE ---");
-			System.out.println(form.searchTree(form.k_par, new ArrayList<Integer>(), mute));
-			System.out.println("\n--- REDUCTION ---");
-			Hypergraph hyp = form.reduceToHS();
-			System.out.println(hyp.toOutputString());
-			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
-			hyp.kernelize(hyp, form.k_par, mute);
-			System.out.println("<< Main\nKernel:");
-			System.out.println(hyp.toOutputString());
-			System.out.println("--- END FORMULA ---\n");
+//		ArrayList<Formula> formulas = new ArrayList<Formula>();
+////		File folder = new File("../instances"); // Use this for execution in windows cmd
+//		File folder = new File("instances"); // Use this inside eclipse
+//		File[] listOfFiles = folder.listFiles();
+//		for (File f : listOfFiles) {
+//			if (f.isFile()) {
+//				formulas.add(new Formula(f.getAbsolutePath()));
+//			}
+//		}
+//
+//		// Solve each File
+//		for (Formula form : formulas) {
+//
+//			System.out.println("--- FORMULA ---");
+//			form.printFormula();
+//			System.out.println("\n--- SEARCH TREE ---");
+//			System.out.println(form.searchTree(form.k_par, new ArrayList<Integer>(), mute));
+//			System.out.println("\n--- REDUCTION ---");
+//			Hypergraph hyp = form.reduceToHS();
+//			System.out.println(hyp.toOutputString());
+//			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
+//			hyp.kernelize(hyp, form.k_par, mute);
+//			System.out.println("<< Main\nKernel:");
+//			System.out.println(hyp.toOutputString());
+//			System.out.println("--- END FORMULA ---\n");
 			
 //			// Hypergraph doc example
 //			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
@@ -96,8 +96,8 @@ public class Main {
 //			doc_ex.kernelize(doc_ex, 3);
 //			System.out.println("+++\nex_kernel:\n" + doc_ex.toOutputString());
 			
-			break;
-		}
+//			break;
+//		}
 		
 		// Hypergraph doc example
 		// Test HS Search Tree (works)
@@ -125,24 +125,24 @@ public class Main {
 //		System.out.println(hs_st_result);
 		
 		// Test formulas from PACE files
-//		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
-//		File form_folder = new File("../instances"); // Use this for execution in windows cmd
-////		File pace_folder = new File("pace"); // Use this inside of eclipse
-////		File form_folder = new File("instances"); // Use this for execution inside of eclipse
-//		File[] pace_files = pace_folder.listFiles();
-//		File[] form_files = form_folder.listFiles();
-//		// TODO Iterate over this
-//		int k_par = 10;
-//		for( int i = 0; i < form_files.length; i++) {
-//			File curr_form_file = form_files[i];
-//			// TODO change back to j = 0
-//			for (int j = 0; j < pace_files.length; j++) {
-//				File curr_pace_file = pace_files[j];
-//				if (curr_form_file.isFile() && curr_pace_file.isFile()) {
-//					testFile(curr_form_file, curr_pace_file, k_par);
-//				}
-//			}	
-//		}
+		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
+		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+//		File pace_folder = new File("pace"); // Use this inside of eclipse
+//		File form_folder = new File("instances"); // Use this for execution inside of eclipse
+		File[] pace_files = pace_folder.listFiles();
+		File[] form_files = form_folder.listFiles();
+		// TODO Iterate over this
+		int k_par = 10;
+		for( int i = 0; i < form_files.length; i++) {
+			File curr_form_file = form_files[i];
+			// TODO change back to j = 0
+			for (int j = 0; j < pace_files.length; j++) {
+				File curr_pace_file = pace_files[j];
+				if (curr_form_file.isFile() && curr_pace_file.isFile()) {
+					testFile(curr_form_file, curr_pace_file, k_par);
+				}
+			}	
+		}
 		
 	}
 	
@@ -208,7 +208,7 @@ public class Main {
 		double hs_st_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(hs_st_time);		
 		// compare times: SearchTree <-> Reduction + Kernel + hsSearchTree
-		System.out.println("- Assignments time    : " + String.format("%.3f", constr_time) + " sec");
+		System.out.println("- Construction time    : " + String.format("%.3f", constr_time) + " sec");
 		System.out.println("- Force time          : " + String.format("%.3f", st_time) + " sec");
 		double case_two_time = red_time + kern_time + hs_st_time;
 		System.out.println("- Redu + Kern + Force : " + String.format("%.3f", case_two_time) + " sec");

@@ -329,21 +329,25 @@ public class Formula {
 						boolean flag = false;
 						// Construct branches with each branch adding one literal to S respectively
 						for (int y : f) {
-							ArrayList<Integer> sol_with_y = (ArrayList<Integer>) sol.clone();
-							sol_with_y.add(y);
+							// Try adding y to solution
+							sol.add(y);
 							// print
 							if (mute) {
 								String prnt = "  ";
 								prnt += "S: ";
-								for (int s : sol_with_y)
+								for (int s : sol)
 									prnt += s + " ";
 								prnt += "                                 \r";
 								System.out.print(prnt);
 							}
 							// if one branch is successful we win, else go back through recursion.
-							flag = flag || searchTree(k_par, sol_with_y, mute);
-							if (flag)
-								return true;
+							flag = flag || searchTree(k_par, sol, mute);
+							if (flag) {
+								return true;								
+							} else {
+								// Branch failed, remove y again to clean up sol for next branch.
+								sol.remove((Object) y);
+							}
 						}
 						return flag;
 					}
