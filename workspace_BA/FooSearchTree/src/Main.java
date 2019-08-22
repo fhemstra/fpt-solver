@@ -208,7 +208,7 @@ public class Main {
 		double hs_st_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(hs_st_time);		
 		// compare times: SearchTree <-> Reduction + Kernel + hsSearchTree
-		System.out.println("- Construction time    : " + String.format("%.3f", constr_time) + " sec");
+		System.out.println("- Construction time   : " + String.format("%.3f", constr_time) + " sec");
 		System.out.println("- Force time          : " + String.format("%.3f", st_time) + " sec");
 		double case_two_time = red_time + kern_time + hs_st_time;
 		System.out.println("- Redu + Kern + Force : " + String.format("%.3f", case_two_time) + " sec");
