@@ -193,9 +193,9 @@ public class Hypergraph {
 			// Update nodes
 			ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
 			for (Tuple edge : updated_e) {
-				for (int e : edge.elements) {
-					if (!updated_nodes.contains(e))
-						updated_nodes.add(e);
+				for (int node : edge.elements) {
+					if (!updated_nodes.contains(node) && node != -1)
+						updated_nodes.add(node);
 				}
 			}
 			// Change nodes to int[]
@@ -240,25 +240,18 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns the most common node in edges_to_search.
+	 * Returns the most common node in edges_to_search. Returns -1 i there are no nodes.
 	 */
 	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
-		// TODO Use map to iterate over nodes and count occurences there
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
 		int max_node = -1;
 		occurences.put(max_node, 0);
-		for (int i = 0; i < edges_to_search.size(); i++) {
-			for (int node : edges_to_search.get(i).elements) {
-				// Don't count -1 occurences
-				if (node == -1)
-					continue;
-				if (occurences.get(node) == null) {
-					occurences.put(node, 1);
-				} else {
-					occurences.put(node, occurences.get(node) + 1);
-				}
-				if (occurences.get(node) > occurences.get(max_node))
-					max_node = node;
+		for(int i = 0; i < nodes.length; i++) {
+			occurences.put(nodes[i], node_to_edges.get(nodes[i]).size());
+		}
+		for(int i = 0; i < nodes.length; i++) {
+			if(occurences.get(max_node) < occurences.get(nodes[i]) || max_node == -1) {
+				max_node = nodes[i];
 			}
 		}
 		return max_node;

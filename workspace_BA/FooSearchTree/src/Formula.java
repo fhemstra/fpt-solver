@@ -212,7 +212,6 @@ public class Formula {
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
-		// TODO maybe use indices? (see old assign stuff in git)
 		int[] curr_assignment = new int[c_par];
 		double progress = 0;
 		for (int i = 0; i < nr_of_assignments; i++) {
@@ -357,18 +356,6 @@ public class Formula {
 			curr_assignment = nextAssignment(curr_assignment);
 		}
 		return true;
-	}
-
-	private int[] getActualAssignment(int[] add_this_copy) {
-		// Generate actual assignment from indices
-		int[] s_arr = new int[c_par];
-		// c_par is equal to bound_vars.lenght
-		for (int j = 0; j < c_par; j++) {
-			// assi_indices.get(i)[j] contains the index of the element in the universe,
-			// that should now be added to the assignment
-			s_arr[j] = universe[add_this_copy[j]];
-		}
-		return s_arr;
 	}
 
 	/**
