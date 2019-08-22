@@ -22,8 +22,7 @@ public class Formula {
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
-//	ArrayList<int[]> assignments = new ArrayList<int[]>();
-	int[][] assignments;
+	int nr_of_assignments;
 
 	public Formula() {
 		// Do everything yourself.
@@ -31,13 +30,12 @@ public class Formula {
 
 	public Formula(String path) {
 		parseInternalFormula(path);
-		// Generate all assignments
-		generateAssignments();
+		nr_of_assignments = (int) Math.pow(universe.length, c_par);
 	}
 
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
-		generateAssignments();
+		nr_of_assignments = (int) Math.pow(universe.length, c_par);
 	}
 
 	private void parseExternalFormula(String form_path, String graph_path) {
@@ -214,9 +212,11 @@ public class Formula {
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
+		// TODO maybe use indices? (see old assign stuff in git)
+		int[] curr_assignment = new int[c_par];
 		double progress = 0;
-		for (int i = 0; i < assignments.length; i++) {
-			progress = (double)i/(assignments.length-1);
+		for (int i = 0; i < nr_of_assignments; i++) {
+			progress = (double)i/(nr_of_assignments-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
 			System.out.print("  Testing assignments, Progress " + tmp + "%\r");
@@ -224,18 +224,32 @@ public class Formula {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
 				// elements bound to S)
-				if (!checkClause(curr_clause, assignments[i], empty_sol)) {
+				if (!checkClause(curr_clause, curr_assignment, empty_sol)) {
 					// Find elements that are bound to S in this clause
-					Tuple edge_to_add = findCandidates(curr_clause, assignments[i]);
+					Tuple edge_to_add = findCandidates(curr_clause, curr_assignment);
 					if (!hyp_edges.contains(edge_to_add)) {
 						hyp_edges.add(edge_to_add);
 					}
 				}
 			}
+			curr_assignment = nextAssignment(curr_assignment);
 		}
 		System.out.println();
 		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges);
 		return hyp;
+	}
+
+	private int[] nextAssignment(int[] curr_assignment) {
+		int mode = universe.length;
+		for(int i = c_par-1; i >= 0; i--) {
+			if(curr_assignment[i] < mode) {
+				curr_assignment[i]++;
+				return curr_assignment;
+			} else {
+				curr_assignment[i] = 0;
+			}
+		}
+		return null;
 	}
 
 	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
@@ -297,14 +311,15 @@ public class Formula {
 		if (sol.size() > k_par) {
 			return false;
 		}
+		int[] curr_assignment = new int[c_par];
 		// Check all clauses considering S
-		for (int i = 0; i < assignments.length; i++) {
+		for (int i = 0; i < nr_of_assignments; i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
-				if (!checkClause(clauses.get(j), assignments[i], sol)) {
+				if (!checkClause(clauses.get(j), curr_assignment, sol)) {
 					HashSet<Integer> f = new HashSet<Integer>();
 					// Find variables that are bound to S in this clause
-					Tuple candidates = findCandidates(clauses.get(j), assignments[i]);
+					Tuple candidates = findCandidates(clauses.get(j), curr_assignment);
 					for (int c : candidates.elements) {
 						if (!sol.contains(c)) {
 							f.add(c);
@@ -339,57 +354,9 @@ public class Formula {
 					}
 				}
 			}
+			curr_assignment = nextAssignment(curr_assignment);
 		}
 		return true;
-	}
-
-	/**
-	 * Generates all possible subsets of the Universe of size c_par and put them
-	 * into the assignments list.
-	 */
-	private void generateAssignments() {
-		int[] curr_assi_ind = new int[c_par];
-		int inc_pos = c_par - 1;
-		int counter = 0;
-		int number_of_nodes = universe.length;
-		int nr_of_assignments = (int) Math.pow(number_of_nodes, c_par);
-		assignments = new int[nr_of_assignments][c_par];
-		System.out.println("  Assignments to generate: " + nr_of_assignments);
-		// There are universe.length ^ c_par possible assignments
-		for (int i = 0; i < nr_of_assignments; i++) {
-			// Add to set of assignments
-			assignments[i] = getActualAssignment(curr_assi_ind);
-			// print
-			String print_str = "";
-			for (int u : curr_assi_ind) {
-				print_str += u + " ";
-			}
-			double progress = counter/(Math.pow(number_of_nodes, c_par)-1);
-			progress *= 100;
-			String tmp = String.format("%.2f", progress);
-			System.out.print("  Generating assignments, Progress: " + tmp + "%, " + print_str + "\r");
-			counter++;
-			// Move to the right until there is something to increment
-			while (inc_pos + 1 < curr_assi_ind.length && curr_assi_ind[inc_pos + 1] < universe.length) {
-				inc_pos++;
-			}
-			// Increment current position if possible
-			if (curr_assi_ind[inc_pos] < universe.length - 1) {
-				curr_assi_ind[inc_pos]++;
-			}
-			// If not possible, move left
-			else {
-				// Move left until there is something to increment
-				while (inc_pos - 1 >= 0 && !(curr_assi_ind[inc_pos] < universe.length - 1)) {
-					// Also set everything back to 0 on the way
-					curr_assi_ind[inc_pos] = 0;
-					inc_pos--;
-				}
-				// After moving left far enough, increment
-				curr_assi_ind[inc_pos]++;
-			}
-		}
-		System.out.println();
 	}
 
 	private int[] getActualAssignment(int[] add_this_copy) {
