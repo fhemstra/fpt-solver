@@ -14,8 +14,6 @@ public class Hypergraph {
 	int[] nodes;
 	// A hyperedge is a Array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
-	// HashMap of nodes to global hyperedges
-	HashMap<Integer, ArrayList<Tuple>> node_to_edges = new HashMap<Integer, ArrayList<Tuple>>();
 	// TODO use map to improve performance
 	
 	// TODO Change Integer to int?
@@ -23,7 +21,6 @@ public class Hypergraph {
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
-		this.node_to_edges = computeHashmap();
 		this.d_par = computeD();
 	}
 
@@ -53,7 +50,6 @@ public class Hypergraph {
 				edges.add(new Tuple(tuple_nodes));
 			}
 			br.close();
-			node_to_edges = computeHashmap();
 			d_par = computeD();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -206,7 +202,6 @@ public class Hypergraph {
 			// Update graph
 			hyp.nodes = int_nodes;
 			hyp.edges = updated_e;
-			hyp.node_to_edges = hyp.computeHashmap();
 			sf_counter++;
 			System.out.print("  SFs removed:   " + sf_counter + "\r");
 			// print new, kernelized hyp
@@ -246,12 +241,19 @@ public class Hypergraph {
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
 		int max_node = -1;
 		occurences.put(max_node, 0);
-		for(int i = 0; i < nodes.length; i++) {
-			occurences.put(nodes[i], node_to_edges.get(nodes[i]).size());
-		}
-		for(int i = 0; i < nodes.length; i++) {
-			if(occurences.get(max_node) < occurences.get(nodes[i]) || max_node == -1) {
-				max_node = nodes[i];
+		for (int i = 0; i < edges_to_search.size(); i++) {
+			for (int node : edges_to_search.get(i).elements) {
+				// Don't count -1 occurences
+				if (node == -1)
+					continue;
+				if (occurences.get(node) == null) {
+					occurences.put(node, 1);
+				} else {
+					occurences.put(node, occurences.get(node) + 1);
+				}
+				if (occurences.get(node) > occurences.get(max_node)) {
+					max_node = node;					
+				}
 			}
 		}
 		return max_node;
@@ -331,35 +333,12 @@ public class Hypergraph {
 			res = (i < edges.size() - 1) ? res + "," : res;
 		}
 		res += "}\n";
-		if (node_to_edges.isEmpty()) {
-			res += "mapping: none";
-			return res;
-		}
-		res += "mapping:\n";
-		// Loop through all mappings from nodes to edges
-		Iterator<Entry<Integer, ArrayList<Tuple>>> it = node_to_edges.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<Integer, ArrayList<Tuple>> e = it.next();
-			res += " " + e.getKey() + " -> ";
-			// If a node is isolated
-			if (e.getValue().size() == 0)
-				res += "iso";
-			// Loop through all edges the entry e is contained in
-			for (int i = 0; i < e.getValue().size(); i++) {
-				res += e.getValue().get(i).toOutputString(showEverything);
-				if (i < e.getValue().size() - 1)
-					res += ",";
-			}
-			if (it.hasNext())
-				res += "\n";
-		}
 		return res;
 	}
 
 	public boolean hsSearchTree(Hypergraph graph, int k_par, ArrayList<Integer> sol, boolean mute) {
 		int[] local_nodes = graph.nodes;
 		ArrayList<Tuple> local_edges = graph.edges;
-		HashMap<Integer, ArrayList<Tuple>> local_map = graph.node_to_edges;
 		// check for empty edges at the start
 		for(Tuple edge : local_edges) {
 			if(edge.elements.length == 0) {

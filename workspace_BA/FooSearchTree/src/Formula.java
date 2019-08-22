@@ -306,6 +306,7 @@ public class Formula {
 	 * @return True if a solution of size k is found, else false.
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
+		// TODO Check why big instances work more slowly
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -332,14 +333,12 @@ public class Formula {
 							// Try adding y to solution
 							sol.add(y);
 							// print
-							if (mute) {
-								String prnt = "  ";
-								prnt += "S: ";
-								for (int s : sol)
-									prnt += s + " ";
-								prnt += "                                 \r";
-								System.out.print(prnt);
-							}
+							String prnt = "  ";
+							prnt += "S: ";
+							for (int s : sol)
+								prnt += s + " ";
+							prnt += "                                 \r";
+							System.out.print(prnt);
 							// if one branch is successful we win, else go back through recursion.
 							flag = flag || searchTree(k_par, sol, mute);
 							if (flag) {
