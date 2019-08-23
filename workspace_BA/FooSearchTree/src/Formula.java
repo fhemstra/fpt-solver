@@ -203,7 +203,7 @@ public class Formula {
 		}
 	}
 
-	public Hypergraph reduceToHS() {
+	public Hypergraph reduceToHS(boolean mute) {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
@@ -218,14 +218,16 @@ public class Formula {
 		double progress = 0;
 		for (int i = 0; i < nr_of_assignments; i++) {
 			// prints
-			curr_assignment_str = "";
-			for(int j = 0; j < c_par; j++) {
-				curr_assignment_str += curr_assignment[j] + " ";
+			if(!mute) {
+				curr_assignment_str = "";
+				for(int j = 0; j < c_par; j++) {
+					curr_assignment_str += curr_assignment[j] + " ";
+				}
+				progress = (double)i/(nr_of_assignments-1);
+				progress *= 100;
+				String tmp = String.format("%.2f", progress);
+				System.out.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
 			}
-			progress = (double)i/(nr_of_assignments-1);
-			progress *= 100;
-			String tmp = String.format("%.2f", progress);
-			System.out.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
@@ -240,7 +242,7 @@ public class Formula {
 			}
 			curr_assignment = nextAssignment(curr_assignment);
 		}
-		System.out.println();
+		if(!mute) System.out.println();
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		return hyp;
@@ -341,12 +343,14 @@ public class Formula {
 							// Try adding y to solution
 							sol.add(y);
 							// print
-							String prnt = "  ";
-							prnt += "S: ";
-							for (int s : sol)
-								prnt += s + " ";
-							prnt += "                                 \r";
-							System.out.print(prnt);
+							if(!mute) {
+								String prnt = "  ";
+								prnt += "S: ";
+								for (int s : sol)
+									prnt += s + " ";
+								prnt += "                                 \r";
+								System.out.print(prnt);
+							}
 							// if one branch is successful we win, else go back through recursion.
 							flag = flag || searchTree(k_par, sol, mute);
 							if (flag) {

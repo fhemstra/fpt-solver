@@ -136,14 +136,14 @@ public class Main {
 		for( int i = 0; i < form_files.length; i++) {
 			File curr_form_file = form_files[i];
 			// TODO change back to j = 0
-			for (int j = 2; j < pace_files.length; j++) {
+			for (int j = 0; j < pace_files.length; j++) {
 				File curr_pace_file = pace_files[j];
 				if (curr_form_file.isFile() && curr_pace_file.isFile()) {
 					testFile(curr_form_file, curr_pace_file, k_par);
 				}
-			}	
+			}
+			break;
 		}
-		
 	}
 	
 	private static void testFile(File form_file, File graph_file, int k_par) {
@@ -165,7 +165,7 @@ public class Main {
 		start_time = System.currentTimeMillis();
 		boolean st_res = pace_form.searchTree(k_par, new ArrayList<Integer>(), mute);
 		stop_time = System.currentTimeMillis();
-		System.out.println();
+		if(!mute) System.out.println();
 		System.out.println("  SearchTree result: " + st_res);
 		double st_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(st_time);
@@ -173,7 +173,7 @@ public class Main {
 		// TODO outsource reduction, only needs to be done once for all values of k
 		System.out.println("> Reduction");
 		start_time = System.currentTimeMillis();
-		Hypergraph pace_reduced_graph = pace_form.reduceToHS();
+		Hypergraph pace_reduced_graph = pace_form.reduceToHS(mute);
 		stop_time = System.currentTimeMillis();
 		double red_time = (double)(stop_time-start_time)/(double)1000;
 		printTime(red_time);
