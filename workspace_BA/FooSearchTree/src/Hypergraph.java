@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Hypergraph {
-	boolean showEverything = true;
+	boolean show_minus_one_entries = true;
 	boolean printGraphs = false;
 	int d_par;
 	int[] nodes;
@@ -98,7 +98,7 @@ public class Hypergraph {
 				System.out.println(updated_e.size() + " edges that are left after removing " + u + ":");
 				if (printGraphs) {
 					for (Tuple t : updated_e) {
-						System.out.println(t.toOutputString(showEverything));
+						System.out.println(t.toOutputString(show_minus_one_entries));
 					}
 				} else {
 					System.out.println("* hidden *");
@@ -329,7 +329,7 @@ public class Hypergraph {
 		res += "edges: {";
 		for (int i = 0; i < edges.size(); i++) {
 			Tuple t = edges.get(i);
-			res += t.toOutputString(showEverything);
+			res += t.toOutputString(show_minus_one_entries);
 			res = (i < edges.size() - 1) ? res + "," : res;
 		}
 		res += "}\n";

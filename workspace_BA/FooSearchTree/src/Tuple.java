@@ -72,18 +72,18 @@ public class Tuple {
 	/**
 	 * Returns a String to output for this tuple.
 	 */
-	public String toOutputString(boolean showEverything) {
+	public String toOutputString(boolean show_minus_one_entries) {
 		String res = "(";
 		if (elements.length == 0) {
 			res += "empty";
 		} else {
 			for (int j = 0; j < elements.length; j++) {
 				// Don't print the -1
-				if (!showEverything && elements[j] == -1)
+				if (!show_minus_one_entries && elements[j] == -1)
 					continue;
 				res += elements[j];
 				if (j + 1 != elements.length) {
-					if (showEverything || elements[j + 1] != -1) {
+					if (show_minus_one_entries || elements[j + 1] != -1) {
 						res += "|";
 					}
 				}

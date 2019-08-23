@@ -218,7 +218,7 @@ public class Formula {
 		double progress = 0;
 		for (int i = 0; i < nr_of_assignments; i++) {
 			// prints
-			if(!mute) {
+			if(!mute && i % 100 == 0) {
 				curr_assignment_str = "";
 				for(int j = 0; j < c_par; j++) {
 					curr_assignment_str += curr_assignment[j] + " ";
@@ -317,6 +317,7 @@ public class Formula {
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
 		// TODO Check why big instances work more slowly
+		int branch_counter = 0;
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -343,6 +344,7 @@ public class Formula {
 							// Try adding y to solution
 							sol.add(y);
 							// print
+							branch_counter++;
 							if(!mute) {
 								String prnt = "  ";
 								prnt += "S: ";
@@ -420,36 +422,38 @@ public class Formula {
 	/**
 	 * Prints info about this into sysout.
 	 */
-	public void printFormula() {
-		System.out.println(name + ":");
-		System.out.print("U = {");
+	public String toOutputString() {
+		String res = "";
+		res += name + ":\n";
+		res += "U = {";
 		for (int i = 0; i < universe.length; i++) {
 			if (i + 1 != universe.length)
-				System.out.print(universe[i] + ",");
+				res += universe[i] + ",";
 			else
-				System.out.print(universe[i]);
+				res += universe[i];
 		}
-		System.out.println("}");
-		System.out.println("Relations:");
+		res += "}\n";
+		res += "Relations:\n";
 		for (Entry<String, Relation> r : rels.entrySet()) {
-			System.out.println(r.getValue().toOutputString());
+			res += r.getValue().toOutputString() + "\n";
 		}
-		System.out.println("Parameter k = " + k_par);
-		System.out.print("Bound varibales: (");
+		res += "Parameter k = " + k_par + "\n";
+		res += "Bound varibales: (";
 		for (int i = 0; i < bound_vars.length; i++) {
 			if (i + 1 != bound_vars.length)
-				System.out.print(bound_vars[i] + ",");
+				res += bound_vars[i] + ",";
 			else
-				System.out.print(bound_vars[i]);
+				res += bound_vars[i];
 		}
-		System.out.println(")");
-		System.out.println("Clauses:");
+		res += ")\n";
+		res += "Clauses:\n";
 		for (String[] c : clauses) {
 			for (String l : c) {
-				System.out.print(l + " ");
+				res += l + " ";
 			}
-			System.out.println();
+			res += "\n";
 		}
+		return res;
 	}
 
 	/**
