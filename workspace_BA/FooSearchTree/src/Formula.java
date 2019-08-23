@@ -96,8 +96,9 @@ public class Formula {
 		}
 		if (arr_lenght > -1) {
 			int[] universe = new int[arr_lenght];
+			// PACE nodes go from 1 to arr_lenght
 			for (int i = 0; i < arr_lenght; i++) {
-				universe[i] = i;
+				universe[i] = i+1;
 			}
 			return universe;
 		} else {
@@ -203,27 +204,33 @@ public class Formula {
 	}
 
 	public Hypergraph reduceToHS() {
-		// Nodes of the Hypergraph are derived from the universe of the formula
-		int[] hyp_nodes = new int[universe.length];
-		for (int i = 0; i < universe.length; i++) {
-			hyp_nodes[i] = universe[i];
-		}
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		int[] curr_assignment = new int[c_par];
+		// generate first assignment 
+		for(int i = 0; i < c_par; i++) {
+			curr_assignment[i] = universe[0];
+		}
+		// print string
+		String curr_assignment_str = "";
 		double progress = 0;
 		for (int i = 0; i < nr_of_assignments; i++) {
+			// prints
+			curr_assignment_str = "";
+			for(int j = 0; j < c_par; j++) {
+				curr_assignment_str += curr_assignment[j] + " ";
+			}
 			progress = (double)i/(nr_of_assignments-1);
 			progress *= 100;
 			String tmp = String.format("%.2f", progress);
-			System.out.print("  Testing assignments, Progress " + tmp + "%\r");
+			System.out.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
 				// elements bound to S)
-				if (!checkClause(curr_clause, curr_assignment, empty_sol)) {
+				if (!checkClause(curr_clause, curr_assignment, empty_sol, true)) {
 					// Find elements that are bound to S in this clause
 					Tuple edge_to_add = findCandidates(curr_clause, curr_assignment);
 					if (!hyp_edges.contains(edge_to_add)) {
@@ -234,7 +241,8 @@ public class Formula {
 			curr_assignment = nextAssignment(curr_assignment);
 		}
 		System.out.println();
-		Hypergraph hyp = new Hypergraph(hyp_nodes, hyp_edges);
+		// Nodes of the Hypergraph are derived from the universe of the formula
+		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		return hyp;
 	}
 
@@ -245,7 +253,7 @@ public class Formula {
 				curr_assignment[i]++;
 				return curr_assignment;
 			} else {
-				curr_assignment[i] = 0;
+				curr_assignment[i] = universe[0];
 			}
 		}
 		return null;
@@ -316,7 +324,7 @@ public class Formula {
 		for (int i = 0; i < nr_of_assignments; i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
-				if (!checkClause(clauses.get(j), curr_assignment, sol)) {
+				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
 					HashSet<Integer> f = new HashSet<Integer>();
 					// Find variables that are bound to S in this clause
 					Tuple candidates = findCandidates(clauses.get(j), curr_assignment);
@@ -365,7 +373,7 @@ public class Formula {
 	 * Checks if the specified clause holds under the specified assignment with S
 	 * being sol.
 	 */
-	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol) {
+	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol, boolean ignore_S) {
 		// Evaluate literals one at a time
 		for (String l : clause) {
 			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
@@ -373,11 +381,15 @@ public class Formula {
 			int[] assi_elements = assign(l, assignment);
 			// Handle S(x)
 			if (id.equals("S")) {
+				// Ignore S during reduction, because it stays empty
+				if(ignore_S) {
+					continue;
+				}
 				// check if S contains the element
 				if (sol.contains(assi_elements[0])) {
 					return true;
 				}
-				// Else: continue
+				// Else: look in all other available relations
 			} else {
 				Relation r = rels.get(id);
 				if (r != null) {
