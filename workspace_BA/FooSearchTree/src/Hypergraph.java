@@ -136,10 +136,12 @@ public class Hypergraph {
 	 * Kernelizes hypergraph hyp wit parameter k using the sunflower lemma. Changes
 	 * are made to the handed graph hyp.
 	 */
-	public void kernelize(Hypergraph hyp, int k, boolean mute) {
+	public Hypergraph kernelize(Hypergraph hyp, int k, boolean mute) {
+		// "Clone" hyp
+		Hypergraph kernel = new Hypergraph(hyp.nodes, hyp.edges);
 		int sf_counter = 0;
 		if(!mute) System.out.println(">> kernelize()");
-		Sunflower sun = findSunflower(hyp, k, mute);
+		Sunflower sun = findSunflower(kernel, k, mute);
 		if (sun == null) {
 			if(!mute) System.out.println("Initial sunflower is already null, nothing to kernelize.");
 		}
@@ -160,7 +162,7 @@ public class Hypergraph {
 			}
 			// Remove petals from graph
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
-			for (Tuple edge : hyp.edges) {
+			for (Tuple edge : kernel.edges) {
 				boolean add_edge = true;
 				for (Tuple petal : sun.petals) {
 					if (petal.equals(edge)) {
@@ -173,8 +175,8 @@ public class Hypergraph {
 					updated_e.add(edge);
 			}
 			// Convert core to int[] and fill up with -1
-			int[] int_core = new int[hyp.d_par];
-			for (int i = 0; i < hyp.d_par; i++) {
+			int[] int_core = new int[kernel.d_par];
+			for (int i = 0; i < kernel.d_par; i++) {
 				if(i < sun.core.size()) {
 					int_core[i] = sun.core.get(i);
 				} else {
@@ -199,27 +201,28 @@ public class Hypergraph {
 			for (int i = 0; i < updated_nodes.size(); i++) {
 				int_nodes[i] = updated_nodes.get(i);
 			}
-			// Update graph
-			hyp.nodes = int_nodes;
-			hyp.edges = updated_e;
+			// Update kernel
+			kernel.nodes = int_nodes;
+			kernel.edges = updated_e;
 			sf_counter++;
 			System.out.print("  SFs removed:   " + sf_counter + "\r");
-			// print new, kernelized hyp
+			// print kernel
 			if(!mute) System.out.println("KERNELIZED hyp:");
 			if(!mute) {
 				if (printGraphs) {
-					System.out.println(hyp.toOutputString());
+					System.out.println(kernel.toOutputString());
 				} else {
 					System.out.println("* hidden *");
 				}
 			}
 			// Repeat
 			if(!mute) System.out.println("Go find another sunflower.");
-			sun = findSunflower(hyp, k, mute);
+			sun = findSunflower(kernel, k, mute);
 			if(!mute) System.out.println("LOOP KERNELIZE.");
 		}
 		if(sf_counter > 0) System.out.println();
 		if(!mute) System.out.println("<< END KERNELIZE.");
+		return kernel;
 	}
 
 	/**

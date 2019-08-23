@@ -18,7 +18,6 @@ public class Formula {
 	String name;
 	int[] universe;
 	HashMap<String, Relation> rels;
-	int k_par;
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
@@ -58,7 +57,7 @@ public class Formula {
 			// Solution S is not contained in rels
 			// Parameter k
 			line = br.readLine();
-			k_par = Integer.parseInt(line);
+			// TODO remove k from file format
 			// Bound variables
 			line = br.readLine();
 			bound_vars = line.split(",");
@@ -179,7 +178,7 @@ public class Formula {
 			}
 			// Parameter k
 			line = br.readLine();
-			k_par = Integer.parseInt(line);
+			// TODO remove k from file format
 			// Bound variables
 			line = br.readLine();
 			bound_vars = line.split(",");
@@ -437,7 +436,6 @@ public class Formula {
 		for (Entry<String, Relation> r : rels.entrySet()) {
 			res += r.getValue().toOutputString() + "\n";
 		}
-		res += "Parameter k = " + k_par + "\n";
 		res += "Bound varibales: (";
 		for (int i = 0; i < bound_vars.length; i++) {
 			if (i + 1 != bound_vars.length)
@@ -481,7 +479,6 @@ public class Formula {
 			}
 			bw.write("\n");
 			// Parameter k
-			bw.write(Integer.toString(k_par));
 			bw.write("\n");
 			// Bound vars
 			for (int i = 0; i < bound_vars.length; i++) {
