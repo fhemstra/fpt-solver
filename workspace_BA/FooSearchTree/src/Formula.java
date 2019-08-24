@@ -316,8 +316,7 @@ public class Formula {
 	 * @return True if a solution of size k is found, else false.
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
-		// TODO Check why big instances work more slowly
-		int branch_counter = 0;
+		// TODO Maybe search trees can start testing assignments where they left of?
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -344,7 +343,6 @@ public class Formula {
 							// Try adding y to solution
 							sol.add(y);
 							// print
-							branch_counter++;
 							if(!mute) {
 								String prnt = "  ";
 								prnt += "S: ";
