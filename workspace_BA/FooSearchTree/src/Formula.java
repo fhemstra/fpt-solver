@@ -21,7 +21,7 @@ public class Formula {
 	String[] bound_vars;
 	int c_par;
 	ArrayList<String[]> clauses;
-	int nr_of_assignments;
+	long nr_of_assignments;
 
 	public Formula() {
 		// Do everything yourself.
@@ -29,12 +29,12 @@ public class Formula {
 
 	public Formula(String path) {
 		parseInternalFormula(path);
-		nr_of_assignments = (int) Math.pow(universe.length, c_par);
+		nr_of_assignments = (long) Math.pow(universe.length, c_par);
 	}
 
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
-		nr_of_assignments = (int) Math.pow(universe.length, c_par);
+		nr_of_assignments = (long) Math.pow(universe.length, c_par);
 	}
 
 	private void parseExternalFormula(String form_path, String graph_path) {
@@ -215,9 +215,10 @@ public class Formula {
 		// print string
 		String curr_assignment_str = "";
 		double progress = 0;
-		for (int i = 0; i < nr_of_assignments; i++) {
+		for (long i = 0; i < nr_of_assignments; i++) {
 			// prints
-			if(!mute && i % 100 == 0) {
+//			if(!mute && i % 100 == 0) {
+			if(i % 400000 == 0) {
 				curr_assignment_str = "";
 				for(int j = 0; j < c_par; j++) {
 					curr_assignment_str += curr_assignment[j] + " ";
@@ -323,7 +324,7 @@ public class Formula {
 		}
 		int[] curr_assignment = new int[c_par];
 		// Check all clauses considering S
-		for (int i = 0; i < nr_of_assignments; i++) {
+		for (long i = 0; i < nr_of_assignments; i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {

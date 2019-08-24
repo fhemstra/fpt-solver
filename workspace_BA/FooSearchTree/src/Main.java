@@ -136,14 +136,14 @@ public class Main {
 		// Timer
 		long start_time = 0;
 		long stop_time = 0;
-		System.out.println("> Constructing formulas and reducing them to hypergraphs.");
-		start_time = System.currentTimeMillis();
+//		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
+		System.out.println("> Constructing " + 1 + " formulas with " + 10 + " vc-instances and reducing them to hypergraphs.");		start_time = System.currentTimeMillis();
 		
 		// Construct Formulas and reduced graphs
 		for( int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
-			// TODO j = 0
-			for (int j = 0; j < graph_files.length; j++) {
+			// TODO j = 0; j < graph_files.length
+			for (int j = 0; j < 3; j++) {
 				String graph_path = graph_files[j].getAbsolutePath();
 				// Construction
 				Formula curr_formula = new Formula(form_path, graph_path);
@@ -151,7 +151,7 @@ public class Main {
 				// Reduction
 				reduced_graphs.add(curr_formula.reduceToHS(mute));
 				// TODO remove break;
-				break;
+//				break;
 			}
 			// TODO only the first formula works right now
 			break;
@@ -161,7 +161,8 @@ public class Main {
 		printTime(constr_time);
 		
 		// Solving formulas
-		for(int k_par = 1; k_par < 11; k_par++) {
+//		for(int k_par = 1; k_par < 11; k_par++) {
+		for(int k_par = 5; k_par < 6; k_par++) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
 			for(int j = 0; j < formulas.size(); j++) {
