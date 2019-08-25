@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -137,19 +139,26 @@ public class Main {
 		long start_time = 0;
 		long stop_time = 0;
 //		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
-		System.out.println("> Constructing " + 1 + " formulas with " + 10 + " vc-instances and reducing them to hypergraphs.");		start_time = System.currentTimeMillis();
+		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
+		start_time = System.currentTimeMillis();
 		
 		// Construct Formulas and reduced graphs
 		for( int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
-			for (int j = 0; j < 3; j++) {
+			for (int j = 3; j < 10; j++) {
 				String graph_path = graph_files[j].getAbsolutePath();
-				// Construction
-				Formula curr_formula = new Formula(form_path, graph_path);
-				formulas.add(curr_formula);
-				// Reduction
-				reduced_graphs.add(curr_formula.reduceToHS(mute));
+				// Only take graphs, that are not too big
+				if(graphSize(graph_path) < 10000) {
+					System.out.println("Accepted " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
+					// Construction
+					Formula curr_formula = new Formula(form_path, graph_path);
+					formulas.add(curr_formula);
+					// Reduction
+					reduced_graphs.add(curr_formula.reduceToHS(mute));					
+				} else {
+					System.out.println("Discarded " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
+				}
 				// TODO remove break;
 //				break;
 			}
@@ -162,7 +171,7 @@ public class Main {
 		
 		// Solving formulas
 //		for(int k_par = 1; k_par < 11; k_par++) {
-		for(int k_par = 5; k_par < 6; k_par++) {
+		for(int k_par = 10; k_par < 11; k_par++) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
 			for(int j = 0; j < formulas.size(); j++) {
@@ -209,6 +218,21 @@ public class Main {
 				printTime(hs_st_time);
 			}
 		}
+	}
+
+	private static int graphSize(String graph_path) {
+		int size = 0;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
+			// First line is the descriptor
+			String first_line = br.readLine();
+			String[] first_split_line = first_line.split(" ");
+			size = Integer.parseInt(first_split_line[2]);
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return size;
 	}
 
 	private static void printTime(double time) {
