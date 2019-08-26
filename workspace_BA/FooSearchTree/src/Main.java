@@ -170,7 +170,7 @@ public class Main {
 					reduction_times.add(time_passed);
 					printTime(time_passed);
 				} else {
-					System.out.println("Discarded " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
+					System.out.println("  Discarded " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
 				}
 				// TODO remove break;
 //				break;
