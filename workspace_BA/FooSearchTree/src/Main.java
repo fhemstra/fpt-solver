@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Main {
 
@@ -127,6 +126,9 @@ public class Main {
 //		System.out.println(hs_st_result);
 		
 		// Test formulas from PACE files
+		int start_k = 10;
+		int k_increment = 2;
+		int stop_k = 12;
 		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
@@ -138,24 +140,35 @@ public class Main {
 		// Timer
 		long start_time = 0;
 		long stop_time = 0;
+		ArrayList<Double> reduction_times = new ArrayList<Double>();
+		ArrayList<Double> search_tree_times = new ArrayList<Double>();
+		ArrayList<Double> kernel_times = new ArrayList<Double>();
+		ArrayList<Double> hs_times = new ArrayList<Double>();
+		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
+		ArrayList<Boolean> hs_results = new ArrayList<Boolean>();
 //		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
-		start_time = System.currentTimeMillis();
 		
 		// Construct Formulas and reduced graphs
 		for( int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
-			for (int j = 3; j < 10; j++) {
+			for (int j = 0; j < graph_files.length; j++) {
 				String graph_path = graph_files[j].getAbsolutePath();
 				// Only take graphs, that are not too big
 				if(graphSize(graph_path) < 10000) {
-					System.out.println("Accepted " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
+					System.out.println("  Accepted " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
 					// Construction
 					Formula curr_formula = new Formula(form_path, graph_path);
 					formulas.add(curr_formula);
 					// Reduction
+					System.out.println("> Reduction, " + curr_formula.graph_name);
+					start_time = System.currentTimeMillis();
 					reduced_graphs.add(curr_formula.reduceToHS(mute));					
+					stop_time = System.currentTimeMillis();
+					double time_passed = (double)(stop_time-start_time)/(double)1000;
+					reduction_times.add(time_passed);
+					printTime(time_passed);
 				} else {
 					System.out.println("Discarded " + graph_files[j].getName() + " with " + graphSize(graph_path) + " nodes.");
 				}
@@ -165,58 +178,79 @@ public class Main {
 			// TODO only the first formula works right now
 			break;
 		}
-		stop_time = System.currentTimeMillis();
-		double constr_time = (double)(stop_time-start_time)/(double)1000;
-		printTime(constr_time);
 		
 		// Solving formulas
-//		for(int k_par = 1; k_par < 11; k_par++) {
-		for(int k_par = 10; k_par < 11; k_par++) {
+		for(int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
 			for(int j = 0; j < formulas.size(); j++) {
-				System.out.println("> SearchTree, graph " + j + ", k = " + k_par);
-				start_time = System.currentTimeMillis();
 				Formula curr_form = formulas.get(j);
+				System.out.println("> SearchTree, " + curr_form.graph_name + ", k = " + k_par);
+				start_time = System.currentTimeMillis();
 				boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute);
 				stop_time = System.currentTimeMillis();
 				if(!mute) System.out.println();
-				System.out.println("  SearchTree result: " + st_result );
-				double st_time = (double)(stop_time-start_time)/(double)1000;
-				printTime(st_time);
+				System.out.println("  result: " + st_result );
+				search_tree_results.add(st_result);
+				double time_passed = (double)(stop_time-start_time)/(double)1000;
+				search_tree_times.add(time_passed);
+				printTime(time_passed);
 			}
 			// Pipeline 2: (Reduce) + Kernel + HS SearchTree
 			for(int j = 0; j < reduced_graphs.size(); j++) {
 				// Kernel
 				Hypergraph curr_graph =  reduced_graphs.get(j);
-				System.out.println("> Kernelization, graph " + j + ", k = " + k_par + ", d = " + curr_graph.d_par);
+				System.out.println("> Kernelization, " + curr_graph.name + ", k = " + k_par + ", d = " + curr_graph.d_par);
 				start_time = System.currentTimeMillis();
 				// TODO kernelize should return kernel, not manipulate this
 				Hypergraph curr_kernel = curr_graph.kernelize(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
-				int edges_removed = curr_graph.edges.size() - curr_kernel.edges.size();
-				int nodes_removed = curr_graph.nodes.length - curr_kernel.nodes.length;
-				System.out.println("  hyp edges:     " + curr_graph.edges.size());
-				System.out.println("  hyp nodes:     " + curr_graph.nodes.length);
-				System.out.println("  edges removed: " + edges_removed);
-				System.out.println("  nodes removed: " + nodes_removed);
-				System.out.println("  kernel edges:  " + curr_kernel.edges.size());
-				System.out.println("  kernel nodes:  " + curr_kernel.nodes.length);
-				long sf_lemma_boundary = factorial(curr_graph.d_par) * (long) Math.pow(k_par, curr_graph.d_par);
-				System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
-				double kern_time = (double)(stop_time-start_time)/(double)1000;
-				printTime(kern_time);
+				if(!mute) {
+					System.out.println("  hyp edges:     " + curr_graph.edges.size());
+					System.out.println("  hyp nodes:     " + curr_graph.nodes.length);
+					int edges_removed = curr_graph.edges.size() - curr_kernel.edges.size();
+					System.out.println("  edges removed: " + edges_removed);
+					int nodes_removed = curr_graph.nodes.length - curr_kernel.nodes.length;
+					System.out.println("  nodes removed: " + nodes_removed);
+					System.out.println("  kernel edges:  " + curr_kernel.edges.size());
+					System.out.println("  kernel nodes:  " + curr_kernel.nodes.length);
+					long sf_lemma_boundary = factorial(curr_graph.d_par) * (long) Math.pow(k_par, curr_graph.d_par);
+					System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
+				}
+				double kernel_time_passed = (double)(stop_time-start_time)/(double)1000;
+				kernel_times.add(kernel_time_passed );
+				printTime(kernel_time_passed );
 				
 				// HS SearchTree
-				System.out.println("> HS-SearchTree, graph " + j);
+				System.out.println("> HS-SearchTree, graph " + curr_graph.name);
 				start_time = System.currentTimeMillis();
-				boolean hs_st_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute);
+				boolean hs_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute);
 				stop_time = System.currentTimeMillis();
-				System.out.println();
-				System.out.println("  result: " + hs_st_result);
-				double hs_st_time = (double)(stop_time-start_time)/(double)1000;
-				printTime(hs_st_time);
+				if(!mute) System.out.println();
+				System.out.println("  result: " + hs_result);
+				hs_results.add(hs_result);
+				double hs_time_passed = (double)(stop_time-start_time)/(double)1000;
+				hs_times.add(hs_time_passed);
+				printTime(hs_time_passed);
 			}
+		}
+		
+		// Collect results
+		System.out.println("\n------------------------------------");
+		// Debugging
+		System.out.println("formulas: " + formulas.size() + ", st_times: " + search_tree_times.size() + ", reduction_times: " + reduction_times.size() + ", kernel_times: " + kernel_times.size() + ", hs_times: " + hs_times.size());
+		int curr_k_par = start_k;
+		for(int i = 0; i < search_tree_times.size(); i++) {
+			int form_and_redu_index = i % formulas.size();
+			if(form_and_redu_index == 0 && i != 0) curr_k_par += k_increment;
+			System.out.println("--- Graph: " + formulas.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
+			System.out.println("1. SearchTree:    " + search_tree_times.get(i));
+			System.out.println("   " + search_tree_results.get(i));
+			System.out.println("2. Reduction:     " + reduction_times.get(form_and_redu_index));
+			System.out.println("   Kernelisation: " + kernel_times.get(i));
+			System.out.println("   HS-SearchTree: " + hs_times.get(i));
+			System.out.println("   " + hs_results.get(i));
+			
 		}
 	}
 

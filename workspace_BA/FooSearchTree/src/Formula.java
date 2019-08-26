@@ -15,7 +15,8 @@ import java.util.Map.Entry;
  * and print the formula.
  */
 public class Formula {
-	String name;
+	String form_name;
+	String graph_name;
 	int[] universe;
 	HashMap<String, Relation> rels;
 	String[] bound_vars;
@@ -44,7 +45,8 @@ public class Formula {
 
 			// Name of the formula
 			line = br.readLine();
-			name = line;
+			form_name = line;
+			graph_name = new File(graph_path).getName();
 			// Universe
 			// External graph from .gr file -> skip two lines
 			line = br.readLine();
@@ -139,7 +141,8 @@ public class Formula {
 
 			// Name of the formula
 			line = br.readLine();
-			name = line;
+			form_name = line;
+			graph_name = "internal";
 			// Universe
 			line = br.readLine();
 			String[] universe_line = line.split(",");
@@ -218,7 +221,7 @@ public class Formula {
 		for (long i = 0; i < nr_of_assignments; i++) {
 			// prints
 //			if(!mute && i % 100 == 0) {
-			if(i % 400000 == 0) {
+			if(!mute && i % 500000 == 0) {
 				curr_assignment_str = "";
 				for(int j = 0; j < c_par; j++) {
 					curr_assignment_str += curr_assignment[j] + " ";
@@ -245,6 +248,8 @@ public class Formula {
 		if(!mute) System.out.println();
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
+		// Copy name from this formula
+		hyp.name = graph_name;
 		return hyp;
 	}
 
@@ -317,6 +322,8 @@ public class Formula {
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
 		// TODO Maybe search trees can start testing assignments where they left of?
+		// TODO return solution
+		
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
@@ -422,7 +429,7 @@ public class Formula {
 	 */
 	public String toOutputString() {
 		String res = "";
-		res += name + ":\n";
+		res += form_name + ":\n";
 		res += "U = {";
 		for (int i = 0; i < universe.length; i++) {
 			if (i + 1 != universe.length)
@@ -458,10 +465,10 @@ public class Formula {
 	 */
 	public void saveToFile() {
 		try {
-			File out_file = new File("saves" + File.separator + this.name + "-save.txt");
+			File out_file = new File("saves" + File.separator + this.form_name + "-save.txt");
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
 			// Name
-			bw.write(name + "\n");
+			bw.write(form_name + "\n");
 			// Universe
 			for (int i = 0; i < universe.length; i++) {
 				if (i + 1 != universe.length)

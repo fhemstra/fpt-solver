@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Hypergraph {
+	public String name;
 	boolean show_minus_one_entries = true;
 	boolean printGraphs = false;
 	int d_par;
@@ -205,7 +206,7 @@ public class Hypergraph {
 			kernel.nodes = int_nodes;
 			kernel.edges = updated_e;
 			sf_counter++;
-			System.out.print("  SFs removed:   " + sf_counter + "\r");
+			if(!mute) System.out.print("  SFs removed:   " + sf_counter + "\r");
 			// print kernel
 			if(!mute) System.out.println("KERNELIZED hyp:");
 			if(!mute) {
@@ -220,7 +221,7 @@ public class Hypergraph {
 			sun = findSunflower(kernel, k, mute);
 			if(!mute) System.out.println("LOOP KERNELIZE.");
 		}
-		if(sf_counter > 0) System.out.println();
+		if(sf_counter > 0 && !mute) System.out.println();
 		if(!mute) System.out.println("<< END KERNELIZE.");
 		return kernel;
 	}
@@ -340,6 +341,7 @@ public class Hypergraph {
 	}
 
 	public boolean hsSearchTree(Hypergraph graph, int k_par, ArrayList<Integer> sol, boolean mute) {
+		// TODO return solution
 		int[] local_nodes = graph.nodes;
 		ArrayList<Tuple> local_edges = graph.edges;
 		// check for empty edges at the start
@@ -368,7 +370,7 @@ public class Hypergraph {
 						// Try adding this
 						sol.add(curr_edge.elements[j]);
 						// print
-						System.out.print("  Sol size: " + sol.size() + "\r");
+						if(!mute) System.out.print("  Sol size: " + sol.size() + "\r");
 						flag = flag || hsSearchTree(graph, k_par, sol, mute);
 						if(flag) {
 							return true;
