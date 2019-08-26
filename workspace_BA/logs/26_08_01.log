@@ -1,0 +1,2269 @@
+> Constructing formulas with vc-instances and reducing them to hypergraphs.
+  Accepted vc-exact_001.gr with 6160 nodes.
+> Reduction, vc-exact_001.gr
+- Time elapsed:  105,070 sec
+  Discarded vc-exact_003.gr with 60541 nodes.
+  Accepted vc-exact_005.gr with 200 nodes.
+> Reduction, vc-exact_005.gr
+- Time elapsed:  0,170 sec
+  Accepted vc-exact_007.gr with 8794 nodes.
+> Reduction, vc-exact_007.gr
+- Time elapsed:  85,032 sec
+  Discarded vc-exact_009.gr with 38452 nodes.
+  Accepted vc-exact_011.gr with 9877 nodes.
+> Reduction, vc-exact_011.gr
+- Time elapsed:  119,378 sec
+  Discarded vc-exact_013.gr with 45307 nodes.
+  Discarded vc-exact_015.gr with 53610 nodes.
+  Discarded vc-exact_017.gr with 23541 nodes.
+  Accepted vc-exact_019.gr with 200 nodes.
+> Reduction, vc-exact_019.gr
+- Time elapsed:  0,070 sec
+  Discarded vc-exact_021.gr with 24765 nodes.
+  Discarded vc-exact_023.gr with 27717 nodes.
+  Discarded vc-exact_025.gr with 23194 nodes.
+  Discarded vc-exact_027.gr with 65866 nodes.
+  Discarded vc-exact_029.gr with 13431 nodes.
+  Accepted vc-exact_031.gr with 200 nodes.
+> Reduction, vc-exact_031.gr
+- Time elapsed:  0,077 sec
+  Accepted vc-exact_033.gr with 4410 nodes.
+> Reduction, vc-exact_033.gr
+- Time elapsed:  18,921 sec
+  Accepted vc-exact_035.gr with 200 nodes.
+> Reduction, vc-exact_035.gr
+- Time elapsed:  0,074 sec
+  Accepted vc-exact_037.gr with 198 nodes.
+> Reduction, vc-exact_037.gr
+- Time elapsed:  0,070 sec
+  Accepted vc-exact_039.gr with 6795 nodes.
+> Reduction, vc-exact_039.gr
+- Time elapsed:  45,208 sec
+  Accepted vc-exact_041.gr with 200 nodes.
+> Reduction, vc-exact_041.gr
+- Time elapsed:  0,087 sec
+  Accepted vc-exact_043.gr with 200 nodes.
+> Reduction, vc-exact_043.gr
+- Time elapsed:  0,081 sec
+  Accepted vc-exact_045.gr with 200 nodes.
+> Reduction, vc-exact_045.gr
+- Time elapsed:  0,088 sec
+  Accepted vc-exact_047.gr with 200 nodes.
+> Reduction, vc-exact_047.gr
+- Time elapsed:  0,120 sec
+  Accepted vc-exact_049.gr with 200 nodes.
+> Reduction, vc-exact_049.gr
+- Time elapsed:  0,089 sec
+  Accepted vc-exact_051.gr with 200 nodes.
+> Reduction, vc-exact_051.gr
+- Time elapsed:  0,102 sec
+  Accepted vc-exact_053.gr with 200 nodes.
+> Reduction, vc-exact_053.gr
+- Time elapsed:  0,100 sec
+  Accepted vc-exact_055.gr with 200 nodes.
+> Reduction, vc-exact_055.gr
+- Time elapsed:  0,085 sec
+  Accepted vc-exact_057.gr with 200 nodes.
+> Reduction, vc-exact_057.gr
+- Time elapsed:  0,117 sec
+  Accepted vc-exact_059.gr with 200 nodes.
+> Reduction, vc-exact_059.gr
+- Time elapsed:  0,096 sec
+  Accepted vc-exact_061.gr with 200 nodes.
+> Reduction, vc-exact_061.gr
+- Time elapsed:  0,075 sec
+  Accepted vc-exact_063.gr with 200 nodes.
+> Reduction, vc-exact_063.gr
+- Time elapsed:  0,100 sec
+  Accepted vc-exact_065.gr with 200 nodes.
+> Reduction, vc-exact_065.gr
+- Time elapsed:  0,111 sec
+  Accepted vc-exact_067.gr with 200 nodes.
+> Reduction, vc-exact_067.gr
+- Time elapsed:  0,105 sec
+  Accepted vc-exact_069.gr with 200 nodes.
+> Reduction, vc-exact_069.gr
+- Time elapsed:  0,090 sec
+  Accepted vc-exact_071.gr with 200 nodes.
+> Reduction, vc-exact_071.gr
+- Time elapsed:  0,086 sec
+  Accepted vc-exact_073.gr with 200 nodes.
+> Reduction, vc-exact_073.gr
+- Time elapsed:  0,110 sec
+  Discarded vc-exact_075.gr with 26300 nodes.
+  Accepted vc-exact_077.gr with 200 nodes.
+> Reduction, vc-exact_077.gr
+- Time elapsed:  0,095 sec
+  Discarded vc-exact_079.gr with 26300 nodes.
+  Accepted vc-exact_081.gr with 199 nodes.
+> Reduction, vc-exact_081.gr
+- Time elapsed:  0,100 sec
+  Accepted vc-exact_083.gr with 200 nodes.
+> Reduction, vc-exact_083.gr
+- Time elapsed:  0,105 sec
+  Discarded vc-exact_085.gr with 11470 nodes.
+  Discarded vc-exact_087.gr with 13590 nodes.
+  Discarded vc-exact_089.gr with 57316 nodes.
+  Accepted vc-exact_091.gr with 200 nodes.
+> Reduction, vc-exact_091.gr
+- Time elapsed:  0,110 sec
+  Accepted vc-exact_093.gr with 200 nodes.
+> Reduction, vc-exact_093.gr
+- Time elapsed:  0,115 sec
+  Discarded vc-exact_095.gr with 15783 nodes.
+  Discarded vc-exact_097.gr with 18096 nodes.
+  Discarded vc-exact_099.gr with 26300 nodes.
+  Discarded vc-exact_101.gr with 26300 nodes.
+  Discarded vc-exact_103.gr with 15783 nodes.
+  Discarded vc-exact_105.gr with 26300 nodes.
+  Discarded vc-exact_107.gr with 13590 nodes.
+  Discarded vc-exact_109.gr with 66992 nodes.
+  Accepted vc-exact_111.gr with 450 nodes.
+> Reduction, vc-exact_111.gr
+- Time elapsed:  11,815 sec
+  Discarded vc-exact_113.gr with 26300 nodes.
+  Discarded vc-exact_115.gr with 18096 nodes.
+  Discarded vc-exact_117.gr with 18096 nodes.
+  Discarded vc-exact_119.gr with 18096 nodes.
+  Discarded vc-exact_121.gr with 18096 nodes.
+  Discarded vc-exact_123.gr with 26300 nodes.
+  Discarded vc-exact_125.gr with 26300 nodes.
+  Discarded vc-exact_127.gr with 18096 nodes.
+  Discarded vc-exact_129.gr with 15783 nodes.
+  Accepted vc-exact_131.gr with 2980 nodes.
+> Reduction, vc-exact_131.gr
+- Time elapsed:  9,243 sec
+  Discarded vc-exact_133.gr with 15783 nodes.
+  Discarded vc-exact_135.gr with 26300 nodes.
+  Discarded vc-exact_137.gr with 26300 nodes.
+  Discarded vc-exact_139.gr with 18096 nodes.
+  Discarded vc-exact_141.gr with 18096 nodes.
+  Discarded vc-exact_143.gr with 18096 nodes.
+  Discarded vc-exact_145.gr with 18096 nodes.
+  Discarded vc-exact_147.gr with 18096 nodes.
+  Discarded vc-exact_149.gr with 26300 nodes.
+  Discarded vc-exact_151.gr with 15783 nodes.
+  Discarded vc-exact_153.gr with 29076 nodes.
+  Discarded vc-exact_155.gr with 26300 nodes.
+  Accepted vc-exact_157.gr with 2980 nodes.
+> Reduction, vc-exact_157.gr
+- Time elapsed:  9,826 sec
+  Discarded vc-exact_159.gr with 18096 nodes.
+  Discarded vc-exact_161.gr with 138141 nodes.
+  Discarded vc-exact_163.gr with 18096 nodes.
+  Discarded vc-exact_165.gr with 18096 nodes.
+  Discarded vc-exact_167.gr with 15783 nodes.
+  Accepted vc-exact_169.gr with 4768 nodes.
+> Reduction, vc-exact_169.gr
+- Time elapsed:  22,972 sec
+  Discarded vc-exact_171.gr with 18096 nodes.
+  Discarded vc-exact_173.gr with 56860 nodes.
+  Accepted vc-exact_175.gr with 3523 nodes.
+> Reduction, vc-exact_175.gr
+- Time elapsed:  12,466 sec
+  Accepted vc-exact_177.gr with 5066 nodes.
+> Reduction, vc-exact_177.gr
+- Time elapsed:  26,947 sec
+  Discarded vc-exact_179.gr with 15783 nodes.
+  Discarded vc-exact_181.gr with 18096 nodes.
+  Discarded vc-exact_183.gr with 72420 nodes.
+  Accepted vc-exact_185.gr with 3523 nodes.
+> Reduction, vc-exact_185.gr
+- Time elapsed:  12,341 sec
+  Accepted vc-exact_187.gr with 4227 nodes.
+> Reduction, vc-exact_187.gr
+- Time elapsed:  18,133 sec
+  Accepted vc-exact_189.gr with 7400 nodes.
+> Reduction, vc-exact_189.gr
+- Time elapsed:  57,438 sec
+  Accepted vc-exact_191.gr with 4579 nodes.
+> Reduction, vc-exact_191.gr
+- Time elapsed:  21,446 sec
+  Accepted vc-exact_193.gr with 7030 nodes.
+> Reduction, vc-exact_193.gr
+- Time elapsed:  51,085 sec
+  Accepted vc-exact_195.gr with 1150 nodes.
+> Reduction, vc-exact_195.gr
+- Time elapsed:  250,762 sec
+  Accepted vc-exact_197.gr with 1534 nodes.
+> Reduction, vc-exact_197.gr
+- Time elapsed:  624,952 sec
+  Accepted vc-exact_199.gr with 1534 nodes.
+> Reduction, vc-exact_199.gr
+- Time elapsed:  616,843 sec
+--- k = 10 ---
+> SearchTree, vc-exact_001.gr, k = 10
+  result: false
+- Time elapsed:  117,057 sec
+> SearchTree, vc-exact_005.gr, k = 10
+  result: false
+- Time elapsed:  3,235 sec
+> SearchTree, vc-exact_007.gr, k = 10
+  result: false
+- Time elapsed:  210,691 sec
+> SearchTree, vc-exact_011.gr, k = 10
+  result: false
+- Time elapsed:  171,414 sec
+> SearchTree, vc-exact_019.gr, k = 10
+  result: false
+- Time elapsed:  2,522 sec
+> SearchTree, vc-exact_031.gr, k = 10
+  result: false
+- Time elapsed:  3,077 sec
+> SearchTree, vc-exact_033.gr, k = 10
+  result: false
+- Time elapsed:  60,161 sec
+> SearchTree, vc-exact_035.gr, k = 10
+  result: false
+- Time elapsed:  2,359 sec
+> SearchTree, vc-exact_037.gr, k = 10
+  result: false
+- Time elapsed:  2,422 sec
+> SearchTree, vc-exact_039.gr, k = 10
+  result: false
+- Time elapsed:  93,913 sec
+> SearchTree, vc-exact_041.gr, k = 10
+  result: false
+- Time elapsed:  2,516 sec
+> SearchTree, vc-exact_043.gr, k = 10
+  result: false
+- Time elapsed:  2,625 sec
+> SearchTree, vc-exact_045.gr, k = 10
+  result: false
+- Time elapsed:  2,610 sec
+> SearchTree, vc-exact_047.gr, k = 10
+  result: false
+- Time elapsed:  3,406 sec
+> SearchTree, vc-exact_049.gr, k = 10
+  result: false
+- Time elapsed:  3,939 sec
+> SearchTree, vc-exact_051.gr, k = 10
+  result: false
+- Time elapsed:  3,016 sec
+> SearchTree, vc-exact_053.gr, k = 10
+  result: false
+- Time elapsed:  3,197 sec
+> SearchTree, vc-exact_055.gr, k = 10
+  result: false
+- Time elapsed:  3,320 sec
+> SearchTree, vc-exact_057.gr, k = 10
+  result: false
+- Time elapsed:  3,469 sec
+> SearchTree, vc-exact_059.gr, k = 10
+  result: false
+- Time elapsed:  2,547 sec
+> SearchTree, vc-exact_061.gr, k = 10
+  result: false
+- Time elapsed:  2,360 sec
+> SearchTree, vc-exact_063.gr, k = 10
+  result: false
+- Time elapsed:  2,485 sec
+> SearchTree, vc-exact_065.gr, k = 10
+  result: false
+- Time elapsed:  2,578 sec
+> SearchTree, vc-exact_067.gr, k = 10
+  result: false
+- Time elapsed:  2,812 sec
+> SearchTree, vc-exact_069.gr, k = 10
+  result: false
+- Time elapsed:  3,001 sec
+> SearchTree, vc-exact_071.gr, k = 10
+  result: false
+- Time elapsed:  3,502 sec
+> SearchTree, vc-exact_073.gr, k = 10
+  result: false
+- Time elapsed:  3,734 sec
+> SearchTree, vc-exact_077.gr, k = 10
+  result: false
+- Time elapsed:  2,672 sec
+> SearchTree, vc-exact_081.gr, k = 10
+  result: false
+- Time elapsed:  2,434 sec
+> SearchTree, vc-exact_083.gr, k = 10
+  result: false
+- Time elapsed:  2,676 sec
+> SearchTree, vc-exact_091.gr, k = 10
+  result: false
+- Time elapsed:  2,625 sec
+> SearchTree, vc-exact_093.gr, k = 10
+  result: false
+- Time elapsed:  2,812 sec
+> SearchTree, vc-exact_111.gr, k = 10
+  result: false
+- Time elapsed:  11,776 sec
+> SearchTree, vc-exact_131.gr, k = 10
+  result: false
+- Time elapsed:  33,466 sec
+> SearchTree, vc-exact_157.gr, k = 10
+  result: false
+- Time elapsed:  38,838 sec
+> SearchTree, vc-exact_169.gr, k = 10
+  result: false
+- Time elapsed:  55,917 sec
+> SearchTree, vc-exact_175.gr, k = 10
+  result: false
+- Time elapsed:  40,350 sec
+> SearchTree, vc-exact_177.gr, k = 10
+  result: false
+- Time elapsed:  50,852 sec
+> SearchTree, vc-exact_185.gr, k = 10
+  result: false
+- Time elapsed:  33,878 sec
+> SearchTree, vc-exact_187.gr, k = 10
+  result: false
+- Time elapsed:  41,701 sec
+> SearchTree, vc-exact_189.gr, k = 10
+  result: false
+- Time elapsed:  74,151 sec
+> SearchTree, vc-exact_191.gr, k = 10
+  result: false
+- Time elapsed:  45,907 sec
+> SearchTree, vc-exact_193.gr, k = 10
+  result: false
+- Time elapsed:  69,222 sec
+> SearchTree, vc-exact_195.gr, k = 10
+  result: false
+- Time elapsed:  21,619 sec
+> SearchTree, vc-exact_197.gr, k = 10
+  result: false
+- Time elapsed:  28,645 sec
+> SearchTree, vc-exact_199.gr, k = 10
+  result: false
+- Time elapsed:  26,020 sec
+> Kernelization, vc-exact_001.gr, k = 10, d = 2
+- Time elapsed:  49,982 sec
+> HS-SearchTree, graph vc-exact_001.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_005.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_005.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_007.gr, k = 10, d = 2
+- Time elapsed:  2,906 sec
+> HS-SearchTree, graph vc-exact_007.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_011.gr, k = 10, d = 2
+- Time elapsed:  16,331 sec
+> HS-SearchTree, graph vc-exact_011.gr
+  result: false
+- Time elapsed:  0,031 sec
+> Kernelization, vc-exact_019.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_019.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_031.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_031.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_033.gr, k = 10, d = 2
+- Time elapsed:  1,265 sec
+> HS-SearchTree, graph vc-exact_033.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_035.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_035.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_037.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_037.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_039.gr, k = 10, d = 2
+- Time elapsed:  3,067 sec
+> HS-SearchTree, graph vc-exact_039.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_041.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_041.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_043.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_043.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_045.gr, k = 10, d = 2
+- Time elapsed:  0,047 sec
+> HS-SearchTree, graph vc-exact_045.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_047.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_047.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_049.gr, k = 10, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_049.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_051.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_051.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_053.gr, k = 10, d = 2
+- Time elapsed:  0,047 sec
+> HS-SearchTree, graph vc-exact_053.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_055.gr, k = 10, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_055.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_057.gr, k = 10, d = 2
+- Time elapsed:  0,063 sec
+> HS-SearchTree, graph vc-exact_057.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_059.gr, k = 10, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_059.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_061.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_061.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_063.gr, k = 10, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_063.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_065.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_065.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_067.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_067.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_069.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_069.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_071.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_071.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_073.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_073.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_077.gr, k = 10, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_077.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_081.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_081.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_083.gr, k = 10, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_083.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_091.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_091.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_093.gr, k = 10, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_093.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_111.gr, k = 10, d = 2
+- Time elapsed:  7,406 sec
+> HS-SearchTree, graph vc-exact_111.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_131.gr, k = 10, d = 2
+- Time elapsed:  0,610 sec
+> HS-SearchTree, graph vc-exact_131.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_157.gr, k = 10, d = 2
+- Time elapsed:  0,593 sec
+> HS-SearchTree, graph vc-exact_157.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_169.gr, k = 10, d = 2
+- Time elapsed:  1,641 sec
+> HS-SearchTree, graph vc-exact_169.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_175.gr, k = 10, d = 2
+- Time elapsed:  0,891 sec
+> HS-SearchTree, graph vc-exact_175.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_177.gr, k = 10, d = 2
+- Time elapsed:  1,860 sec
+> HS-SearchTree, graph vc-exact_177.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_185.gr, k = 10, d = 2
+- Time elapsed:  0,937 sec
+> HS-SearchTree, graph vc-exact_185.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_187.gr, k = 10, d = 2
+- Time elapsed:  1,407 sec
+> HS-SearchTree, graph vc-exact_187.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_189.gr, k = 10, d = 2
+- Time elapsed:  4,750 sec
+> HS-SearchTree, graph vc-exact_189.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_191.gr, k = 10, d = 2
+- Time elapsed:  1,906 sec
+> HS-SearchTree, graph vc-exact_191.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_193.gr, k = 10, d = 2
+- Time elapsed:  4,501 sec
+> HS-SearchTree, graph vc-exact_193.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_195.gr, k = 10, d = 2
+- Time elapsed:  169,456 sec
+> HS-SearchTree, graph vc-exact_195.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_197.gr, k = 10, d = 2
+- Time elapsed:  484,050 sec
+> HS-SearchTree, graph vc-exact_197.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_199.gr, k = 10, d = 2
+- Time elapsed:  440,628 sec
+> HS-SearchTree, graph vc-exact_199.gr
+  result: false
+- Time elapsed:  0,000 sec
+--- k = 12 ---
+> SearchTree, vc-exact_001.gr, k = 12
+  result: false
+- Time elapsed:  533,651 sec
+> SearchTree, vc-exact_005.gr, k = 12
+  result: false
+- Time elapsed:  11,108 sec
+> SearchTree, vc-exact_007.gr, k = 12
+  result: false
+- Time elapsed:  1068,705 sec
+> SearchTree, vc-exact_011.gr, k = 12
+  result: false
+- Time elapsed:  910,080 sec
+> SearchTree, vc-exact_019.gr, k = 12
+  result: false
+- Time elapsed:  12,114 sec
+> SearchTree, vc-exact_031.gr, k = 12
+  result: false
+- Time elapsed:  12,094 sec
+> SearchTree, vc-exact_033.gr, k = 12
+  result: false
+- Time elapsed:  244,152 sec
+> SearchTree, vc-exact_035.gr, k = 12
+  result: false
+- Time elapsed:  10,907 sec
+> SearchTree, vc-exact_037.gr, k = 12
+  result: false
+- Time elapsed:  11,205 sec
+> SearchTree, vc-exact_039.gr, k = 12
+  result: false
+- Time elapsed:  465,466 sec
+> SearchTree, vc-exact_041.gr, k = 12
+  result: false
+- Time elapsed:  15,124 sec
+> SearchTree, vc-exact_043.gr, k = 12
+  result: false
+- Time elapsed:  12,887 sec
+> SearchTree, vc-exact_045.gr, k = 12
+  result: false
+- Time elapsed:  15,009 sec
+> SearchTree, vc-exact_047.gr, k = 12
+  result: false
+- Time elapsed:  14,942 sec
+> SearchTree, vc-exact_049.gr, k = 12
+  result: false
+- Time elapsed:  15,535 sec
+> SearchTree, vc-exact_051.gr, k = 12
+  result: false
+- Time elapsed:  14,640 sec
+> SearchTree, vc-exact_053.gr, k = 12
+  result: false
+- Time elapsed:  14,580 sec
+> SearchTree, vc-exact_055.gr, k = 12
+  result: false
+- Time elapsed:  15,157 sec
+> SearchTree, vc-exact_057.gr, k = 12
+  result: false
+- Time elapsed:  15,069 sec
+> SearchTree, vc-exact_059.gr, k = 12
+  result: false
+- Time elapsed:  14,485 sec
+> SearchTree, vc-exact_061.gr, k = 12
+  result: false
+- Time elapsed:  14,081 sec
+> SearchTree, vc-exact_063.gr, k = 12
+  result: false
+- Time elapsed:  14,965 sec
+> SearchTree, vc-exact_065.gr, k = 12
+  result: false
+- Time elapsed:  14,629 sec
+> SearchTree, vc-exact_067.gr, k = 12
+  result: false
+- Time elapsed:  14,670 sec
+> SearchTree, vc-exact_069.gr, k = 12
+  result: false
+- Time elapsed:  13,345 sec
+> SearchTree, vc-exact_071.gr, k = 12
+  result: false
+- Time elapsed:  11,786 sec
+> SearchTree, vc-exact_073.gr, k = 12
+  result: false
+- Time elapsed:  14,475 sec
+> SearchTree, vc-exact_077.gr, k = 12
+  result: false
+- Time elapsed:  14,621 sec
+> SearchTree, vc-exact_081.gr, k = 12
+  result: false
+- Time elapsed:  14,975 sec
+> SearchTree, vc-exact_083.gr, k = 12
+  result: false
+- Time elapsed:  15,934 sec
+> SearchTree, vc-exact_091.gr, k = 12
+  result: false
+- Time elapsed:  15,445 sec
+> SearchTree, vc-exact_093.gr, k = 12
+  result: false
+- Time elapsed:  15,160 sec
+> SearchTree, vc-exact_111.gr, k = 12
+  result: false
+- Time elapsed:  49,803 sec
+> SearchTree, vc-exact_131.gr, k = 12
+  result: false
+- Time elapsed:  174,089 sec
+> SearchTree, vc-exact_157.gr, k = 12
+  result: false
+- Time elapsed:  186,620 sec
+> SearchTree, vc-exact_169.gr, k = 12
+  result: false
+- Time elapsed:  276,581 sec
+> SearchTree, vc-exact_175.gr, k = 12
+  result: false
+- Time elapsed:  170,533 sec
+> SearchTree, vc-exact_177.gr, k = 12
+  result: false
+- Time elapsed:  214,190 sec
+> SearchTree, vc-exact_185.gr, k = 12
+  result: false
+- Time elapsed:  231,197 sec
+> SearchTree, vc-exact_187.gr, k = 12
+  result: false
+- Time elapsed:  237,816 sec
+> SearchTree, vc-exact_189.gr, k = 12
+  result: false
+- Time elapsed:  354,427 sec
+> SearchTree, vc-exact_191.gr, k = 12
+  result: false
+- Time elapsed:  194,935 sec
+> SearchTree, vc-exact_193.gr, k = 12
+  result: false
+- Time elapsed:  300,350 sec
+> SearchTree, vc-exact_195.gr, k = 12
+  result: false
+- Time elapsed:  115,816 sec
+> SearchTree, vc-exact_197.gr, k = 12
+  result: false
+- Time elapsed:  150,142 sec
+> SearchTree, vc-exact_199.gr, k = 12
+  result: false
+- Time elapsed:  150,397 sec
+> Kernelization, vc-exact_001.gr, k = 12, d = 2
+- Time elapsed:  51,453 sec
+> HS-SearchTree, graph vc-exact_001.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_005.gr, k = 12, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_005.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_007.gr, k = 12, d = 2
+- Time elapsed:  2,740 sec
+> HS-SearchTree, graph vc-exact_007.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_011.gr, k = 12, d = 2
+- Time elapsed:  19,377 sec
+> HS-SearchTree, graph vc-exact_011.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_019.gr, k = 12, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_019.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_031.gr, k = 12, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_031.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_033.gr, k = 12, d = 2
+- Time elapsed:  1,329 sec
+> HS-SearchTree, graph vc-exact_033.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_035.gr, k = 12, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_035.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_037.gr, k = 12, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_037.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_039.gr, k = 12, d = 2
+- Time elapsed:  3,079 sec
+> HS-SearchTree, graph vc-exact_039.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_041.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_041.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_043.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_043.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_045.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_045.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_047.gr, k = 12, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_047.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_049.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_049.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_051.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_051.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_053.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_053.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_055.gr, k = 12, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_055.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_057.gr, k = 12, d = 2
+- Time elapsed:  0,046 sec
+> HS-SearchTree, graph vc-exact_057.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_059.gr, k = 12, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_059.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_061.gr, k = 12, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_061.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_063.gr, k = 12, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_063.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_065.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_065.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_067.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_067.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_069.gr, k = 12, d = 2
+- Time elapsed:  0,047 sec
+> HS-SearchTree, graph vc-exact_069.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_071.gr, k = 12, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_071.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_073.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_073.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_077.gr, k = 12, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_077.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_081.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_081.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_083.gr, k = 12, d = 2
+- Time elapsed:  0,047 sec
+> HS-SearchTree, graph vc-exact_083.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_091.gr, k = 12, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_091.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_093.gr, k = 12, d = 2
+- Time elapsed:  0,047 sec
+> HS-SearchTree, graph vc-exact_093.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_111.gr, k = 12, d = 2
+- Time elapsed:  8,766 sec
+> HS-SearchTree, graph vc-exact_111.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_131.gr, k = 12, d = 2
+- Time elapsed:  0,797 sec
+> HS-SearchTree, graph vc-exact_131.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_157.gr, k = 12, d = 2
+- Time elapsed:  0,797 sec
+> HS-SearchTree, graph vc-exact_157.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_169.gr, k = 12, d = 2
+- Time elapsed:  1,997 sec
+> HS-SearchTree, graph vc-exact_169.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_175.gr, k = 12, d = 2
+- Time elapsed:  1,145 sec
+> HS-SearchTree, graph vc-exact_175.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_177.gr, k = 12, d = 2
+- Time elapsed:  2,297 sec
+> HS-SearchTree, graph vc-exact_177.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_185.gr, k = 12, d = 2
+- Time elapsed:  1,141 sec
+> HS-SearchTree, graph vc-exact_185.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_187.gr, k = 12, d = 2
+- Time elapsed:  1,593 sec
+> HS-SearchTree, graph vc-exact_187.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_189.gr, k = 12, d = 2
+- Time elapsed:  5,047 sec
+> HS-SearchTree, graph vc-exact_189.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_191.gr, k = 12, d = 2
+- Time elapsed:  2,031 sec
+> HS-SearchTree, graph vc-exact_191.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_193.gr, k = 12, d = 2
+- Time elapsed:  4,579 sec
+> HS-SearchTree, graph vc-exact_193.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_195.gr, k = 12, d = 2
+- Time elapsed:  190,038 sec
+> HS-SearchTree, graph vc-exact_195.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_197.gr, k = 12, d = 2
+- Time elapsed:  484,882 sec
+> HS-SearchTree, graph vc-exact_197.gr
+  result: false
+- Time elapsed:  0,010 sec
+> Kernelization, vc-exact_199.gr, k = 12, d = 2
+- Time elapsed:  559,100 sec
+> HS-SearchTree, graph vc-exact_199.gr
+  result: false
+- Time elapsed:  0,015 sec
+--- k = 14 ---
+> SearchTree, vc-exact_001.gr, k = 14
+  result: false
+- Time elapsed:  2697,382 sec
+> SearchTree, vc-exact_005.gr, k = 14
+  result: false
+- Time elapsed:  59,206 sec
+> SearchTree, vc-exact_007.gr, k = 14
+  result: false
+- Time elapsed:  5090,278 sec
+> SearchTree, vc-exact_011.gr, k = 14
+  result: false
+- Time elapsed:  3811,372 sec
+> SearchTree, vc-exact_019.gr, k = 14
+  result: false
+- Time elapsed:  51,535 sec
+> SearchTree, vc-exact_031.gr, k = 14
+  result: false
+- Time elapsed:  51,897 sec
+> SearchTree, vc-exact_033.gr, k = 14
+  result: false
+- Time elapsed:  1286,028 sec
+> SearchTree, vc-exact_035.gr, k = 14
+  result: false
+- Time elapsed:  62,303 sec
+> SearchTree, vc-exact_037.gr, k = 14
+  result: false
+- Time elapsed:  60,794 sec
+> SearchTree, vc-exact_039.gr, k = 14
+  result: false
+- Time elapsed:  2093,878 sec
+> SearchTree, vc-exact_041.gr, k = 14
+  result: false
+- Time elapsed:  62,294 sec
+> SearchTree, vc-exact_043.gr, k = 14
+  result: false
+- Time elapsed:  58,102 sec
+> SearchTree, vc-exact_045.gr, k = 14
+  result: false
+- Time elapsed:  70,323 sec
+> SearchTree, vc-exact_047.gr, k = 14
+  result: false
+- Time elapsed:  70,544 sec
+> SearchTree, vc-exact_049.gr, k = 14
+  result: false
+- Time elapsed:  75,602 sec
+> SearchTree, vc-exact_051.gr, k = 14
+  result: false
+- Time elapsed:  69,554 sec
+> SearchTree, vc-exact_053.gr, k = 14
+  result: false
+- Time elapsed:  70,757 sec
+> SearchTree, vc-exact_055.gr, k = 14
+  result: false
+- Time elapsed:  65,787 sec
+> SearchTree, vc-exact_057.gr, k = 14
+  result: false
+- Time elapsed:  67,462 sec
+> SearchTree, vc-exact_059.gr, k = 14
+  result: false
+- Time elapsed:  67,461 sec
+> SearchTree, vc-exact_061.gr, k = 14
+  result: false
+- Time elapsed:  60,129 sec
+> SearchTree, vc-exact_063.gr, k = 14
+  result: false
+- Time elapsed:  57,039 sec
+> SearchTree, vc-exact_065.gr, k = 14
+  result: false
+- Time elapsed:  61,867 sec
+> SearchTree, vc-exact_067.gr, k = 14
+  result: false
+- Time elapsed:  53,443 sec
+> SearchTree, vc-exact_069.gr, k = 14
+  result: false
+- Time elapsed:  57,563 sec
+> SearchTree, vc-exact_071.gr, k = 14
+  result: false
+- Time elapsed:  68,460 sec
+> SearchTree, vc-exact_073.gr, k = 14
+  result: false
+- Time elapsed:  64,023 sec
+> SearchTree, vc-exact_077.gr, k = 14
+  result: false
+- Time elapsed:  66,381 sec
+> SearchTree, vc-exact_081.gr, k = 14
+  result: false
+- Time elapsed:  65,491 sec
+> SearchTree, vc-exact_083.gr, k = 14
+  result: false
+- Time elapsed:  70,057 sec
+> SearchTree, vc-exact_091.gr, k = 14
+  result: false
+- Time elapsed:  69,183 sec
+> SearchTree, vc-exact_093.gr, k = 14
+  result: false
+- Time elapsed:  68,555 sec
+> SearchTree, vc-exact_111.gr, k = 14
+  result: false
+- Time elapsed:  200,858 sec
+> SearchTree, vc-exact_131.gr, k = 14
+  result: false
+- Time elapsed:  651,565 sec
+> SearchTree, vc-exact_157.gr, k = 14
+  result: false
+- Time elapsed:  824,005 sec
+> SearchTree, vc-exact_169.gr, k = 14
+  result: false
+- Time elapsed:  1067,164 sec
+> SearchTree, vc-exact_175.gr, k = 14
+  result: false
+- Time elapsed:  818,705 sec
+> SearchTree, vc-exact_177.gr, k = 14
+  result: false
+- Time elapsed:  1242,335 sec
+> SearchTree, vc-exact_185.gr, k = 14
+  result: false
+- Time elapsed:  892,147 sec
+> SearchTree, vc-exact_187.gr, k = 14
+  result: false
+- Time elapsed:  999,164 sec
+> SearchTree, vc-exact_189.gr, k = 14
+  result: false
+- Time elapsed:  1762,262 sec
+> SearchTree, vc-exact_191.gr, k = 14
+  result: false
+- Time elapsed:  1138,200 sec
+> SearchTree, vc-exact_193.gr, k = 14
+  result: false
+- Time elapsed:  1511,833 sec
+> SearchTree, vc-exact_195.gr, k = 14
+  result: false
+- Time elapsed:  514,405 sec
+> SearchTree, vc-exact_197.gr, k = 14
+  result: false
+- Time elapsed:  642,084 sec
+> SearchTree, vc-exact_199.gr, k = 14
+  result: false
+- Time elapsed:  651,850 sec
+> Kernelization, vc-exact_001.gr, k = 14, d = 2
+- Time elapsed:  42,818 sec
+> HS-SearchTree, graph vc-exact_001.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_005.gr, k = 14, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_005.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_007.gr, k = 14, d = 2
+- Time elapsed:  2,539 sec
+> HS-SearchTree, graph vc-exact_007.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_011.gr, k = 14, d = 2
+- Time elapsed:  16,534 sec
+> HS-SearchTree, graph vc-exact_011.gr
+  result: false
+- Time elapsed:  0,047 sec
+> Kernelization, vc-exact_019.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_019.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_031.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_031.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_033.gr, k = 14, d = 2
+- Time elapsed:  1,282 sec
+> HS-SearchTree, graph vc-exact_033.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_035.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_035.gr
+  result: false
+- Time elapsed:  0,031 sec
+> Kernelization, vc-exact_037.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_037.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_039.gr, k = 14, d = 2
+- Time elapsed:  2,516 sec
+> HS-SearchTree, graph vc-exact_039.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_041.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_041.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_043.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_043.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_045.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_045.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_047.gr, k = 14, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_047.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_049.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_049.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_051.gr, k = 14, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_051.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_053.gr, k = 14, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_053.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_055.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_055.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_057.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_057.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_059.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_059.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_061.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_061.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_063.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_063.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_065.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_065.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_067.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_067.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_069.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_069.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_071.gr, k = 14, d = 2
+- Time elapsed:  0,016 sec
+> HS-SearchTree, graph vc-exact_071.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_073.gr, k = 14, d = 2
+- Time elapsed:  0,032 sec
+> HS-SearchTree, graph vc-exact_073.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_077.gr, k = 14, d = 2
+- Time elapsed:  0,015 sec
+> HS-SearchTree, graph vc-exact_077.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_081.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_081.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_083.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_083.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_091.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_091.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_093.gr, k = 14, d = 2
+- Time elapsed:  0,031 sec
+> HS-SearchTree, graph vc-exact_093.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_111.gr, k = 14, d = 2
+- Time elapsed:  7,677 sec
+> HS-SearchTree, graph vc-exact_111.gr
+  result: false
+- Time elapsed:  0,031 sec
+> Kernelization, vc-exact_131.gr, k = 14, d = 2
+- Time elapsed:  0,657 sec
+> HS-SearchTree, graph vc-exact_131.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_157.gr, k = 14, d = 2
+- Time elapsed:  0,640 sec
+> HS-SearchTree, graph vc-exact_157.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_169.gr, k = 14, d = 2
+- Time elapsed:  1,714 sec
+> HS-SearchTree, graph vc-exact_169.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_175.gr, k = 14, d = 2
+- Time elapsed:  1,187 sec
+> HS-SearchTree, graph vc-exact_175.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_177.gr, k = 14, d = 2
+- Time elapsed:  2,250 sec
+> HS-SearchTree, graph vc-exact_177.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_185.gr, k = 14, d = 2
+- Time elapsed:  0,943 sec
+> HS-SearchTree, graph vc-exact_185.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_187.gr, k = 14, d = 2
+- Time elapsed:  1,449 sec
+> HS-SearchTree, graph vc-exact_187.gr
+  result: false
+- Time elapsed:  0,015 sec
+> Kernelization, vc-exact_189.gr, k = 14, d = 2
+- Time elapsed:  4,269 sec
+> HS-SearchTree, graph vc-exact_189.gr
+  result: false
+- Time elapsed:  0,031 sec
+> Kernelization, vc-exact_191.gr, k = 14, d = 2
+- Time elapsed:  1,592 sec
+> HS-SearchTree, graph vc-exact_191.gr
+  result: false
+- Time elapsed:  0,000 sec
+> Kernelization, vc-exact_193.gr, k = 14, d = 2
+- Time elapsed:  4,109 sec
+> HS-SearchTree, graph vc-exact_193.gr
+  result: false
+- Time elapsed:  0,016 sec
+> Kernelization, vc-exact_195.gr, k = 14, d = 2
+- Time elapsed:  164,990 sec
+> HS-SearchTree, graph vc-exact_195.gr
+  result: false
+- Time elapsed:  0,064 sec
+> Kernelization, vc-exact_197.gr, k = 14, d = 2
+- Time elapsed:  455,254 sec
+> HS-SearchTree, graph vc-exact_197.gr
+  result: false
+- Time elapsed:  0,063 sec
+> Kernelization, vc-exact_199.gr, k = 14, d = 2
+- Time elapsed:  431,215 sec
+> HS-SearchTree, graph vc-exact_199.gr
+  result: false
+- Time elapsed:  0,031 sec
+
+------------------------------------
+formulas: 46, st_times: 138, reduction_times: 46, kernel_times: 138, hs_times: 138
+--- Graph: vc-exact_001.gr, k = 10 ---
+1. SearchTree:    117.057
+   false
+2. Reduction:     105.07
+   Kernelisation: 49.982
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_005.gr, k = 10 ---
+1. SearchTree:    3.235
+   false
+2. Reduction:     0.17
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_007.gr, k = 10 ---
+1. SearchTree:    210.691
+   false
+2. Reduction:     85.032
+   Kernelisation: 2.906
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_011.gr, k = 10 ---
+1. SearchTree:    171.414
+   false
+2. Reduction:     119.378
+   Kernelisation: 16.331
+   HS-SearchTree: 0.031
+   false
+--- Graph: vc-exact_019.gr, k = 10 ---
+1. SearchTree:    2.522
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_031.gr, k = 10 ---
+1. SearchTree:    3.077
+   false
+2. Reduction:     0.077
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_033.gr, k = 10 ---
+1. SearchTree:    60.161
+   false
+2. Reduction:     18.921
+   Kernelisation: 1.265
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_035.gr, k = 10 ---
+1. SearchTree:    2.359
+   false
+2. Reduction:     0.074
+   Kernelisation: 0.032
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_037.gr, k = 10 ---
+1. SearchTree:    2.422
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_039.gr, k = 10 ---
+1. SearchTree:    93.913
+   false
+2. Reduction:     45.208
+   Kernelisation: 3.067
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_041.gr, k = 10 ---
+1. SearchTree:    2.516
+   false
+2. Reduction:     0.087
+   Kernelisation: 0.032
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_043.gr, k = 10 ---
+1. SearchTree:    2.625
+   false
+2. Reduction:     0.081
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_045.gr, k = 10 ---
+1. SearchTree:    2.61
+   false
+2. Reduction:     0.088
+   Kernelisation: 0.047
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_047.gr, k = 10 ---
+1. SearchTree:    3.406
+   false
+2. Reduction:     0.12
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_049.gr, k = 10 ---
+1. SearchTree:    3.939
+   false
+2. Reduction:     0.089
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_051.gr, k = 10 ---
+1. SearchTree:    3.016
+   false
+2. Reduction:     0.102
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_053.gr, k = 10 ---
+1. SearchTree:    3.197
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.047
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_055.gr, k = 10 ---
+1. SearchTree:    3.32
+   false
+2. Reduction:     0.085
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_057.gr, k = 10 ---
+1. SearchTree:    3.469
+   false
+2. Reduction:     0.117
+   Kernelisation: 0.063
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_059.gr, k = 10 ---
+1. SearchTree:    2.547
+   false
+2. Reduction:     0.096
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_061.gr, k = 10 ---
+1. SearchTree:    2.36
+   false
+2. Reduction:     0.075
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_063.gr, k = 10 ---
+1. SearchTree:    2.485
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_065.gr, k = 10 ---
+1. SearchTree:    2.578
+   false
+2. Reduction:     0.111
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_067.gr, k = 10 ---
+1. SearchTree:    2.812
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_069.gr, k = 10 ---
+1. SearchTree:    3.001
+   false
+2. Reduction:     0.09
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_071.gr, k = 10 ---
+1. SearchTree:    3.502
+   false
+2. Reduction:     0.086
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_073.gr, k = 10 ---
+1. SearchTree:    3.734
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_077.gr, k = 10 ---
+1. SearchTree:    2.672
+   false
+2. Reduction:     0.095
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_081.gr, k = 10 ---
+1. SearchTree:    2.434
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_083.gr, k = 10 ---
+1. SearchTree:    2.676
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_091.gr, k = 10 ---
+1. SearchTree:    2.625
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.032
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_093.gr, k = 10 ---
+1. SearchTree:    2.812
+   false
+2. Reduction:     0.115
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_111.gr, k = 10 ---
+1. SearchTree:    11.776
+   false
+2. Reduction:     11.815
+   Kernelisation: 7.406
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_131.gr, k = 10 ---
+1. SearchTree:    33.466
+   false
+2. Reduction:     9.243
+   Kernelisation: 0.61
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_157.gr, k = 10 ---
+1. SearchTree:    38.838
+   false
+2. Reduction:     9.826
+   Kernelisation: 0.593
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_169.gr, k = 10 ---
+1. SearchTree:    55.917
+   false
+2. Reduction:     22.972
+   Kernelisation: 1.641
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_175.gr, k = 10 ---
+1. SearchTree:    40.35
+   false
+2. Reduction:     12.466
+   Kernelisation: 0.891
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_177.gr, k = 10 ---
+1. SearchTree:    50.852
+   false
+2. Reduction:     26.947
+   Kernelisation: 1.86
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_185.gr, k = 10 ---
+1. SearchTree:    33.878
+   false
+2. Reduction:     12.341
+   Kernelisation: 0.937
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_187.gr, k = 10 ---
+1. SearchTree:    41.701
+   false
+2. Reduction:     18.133
+   Kernelisation: 1.407
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_189.gr, k = 10 ---
+1. SearchTree:    74.151
+   false
+2. Reduction:     57.438
+   Kernelisation: 4.75
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_191.gr, k = 10 ---
+1. SearchTree:    45.907
+   false
+2. Reduction:     21.446
+   Kernelisation: 1.906
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_193.gr, k = 10 ---
+1. SearchTree:    69.222
+   false
+2. Reduction:     51.085
+   Kernelisation: 4.501
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_195.gr, k = 10 ---
+1. SearchTree:    21.619
+   false
+2. Reduction:     250.762
+   Kernelisation: 169.456
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_197.gr, k = 10 ---
+1. SearchTree:    28.645
+   false
+2. Reduction:     624.952
+   Kernelisation: 484.05
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_199.gr, k = 10 ---
+1. SearchTree:    26.02
+   false
+2. Reduction:     616.843
+   Kernelisation: 440.628
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_001.gr, k = 12 ---
+1. SearchTree:    533.651
+   false
+2. Reduction:     105.07
+   Kernelisation: 51.453
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_005.gr, k = 12 ---
+1. SearchTree:    11.108
+   false
+2. Reduction:     0.17
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_007.gr, k = 12 ---
+1. SearchTree:    1068.705
+   false
+2. Reduction:     85.032
+   Kernelisation: 2.74
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_011.gr, k = 12 ---
+1. SearchTree:    910.08
+   false
+2. Reduction:     119.378
+   Kernelisation: 19.377
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_019.gr, k = 12 ---
+1. SearchTree:    12.114
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_031.gr, k = 12 ---
+1. SearchTree:    12.094
+   false
+2. Reduction:     0.077
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_033.gr, k = 12 ---
+1. SearchTree:    244.152
+   false
+2. Reduction:     18.921
+   Kernelisation: 1.329
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_035.gr, k = 12 ---
+1. SearchTree:    10.907
+   false
+2. Reduction:     0.074
+   Kernelisation: 0.015
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_037.gr, k = 12 ---
+1. SearchTree:    11.205
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_039.gr, k = 12 ---
+1. SearchTree:    465.466
+   false
+2. Reduction:     45.208
+   Kernelisation: 3.079
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_041.gr, k = 12 ---
+1. SearchTree:    15.124
+   false
+2. Reduction:     0.087
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_043.gr, k = 12 ---
+1. SearchTree:    12.887
+   false
+2. Reduction:     0.081
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_045.gr, k = 12 ---
+1. SearchTree:    15.009
+   false
+2. Reduction:     0.088
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_047.gr, k = 12 ---
+1. SearchTree:    14.942
+   false
+2. Reduction:     0.12
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_049.gr, k = 12 ---
+1. SearchTree:    15.535
+   false
+2. Reduction:     0.089
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_051.gr, k = 12 ---
+1. SearchTree:    14.64
+   false
+2. Reduction:     0.102
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_053.gr, k = 12 ---
+1. SearchTree:    14.58
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_055.gr, k = 12 ---
+1. SearchTree:    15.157
+   false
+2. Reduction:     0.085
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_057.gr, k = 12 ---
+1. SearchTree:    15.069
+   false
+2. Reduction:     0.117
+   Kernelisation: 0.046
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_059.gr, k = 12 ---
+1. SearchTree:    14.485
+   false
+2. Reduction:     0.096
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_061.gr, k = 12 ---
+1. SearchTree:    14.081
+   false
+2. Reduction:     0.075
+   Kernelisation: 0.015
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_063.gr, k = 12 ---
+1. SearchTree:    14.965
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_065.gr, k = 12 ---
+1. SearchTree:    14.629
+   false
+2. Reduction:     0.111
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_067.gr, k = 12 ---
+1. SearchTree:    14.67
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.031
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_069.gr, k = 12 ---
+1. SearchTree:    13.345
+   false
+2. Reduction:     0.09
+   Kernelisation: 0.047
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_071.gr, k = 12 ---
+1. SearchTree:    11.786
+   false
+2. Reduction:     0.086
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_073.gr, k = 12 ---
+1. SearchTree:    14.475
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.031
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_077.gr, k = 12 ---
+1. SearchTree:    14.621
+   false
+2. Reduction:     0.095
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_081.gr, k = 12 ---
+1. SearchTree:    14.975
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_083.gr, k = 12 ---
+1. SearchTree:    15.934
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.047
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_091.gr, k = 12 ---
+1. SearchTree:    15.445
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_093.gr, k = 12 ---
+1. SearchTree:    15.16
+   false
+2. Reduction:     0.115
+   Kernelisation: 0.047
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_111.gr, k = 12 ---
+1. SearchTree:    49.803
+   false
+2. Reduction:     11.815
+   Kernelisation: 8.766
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_131.gr, k = 12 ---
+1. SearchTree:    174.089
+   false
+2. Reduction:     9.243
+   Kernelisation: 0.797
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_157.gr, k = 12 ---
+1. SearchTree:    186.62
+   false
+2. Reduction:     9.826
+   Kernelisation: 0.797
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_169.gr, k = 12 ---
+1. SearchTree:    276.581
+   false
+2. Reduction:     22.972
+   Kernelisation: 1.997
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_175.gr, k = 12 ---
+1. SearchTree:    170.533
+   false
+2. Reduction:     12.466
+   Kernelisation: 1.145
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_177.gr, k = 12 ---
+1. SearchTree:    214.19
+   false
+2. Reduction:     26.947
+   Kernelisation: 2.297
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_185.gr, k = 12 ---
+1. SearchTree:    231.197
+   false
+2. Reduction:     12.341
+   Kernelisation: 1.141
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_187.gr, k = 12 ---
+1. SearchTree:    237.816
+   false
+2. Reduction:     18.133
+   Kernelisation: 1.593
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_189.gr, k = 12 ---
+1. SearchTree:    354.427
+   false
+2. Reduction:     57.438
+   Kernelisation: 5.047
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_191.gr, k = 12 ---
+1. SearchTree:    194.935
+   false
+2. Reduction:     21.446
+   Kernelisation: 2.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_193.gr, k = 12 ---
+1. SearchTree:    300.35
+   false
+2. Reduction:     51.085
+   Kernelisation: 4.579
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_195.gr, k = 12 ---
+1. SearchTree:    115.816
+   false
+2. Reduction:     250.762
+   Kernelisation: 190.038
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_197.gr, k = 12 ---
+1. SearchTree:    150.142
+   false
+2. Reduction:     624.952
+   Kernelisation: 484.882
+   HS-SearchTree: 0.01
+   false
+--- Graph: vc-exact_199.gr, k = 12 ---
+1. SearchTree:    150.397
+   false
+2. Reduction:     616.843
+   Kernelisation: 559.1
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_001.gr, k = 14 ---
+1. SearchTree:    2697.382
+   false
+2. Reduction:     105.07
+   Kernelisation: 42.818
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_005.gr, k = 14 ---
+1. SearchTree:    59.206
+   false
+2. Reduction:     0.17
+   Kernelisation: 0.015
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_007.gr, k = 14 ---
+1. SearchTree:    5090.278
+   false
+2. Reduction:     85.032
+   Kernelisation: 2.539
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_011.gr, k = 14 ---
+1. SearchTree:    3811.372
+   false
+2. Reduction:     119.378
+   Kernelisation: 16.534
+   HS-SearchTree: 0.047
+   false
+--- Graph: vc-exact_019.gr, k = 14 ---
+1. SearchTree:    51.535
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_031.gr, k = 14 ---
+1. SearchTree:    51.897
+   false
+2. Reduction:     0.077
+   Kernelisation: 0.016
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_033.gr, k = 14 ---
+1. SearchTree:    1286.028
+   false
+2. Reduction:     18.921
+   Kernelisation: 1.282
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_035.gr, k = 14 ---
+1. SearchTree:    62.303
+   false
+2. Reduction:     0.074
+   Kernelisation: 0.016
+   HS-SearchTree: 0.031
+   false
+--- Graph: vc-exact_037.gr, k = 14 ---
+1. SearchTree:    60.794
+   false
+2. Reduction:     0.07
+   Kernelisation: 0.016
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_039.gr, k = 14 ---
+1. SearchTree:    2093.878
+   false
+2. Reduction:     45.208
+   Kernelisation: 2.516
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_041.gr, k = 14 ---
+1. SearchTree:    62.294
+   false
+2. Reduction:     0.087
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_043.gr, k = 14 ---
+1. SearchTree:    58.102
+   false
+2. Reduction:     0.081
+   Kernelisation: 0.016
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_045.gr, k = 14 ---
+1. SearchTree:    70.323
+   false
+2. Reduction:     0.088
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_047.gr, k = 14 ---
+1. SearchTree:    70.544
+   false
+2. Reduction:     0.12
+   Kernelisation: 0.12
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_049.gr, k = 14 ---
+1. SearchTree:    75.602
+   false
+2. Reduction:     0.089
+   Kernelisation: 0.016
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_051.gr, k = 14 ---
+1. SearchTree:    69.554
+   false
+2. Reduction:     0.102
+   Kernelisation: 0.032
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_053.gr, k = 14 ---
+1. SearchTree:    70.757
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_055.gr, k = 14 ---
+1. SearchTree:    65.787
+   false
+2. Reduction:     0.085
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_057.gr, k = 14 ---
+1. SearchTree:    67.462
+   false
+2. Reduction:     0.117
+   Kernelisation: 0.031
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_059.gr, k = 14 ---
+1. SearchTree:    67.461
+   false
+2. Reduction:     0.096
+   Kernelisation: 0.016
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_061.gr, k = 14 ---
+1. SearchTree:    60.129
+   false
+2. Reduction:     0.075
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_063.gr, k = 14 ---
+1. SearchTree:    57.039
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.016
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_065.gr, k = 14 ---
+1. SearchTree:    61.867
+   false
+2. Reduction:     0.111
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_067.gr, k = 14 ---
+1. SearchTree:    53.443
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.031
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_069.gr, k = 14 ---
+1. SearchTree:    57.563
+   false
+2. Reduction:     0.09
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_071.gr, k = 14 ---
+1. SearchTree:    68.46
+   false
+2. Reduction:     0.086
+   Kernelisation: 0.016
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_073.gr, k = 14 ---
+1. SearchTree:    64.023
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.032
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_077.gr, k = 14 ---
+1. SearchTree:    66.381
+   false
+2. Reduction:     0.095
+   Kernelisation: 0.015
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_081.gr, k = 14 ---
+1. SearchTree:    65.491
+   false
+2. Reduction:     0.1
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_083.gr, k = 14 ---
+1. SearchTree:    70.057
+   false
+2. Reduction:     0.105
+   Kernelisation: 0.031
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_091.gr, k = 14 ---
+1. SearchTree:    69.183
+   false
+2. Reduction:     0.11
+   Kernelisation: 0.031
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_093.gr, k = 14 ---
+1. SearchTree:    68.555
+   false
+2. Reduction:     0.115
+   Kernelisation: 0.031
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_111.gr, k = 14 ---
+1. SearchTree:    200.858
+   false
+2. Reduction:     11.815
+   Kernelisation: 7.677
+   HS-SearchTree: 0.031
+   false
+--- Graph: vc-exact_131.gr, k = 14 ---
+1. SearchTree:    651.565
+   false
+2. Reduction:     9.243
+   Kernelisation: 0.657
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_157.gr, k = 14 ---
+1. SearchTree:    824.005
+   false
+2. Reduction:     9.826
+   Kernelisation: 0.64
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_169.gr, k = 14 ---
+1. SearchTree:    1067.164
+   false
+2. Reduction:     22.972
+   Kernelisation: 1.714
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_175.gr, k = 14 ---
+1. SearchTree:    818.705
+   false
+2. Reduction:     12.466
+   Kernelisation: 1.187
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_177.gr, k = 14 ---
+1. SearchTree:    1242.335
+   false
+2. Reduction:     26.947
+   Kernelisation: 2.25
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_185.gr, k = 14 ---
+1. SearchTree:    892.147
+   false
+2. Reduction:     12.341
+   Kernelisation: 0.943
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_187.gr, k = 14 ---
+1. SearchTree:    999.164
+   false
+2. Reduction:     18.133
+   Kernelisation: 1.449
+   HS-SearchTree: 0.015
+   false
+--- Graph: vc-exact_189.gr, k = 14 ---
+1. SearchTree:    1762.262
+   false
+2. Reduction:     57.438
+   Kernelisation: 4.269
+   HS-SearchTree: 0.031
+   false
+--- Graph: vc-exact_191.gr, k = 14 ---
+1. SearchTree:    1138.2
+   false
+2. Reduction:     21.446
+   Kernelisation: 1.592
+   HS-SearchTree: 0.0
+   false
+--- Graph: vc-exact_193.gr, k = 14 ---
+1. SearchTree:    1511.833
+   false
+2. Reduction:     51.085
+   Kernelisation: 4.109
+   HS-SearchTree: 0.016
+   false
+--- Graph: vc-exact_195.gr, k = 14 ---
+1. SearchTree:    514.405
+   false
+2. Reduction:     250.762
+   Kernelisation: 164.99
+   HS-SearchTree: 0.064
+   false
+--- Graph: vc-exact_197.gr, k = 14 ---
+1. SearchTree:    642.084
+   false
+2. Reduction:     624.952
+   Kernelisation: 455.254
+   HS-SearchTree: 0.063
+   false
+--- Graph: vc-exact_199.gr, k = 14 ---
+1. SearchTree:    651.85
+   false
+2. Reduction:     616.843
+   Kernelisation: 431.215
+   HS-SearchTree: 0.031
+   false

@@ -128,7 +128,7 @@ public class Main {
 		// Test formulas from PACE files
 		int start_k = 10;
 		int k_increment = 2;
-		int stop_k = 12;
+		int stop_k = 14;
 		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
