@@ -21,6 +21,7 @@ plot(x_nodes, y_k_12_st,'b');
 plot(x_nodes, y_k_12_ke,'b:');
 plot(x_nodes, y_k_14_st,'r');
 plot(x_nodes, y_k_14_ke,'r-.');
+title 'Laufzeit der kleinen PACE-Graphen'
 xlabel 'nodes';
 ylabel 'time (sec)';
 legend('k=10 st', 'k=10 ke', 'k=12 st', 'k=12 ke', 'k=14 st', 'k=14 ke');

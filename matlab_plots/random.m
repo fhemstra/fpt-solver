@@ -23,6 +23,7 @@ for file = files'
     plot(x,y_ke,'--','DisplayName',['ke ' name]);
     counter = counter + 1;
 end
+title 'Laufzeit der random-Graphen'
 xlabel 'nodes';
 ylabel 'time (sec)';
 legend(gca, 'show');
