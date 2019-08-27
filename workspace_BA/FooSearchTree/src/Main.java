@@ -129,14 +129,18 @@ public class Main {
 //		System.out.println(hs_st_result);
 		
 		// Test formulas from PACE files
-		int start_k = 10;
+		int start_k = 6;
 		int k_increment = 2;
-		int stop_k = 12;
-		File pace_folder = new File("../pace"); // Use this for execution in windows cmd
+		int stop_k = 10;
+		
+		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+		
+//		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
+//		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
 //		File form_folder = new File("instances"); // Use this for execution inside of eclipse
-		File[] graph_files = pace_folder.listFiles();
+		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		ArrayList<Formula> formulas = new ArrayList<Formula>();
 		ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
@@ -157,7 +161,7 @@ public class Main {
 		for( int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
-			for (int j = 31; j < 33; j++) {
+			for (int j = 0; j < graph_files.length; j++) {
 				String graph_path = graph_files[j].getAbsolutePath();
 				int curr_graph_size = graphSize(graph_path);
 				// Only take graphs, that are not too big
@@ -259,12 +263,12 @@ public class Main {
 			System.out.println("   " + hs_results.get(i));
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(form_and_redu_index) + kernel_times.get(i) + hs_times.get(i);
-			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + String.format("%.3f", pipe_2_sum) + ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + "\n");
+			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum + ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + "\n");
 			
 			// Prepare next iteration and save to csv
 			if((i+1)%formulas.size() == 0) {
 				// Save buffer to csv
-				file_name = Integer.toString((int) System.currentTimeMillis()) + "_k_" + curr_k_par + ".csv";
+				file_name = Integer.toString((int) System.currentTimeMillis()) + "_random_k_" + curr_k_par + ".csv";
 				writeToCsv(write_buffer, file_name);
 				write_buffer.clear();
 				write_buffer.add("nodes;pipe 1;pipe 2;reduction;kernel;hs_st\n");
@@ -278,6 +282,7 @@ public class Main {
 		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + file_name);
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
+			// TODO sort write buffer
 			for(String s : write_buffer) {
 				bw.write(s);
 			}
