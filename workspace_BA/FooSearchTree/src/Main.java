@@ -129,13 +129,12 @@ public class Main {
 //		System.out.println(hs_st_result);
 		
 		// Test formulas from PACE files
-		int start_k = 6;
+		int start_k = 12;
 		int k_increment = 2;
-		int stop_k = 10;
+		int stop_k = 13;
 		
 		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
-		
 //		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
 //		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
@@ -162,28 +161,31 @@ public class Main {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
 			for (int j = 0; j < graph_files.length; j++) {
-				String graph_path = graph_files[j].getAbsolutePath();
-				int curr_graph_size = graphSize(graph_path);
-				// Only take graphs, that are not too big
-				if(curr_graph_size < 10000) {
-					System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
-					graph_sizes.add(curr_graph_size);
-					// Construction
-					Formula curr_formula = new Formula(form_path, graph_path);
-					formulas.add(curr_formula);
-					// Reduction
-					System.out.println("> Reduction, " + curr_formula.graph_name);
-					start_time = System.currentTimeMillis();
-					reduced_graphs.add(curr_formula.reduceToHS(mute));					
-					stop_time = System.currentTimeMillis();
-					double time_passed = (double)(stop_time-start_time)/(double)1000;
-					reduction_times.add(time_passed);
-					printTime(time_passed);
-				} else {
-					System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
-				}
-				// TODO remove break;
+				// TODO remove condition
+				if(j%2 == 1) {					
+					String graph_path = graph_files[j].getAbsolutePath();
+					int curr_graph_size = graphSize(graph_path);
+					// Only take graphs, that are not too big
+					if(curr_graph_size <= 3000) {
+						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+						graph_sizes.add(curr_graph_size);
+						// Construction
+						Formula curr_formula = new Formula(form_path, graph_path);
+						formulas.add(curr_formula);
+						// Reduction
+						System.out.println("> Reduction, " + curr_formula.graph_name);
+						start_time = System.currentTimeMillis();
+						reduced_graphs.add(curr_formula.reduceToHS(mute));					
+						stop_time = System.currentTimeMillis();
+						double time_passed = (double)(stop_time-start_time)/(double)1000;
+						reduction_times.add(time_passed);
+						printTime(time_passed);
+					} else {
+						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+					}
+					// TODO remove break;
 //				break;
+				}
 			}
 			// TODO only the first formula works right now
 			break;
