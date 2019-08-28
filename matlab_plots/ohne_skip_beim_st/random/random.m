@@ -1,7 +1,7 @@
 clear all
 close
 
-files = [dir('*765*_random_*.csv'); dir('*786*_random_*.csv')];
+files = dir('*_random_*.csv');
 counter = 0;
 hold on;
 for file = files'
