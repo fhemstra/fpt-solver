@@ -168,7 +168,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this
-					if(curr_graph_size <= 10000) {
+					if(curr_graph_size <= 3000) {
 						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 						graph_sizes.add(curr_graph_size);
 						// Construction
