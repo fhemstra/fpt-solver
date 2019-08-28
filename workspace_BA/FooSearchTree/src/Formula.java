@@ -320,17 +320,20 @@ public class Formula {
 	 * 
 	 * @return True if a solution of size k is found, else false.
 	 */
-	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute) {
-		// TODO Maybe search trees can start testing assignments where they left of?
+	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index) {
 		// TODO return solution
 		
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
 		}
+		// Copy last assignment
 		int[] curr_assignment = new int[c_par];
+		for(int i = 0; i < c_par; i++) {
+			curr_assignment[i] = last_assignment[i];
+		}
 		// Check all clauses considering S
-		for (long i = 0; i < nr_of_assignments; i++) {
+		for (long i = last_index; i < nr_of_assignments; i++) {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
@@ -359,7 +362,7 @@ public class Formula {
 								System.out.print(prnt);
 							}
 							// if one branch is successful we win, else go back through recursion.
-							flag = flag || searchTree(k_par, sol, mute);
+							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i);
 							if (flag) {
 								return true;								
 							} else {

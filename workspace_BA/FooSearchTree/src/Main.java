@@ -69,18 +69,17 @@ public class Main {
 //		for (Formula form : formulas) {
 //
 //			System.out.println("--- FORMULA ---");
-//			form.printFormula();
+//			System.out.println(form.toOutputString());
 //			System.out.println("\n--- SEARCH TREE ---");
-//			System.out.println(form.searchTree(form.k_par, new ArrayList<Integer>(), mute));
+//			System.out.println(form.searchTree(3, new ArrayList<Integer>(), mute, new int[form.c_par], 0));
 //			System.out.println("\n--- REDUCTION ---");
-//			Hypergraph hyp = form.reduceToHS();
+//			Hypergraph hyp = form.reduceToHS(mute);
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
-//			hyp.kernelize(hyp, form.k_par, mute);
+//			hyp.kernelize(hyp, 3, mute);
 //			System.out.println("<< Main\nKernel:");
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("--- END FORMULA ---\n");
-			
 //			// Hypergraph doc example
 //			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 //			ArrayList<Tuple> ex_edges = new	ArrayList<Tuple>();
@@ -133,6 +132,8 @@ public class Main {
 		int k_increment = 2;
 		int stop_k = 13;
 		
+//		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
+//		File form_folder = new File("instances"); // Use this for execution in eclipse
 		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
@@ -141,7 +142,7 @@ public class Main {
 //		File form_folder = new File("instances"); // Use this for execution inside of eclipse
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
-		ArrayList<Formula> formulas = new ArrayList<Formula>();
+		ArrayList<Formula> forms = new ArrayList<Formula>();
 		ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
 		// Timer
 		long start_time = 0;
@@ -166,12 +167,13 @@ public class Main {
 					String graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
-					if(curr_graph_size <= 3000) {
+					// TODO change this
+					if(curr_graph_size <= 10000) {
 						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
-						formulas.add(curr_formula);
+						forms.add(curr_formula);
 						// Reduction
 						System.out.println("> Reduction, " + curr_formula.graph_name);
 						start_time = System.currentTimeMillis();
@@ -195,11 +197,16 @@ public class Main {
 		for(int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
-			for(int j = 0; j < formulas.size(); j++) {
-				Formula curr_form = formulas.get(j);
+			for(int j = 0; j < forms.size(); j++) {
+				Formula curr_form = forms.get(j);
 				System.out.println("> SearchTree, " + curr_form.graph_name + ", k = " + k_par);
+				int[] start_assignment = new int[curr_form.c_par];
+				// generate first assignment 
+				for(int i = 0; i < curr_form.c_par; i++) {
+					start_assignment[i] = curr_form.universe[0];
+				}
 				start_time = System.currentTimeMillis();
-				boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute);
+				boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0);
 				stop_time = System.currentTimeMillis();
 				if(!mute) System.out.println();
 				System.out.println("  result: " + st_result );
@@ -214,7 +221,6 @@ public class Main {
 				Hypergraph curr_graph =  reduced_graphs.get(j);
 				System.out.println("> Kernelization, " + curr_graph.name + ", k = " + k_par + ", d = " + curr_graph.d_par);
 				start_time = System.currentTimeMillis();
-				// TODO kernelize should return kernel, not manipulate this
 				Hypergraph curr_kernel = curr_graph.kernelize(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
 				if(!mute) {
@@ -255,8 +261,8 @@ public class Main {
 		write_buffer.add("nodes;pipe 1;pipe 2;reduction;kernel;hs_st\n");
 		String file_name = "";
 		for(int i = 0; i < search_tree_times.size(); i++) {
-			int form_and_redu_index = i % formulas.size();
-			System.out.println("--- Graph: " + formulas.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
+			int form_and_redu_index = i % forms.size();
+			System.out.println("--- Graph: " + forms.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
 			System.out.println("1. SearchTree:    " + search_tree_times.get(i));
 			System.out.println("   " + search_tree_results.get(i));
 			System.out.println("2. Reduction:     " + reduction_times.get(form_and_redu_index));
@@ -268,7 +274,7 @@ public class Main {
 			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum + ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + "\n");
 			
 			// Prepare next iteration and save to csv
-			if((i+1)%formulas.size() == 0) {
+			if((i+1)%forms.size() == 0) {
 				// Save buffer to csv
 				file_name = Integer.toString((int) System.currentTimeMillis()) + "_random_k_" + curr_k_par + ".csv";
 				writeToCsv(write_buffer, file_name);
