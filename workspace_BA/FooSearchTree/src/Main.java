@@ -130,7 +130,7 @@ public class Main {
 		// Test formulas from PACE files
 		int start_k = 12;
 		int k_increment = 2;
-		int stop_k = 13;
+		int stop_k = 16;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
