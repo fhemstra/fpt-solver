@@ -128,9 +128,9 @@ public class Main {
 //		System.out.println(hs_st_result);
 		
 		// Test formulas from PACE files
-		int start_k = 12;
+		int start_k = 10;
 		int k_increment = 2;
-		int stop_k = 16;
+		int stop_k = 11;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
@@ -163,7 +163,8 @@ public class Main {
 			// TODO j = 0; j < graph_files.length
 			for (int j = 0; j < graph_files.length; j++) {
 				// TODO remove condition
-				if(j%2 == 1) {					
+//				if(j%2 == 1) {
+				if(true ) {
 					String graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
