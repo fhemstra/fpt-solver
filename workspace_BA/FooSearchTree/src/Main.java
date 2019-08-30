@@ -29,6 +29,7 @@ public class Main {
 //				graphs.add(graph_to_add);
 //			}
 //		}
+//		// Kernelize graphs
 //		System.out.println("Loaded PACE successfully.\n");
 //		System.out.flush();
 //		for (int i = 0; i < graphs.size(); i++) {
@@ -76,9 +77,9 @@ public class Main {
 //			Hypergraph hyp = form.reduceToHS(mute);
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
-//			hyp.kernelize(hyp, 3, mute);
+//			Hypergraph hyp_kernel = hyp.kernelize(hyp, 3, mute);
 //			System.out.println("<< Main\nKernel:");
-//			System.out.println(hyp.toOutputString());
+//			System.out.println(hyp_kernel.toOutputString());
 //			System.out.println("--- END FORMULA ---\n");
 //			// Hypergraph doc example
 //			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
@@ -94,11 +95,11 @@ public class Main {
 //			ex_edges.add(new Tuple(new int[]{8,9,13}));
 //			ex_edges.add(new Tuple(new int[]{11,12,14,15}));
 //			ex_edges.add(new Tuple(new int[]{13,15}));
-//			Hypergraph doc_ex = new Hypergraph(ex_nodes, ex_edges);
-//			System.out.println("doc_ex:\n" + doc_ex.toOutputString() + "\n"); // k = 3
-//			doc_ex.kernelize(doc_ex, 3);
-//			System.out.println("+++\nex_kernel:\n" + doc_ex.toOutputString());
-			
+//			Hypergraph doc_ex_1 = new Hypergraph(ex_nodes, ex_edges);
+//			System.out.println("doc_ex:\n" + doc_ex_1.toOutputString() + "\n"); // k = 3
+//			Hypergraph doc_ex_1_kernel = doc_ex_1.kernelize(doc_ex_1, 3, mute);
+//			System.out.println("+++\nex_kernel:\n" + doc_ex_1_kernel.toOutputString());
+//			
 //			break;
 //		}
 		
@@ -121,13 +122,16 @@ public class Main {
 //		boolean hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
 //		System.out.println();
 //		System.out.println(hs_st_result);
-//		doc_ex.kernelize(doc_ex, 3, mute);
+//		Hypergraph doc_ex_kernel = doc_ex.kernelize(doc_ex, 3, mute);
 //		System.out.println("After kernelize:");
+//		System.out.println(doc_ex_kernel.toOutputString());
 //		hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
 //		System.out.println();
 //		System.out.println(hs_st_result);
 		
-		// Test formulas from PACE files
+		
+		
+		// Test pipelines
 		int start_k = 10;
 		int k_increment = 2;
 		int stop_k = 11;
