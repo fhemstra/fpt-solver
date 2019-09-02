@@ -132,9 +132,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 12;
-		int k_increment = 2;
-		int stop_k = 13;
+		int start_k = 1;
+		int k_increment = 1;
+		int stop_k = 10;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
@@ -157,7 +157,7 @@ public class Main {
 		ArrayList<Double> kernel_times = new ArrayList<Double>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
-		ArrayList<Boolean> hs_results = new ArrayList<Boolean>();
+		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
 //		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
 		
@@ -172,8 +172,8 @@ public class Main {
 					String graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
-					// TODO change this
-					if(curr_graph_size <= 3000) {
+					// TODO change this, fixed n
+					if(curr_graph_size == 1500) {
 						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 						graph_sizes.add(curr_graph_size);
 						// Construction
@@ -190,8 +190,8 @@ public class Main {
 					} else {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
-					// TODO remove break;
-//				break;
+					// TODO remove break, only test one graph
+//					break;
 				}
 			}
 			// TODO only the first formula works right now
@@ -251,7 +251,7 @@ public class Main {
 				stop_time = System.currentTimeMillis();
 				if(!mute) System.out.println();
 				System.out.println("  result: " + hs_result);
-				hs_results.add(hs_result);
+				ke_results.add(hs_result);
 				double hs_time_passed = (double)(stop_time-start_time)/(double)1000;
 				hs_times.add(hs_time_passed);
 				printTime(hs_time_passed);
@@ -263,7 +263,8 @@ public class Main {
 		// Will be incremented on first iteration
 		int curr_k_par = start_k;
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		write_buffer.add("nodes;pipe 1;pipe 2;reduction;kernel;hs_st\n");
+		String headline = "nodes;pipe 1;pipe 2;reduction;kernel;hs_st;k;st_result;ke_result;equal\n"; 
+		write_buffer.add(headline);
 		String file_name = "";
 		for(int i = 0; i < search_tree_times.size(); i++) {
 			int form_and_redu_index = i % forms.size();
@@ -273,18 +274,24 @@ public class Main {
 			System.out.println("2. Reduction:     " + reduction_times.get(form_and_redu_index));
 			System.out.println("   Kernelisation: " + kernel_times.get(i));
 			System.out.println("   HS-SearchTree: " + hs_times.get(i));
-			System.out.println("   " + hs_results.get(i));
+			System.out.println("   " + ke_results.get(i));
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(form_and_redu_index) + kernel_times.get(i) + hs_times.get(i);
-			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum + ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + "\n");
-			
+			double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
+			double curr_st_res = search_tree_results.get(i) ? 1 : 0;
+			double curr_ke_res = ke_results.get(i) ? 1 : 0;
+			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
+					+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
+					+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res
+					+ "\n");
+
 			// Prepare next iteration and save to csv
 			if((i+1)%forms.size() == 0) {
 				// Save buffer to csv
 				file_name = Integer.toString((int) System.currentTimeMillis()) + "_random_k_" + curr_k_par + ".csv";
 				writeToCsv(write_buffer, file_name);
 				write_buffer.clear();
-				write_buffer.add("nodes;pipe 1;pipe 2;reduction;kernel;hs_st\n");
+				write_buffer.add(headline);
 				// go to next k
 				curr_k_par += k_increment;
 			}
@@ -292,18 +299,19 @@ public class Main {
 	}
 
 	private static void writeToCsv(ArrayList<String> write_buffer, String file_name) {
-		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + file_name);
+		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
+				+ File.separator + file_name);
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
 			// TODO sort write buffer
-			for(String s : write_buffer) {
+			for (String s : write_buffer) {
 				bw.write(s);
 			}
 			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}			
+		}
 	}
 
 	private static int graphSize(String graph_path) {

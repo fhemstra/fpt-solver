@@ -138,6 +138,8 @@ public class Hypergraph {
 	 * are made to the handed graph hyp.
 	 */
 	public Hypergraph kernelize(Hypergraph hyp, int k, boolean mute) {
+		// TODO handle this better
+		if(k < 1) return null;
 		// "Clone" hyp
 		Hypergraph kernel = new Hypergraph(hyp.nodes, hyp.edges);
 		int sf_counter = 0;
