@@ -134,7 +134,7 @@ public class Main {
 		// Test pipelines
 		int start_k = 1;
 		int k_increment = 1;
-		int stop_k = 10;
+		int stop_k = 15;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
@@ -168,7 +168,7 @@ public class Main {
 			for (int j = 0; j < graph_files.length; j++) {
 				// TODO remove condition
 //				if(j%2 == 1) {
-				if(true ) {
+				if(true) {
 					String graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
