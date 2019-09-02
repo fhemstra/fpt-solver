@@ -1,7 +1,7 @@
 import os
 from random import randint
 
-for nr_of_nodes in range(1000,4000,1000):
+for nr_of_nodes in range(500,3500,1000):
     for i in range(100):
         nr_of_edges = nr_of_nodes * 4
         dir_path = os.path.dirname(os.path.realpath(__file__))
