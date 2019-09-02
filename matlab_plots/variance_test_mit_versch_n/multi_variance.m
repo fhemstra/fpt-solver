@@ -18,7 +18,8 @@ for file = files'
     name = strrep(name, '_', '=');
     boxplot(y_st,x);
 end
-title 'Varianz der ST-Laufzeiten auf festen n'
+axis([0 7 0 25]);
+title 'Varianz der ST-Laufzeiten auf festen n mit k=10 und k = 12'
 xlabel 'nodes';
 ylabel 'time (sec)';
 hold off;
@@ -35,6 +36,7 @@ for file = files'
     name = strrep(name, '_', '=');
     boxplot(y_ke,x);
 end
+axis([0 7 0 25]);
 title 'Varianz der KE-Laufzeiten auf festen n'
 xlabel 'nodes';
 ylabel 'time (sec)';
