@@ -1,5 +1,4 @@
-clear all
-close
+close all
 
 files = dir('*.csv');
 hold on;

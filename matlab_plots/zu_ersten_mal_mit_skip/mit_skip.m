@@ -1,5 +1,4 @@
-clear all
-close
+close all
 
 files = dir('*.csv');
 hold on;
@@ -20,7 +19,6 @@ for file = files'
     name = name(1:name_end_ind);
     name = strrep(name, '_', '=');
     plot(x,y_ke,'--','DisplayName',['ke ' name]);
-    break;
 end
 title 'Laufzeit der random-Graphen'
 xlabel 'nodes';

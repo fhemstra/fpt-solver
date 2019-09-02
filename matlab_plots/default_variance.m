@@ -1,5 +1,4 @@
-clear all
-close
+close all
 
 % Only look at search tree variance for now
 

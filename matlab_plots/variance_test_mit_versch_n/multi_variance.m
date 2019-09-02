@@ -1,5 +1,4 @@
-clear all
-close
+close all
 
 % Only look at search tree variance for now
 
@@ -37,7 +36,7 @@ for file = files'
     boxplot(y_ke,x);
 end
 axis([0 7 0 25]);
-title 'Varianz der KE-Laufzeiten auf festen n'
+title 'Varianz der KE-Laufzeiten auf festen n mit k=10 und k=12'
 xlabel 'nodes';
 ylabel 'time (sec)';
 hold off;
