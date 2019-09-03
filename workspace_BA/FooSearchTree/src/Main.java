@@ -135,6 +135,7 @@ public class Main {
 		int start_k = 1;
 		int k_increment = 1;
 		int stop_k = 15;
+		boolean skip_search_tree = true;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
@@ -202,23 +203,25 @@ public class Main {
 		for(int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
-			for(int j = 0; j < forms.size(); j++) {
-				Formula curr_form = forms.get(j);
-				System.out.println("> SearchTree, " + curr_form.graph_name + ", k = " + k_par);
-				int[] start_assignment = new int[curr_form.c_par];
-				// generate first assignment 
-				for(int i = 0; i < curr_form.c_par; i++) {
-					start_assignment[i] = curr_form.universe[0];
+			if(!skip_search_tree) {
+				for(int j = 0; j < forms.size(); j++) {
+					Formula curr_form = forms.get(j);
+					System.out.println("> SearchTree, " + curr_form.graph_name + ", k = " + k_par);
+					int[] start_assignment = new int[curr_form.c_par];
+					// generate first assignment 
+					for(int i = 0; i < curr_form.c_par; i++) {
+						start_assignment[i] = curr_form.universe[0];
+					}
+					start_time = System.currentTimeMillis();
+					boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0);
+					stop_time = System.currentTimeMillis();
+					if(!mute) System.out.println();
+					System.out.println("  result: " + st_result );
+					search_tree_results.add(st_result);
+					double time_passed = (double)(stop_time-start_time)/(double)1000;
+					search_tree_times.add(time_passed);
+					printTime(time_passed);
 				}
-				start_time = System.currentTimeMillis();
-				boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0);
-				stop_time = System.currentTimeMillis();
-				if(!mute) System.out.println();
-				System.out.println("  result: " + st_result );
-				search_tree_results.add(st_result);
-				double time_passed = (double)(stop_time-start_time)/(double)1000;
-				search_tree_times.add(time_passed);
-				printTime(time_passed);
 			}
 			// Pipeline 2: (Reduce) + Kernel + HS SearchTree
 			for(int j = 0; j < reduced_graphs.size(); j++) {
@@ -259,31 +262,42 @@ public class Main {
 		}
 		
 		// Collect results
+		int number_of_iterations = Math.max(search_tree_results.size(), ke_results.size());
 		System.out.println("\n------------------------------------");
-		// Will be incremented on first iteration
 		int curr_k_par = start_k;
 		ArrayList<String> write_buffer = new ArrayList<String>();
 		String headline = "nodes;pipe 1;pipe 2;reduction;kernel;hs_st;k;st_result;ke_result;equal\n"; 
 		write_buffer.add(headline);
 		String file_name = "";
-		for(int i = 0; i < search_tree_times.size(); i++) {
+		for(int i = 0; i < number_of_iterations; i++) {
 			int form_and_redu_index = i % forms.size();
 			System.out.println("--- Graph: " + forms.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
-			System.out.println("1. SearchTree:    " + search_tree_times.get(i));
-			System.out.println("   " + search_tree_results.get(i));
+			if(!skip_search_tree) {
+				System.out.println("1. SearchTree:    " + search_tree_times.get(i));
+				System.out.println("   " + search_tree_results.get(i));				
+			} else {
+				System.out.println("1. SearchTree: skipped");
+			}
 			System.out.println("2. Reduction:     " + reduction_times.get(form_and_redu_index));
 			System.out.println("   Kernelisation: " + kernel_times.get(i));
 			System.out.println("   HS-SearchTree: " + hs_times.get(i));
 			System.out.println("   " + ke_results.get(i));
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(form_and_redu_index) + kernel_times.get(i) + hs_times.get(i);
-			double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
-			double curr_st_res = search_tree_results.get(i) ? 1 : 0;
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
-			write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
-					+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-					+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res
-					+ "\n");
+			if(!skip_search_tree) {
+				double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
+				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
+				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
+						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
+						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res
+						+ "\n");
+			} else {
+				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum
+						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
+						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1"
+						+ "\n");
+			}
 
 			// Prepare next iteration and save to csv
 			if((i+1)%forms.size() == 0) {
@@ -309,7 +323,6 @@ public class Main {
 			}
 			bw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
