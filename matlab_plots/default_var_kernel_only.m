@@ -10,6 +10,8 @@ for file = files'
     x = file_content.data(:,7);
     boxplot(y_ke,x);
 end
+% axis([1 16 0 200]);
+set(gca, 'YScale', 'log');
 title 'Varianz der KE-Laufzeiten, n = 1500'
 xlabel 'k';
 ylabel 'time (sec)';
