@@ -134,7 +134,7 @@ public class Main {
 		// Test pipelines
 		int start_k = 1;
 		int k_increment = 1;
-		int stop_k = 3;
+		int stop_k = 15;
 		boolean skip_search_tree = false;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
