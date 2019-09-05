@@ -11,6 +11,7 @@ for nr_of_nodes in range(50,550,50):
         os.makedirs(dest_dir) 
 
     for i in range(10):
+        nr_of_edges = nr_of_nodes * 4
         filename = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'random_graphs' + os.sep + 'random_' + str(nr_of_nodes) + '_' + str(i) +  '.txt'
         with open(filename, 'w') as curr_file:
             curr_file.write('p td ' + str(nr_of_nodes) + ' ' + str(nr_of_edges) + ' \n')

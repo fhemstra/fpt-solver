@@ -174,7 +174,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size <= 500) {
+					if(curr_graph_size <= 250) {
 						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 						graph_sizes.add(curr_graph_size);
 						// Construction
@@ -206,7 +206,7 @@ public class Main {
 			if(!skip_search_tree) {
 				for(int j = 0; j < forms.size(); j++) {
 					Formula curr_form = forms.get(j);
-					System.out.println("> SearchTree, " + curr_form.graph_name + ", k = " + k_par);
+					System.out.println("> SearchTree, " + curr_form.form_name + ", " + curr_form.graph_name + ", k = " + k_par);
 					int[] start_assignment = new int[curr_form.c_par];
 					// generate first assignment 
 					for(int i = 0; i < curr_form.c_par; i++) {
