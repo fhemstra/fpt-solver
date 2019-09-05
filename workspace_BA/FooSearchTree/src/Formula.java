@@ -47,19 +47,22 @@ public class Formula {
 			line = br.readLine();
 			form_name = line;
 			graph_name = new File(graph_path).getName();
-			// Universe
-			// External graph from .gr file -> skip two lines
-			line = br.readLine();
+			// Universe from .gr file -> skip a line
 			line = br.readLine();
 			universe = getPaceUniverse(graph_path);
+			
+			// Skip relations, only E is important
+			line = br.readLine();
+			while(true) {
+				if(line.contains(";")) {
+					break;
+				}
+				line = br.readLine();
+			}
 			rels = new HashMap<String, Relation>();
 			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			rels.put("E", edge_relation);
-			// Solution S is not contained in rels
-			// Parameter k
-			line = br.readLine();
-			// TODO remove k from file format
 			// Bound variables
 			line = br.readLine();
 			bound_vars = line.split(",");
@@ -145,14 +148,25 @@ public class Formula {
 			graph_name = "internal";
 			// Universe
 			line = br.readLine();
-			String[] universe_line = line.split(",");
-			universe = new int[universe_line.length];
-			for (int i = 0; i < universe_line.length; i++) {
-				universe[i] = Integer.parseInt(universe_line[i]);
+			int universe_size = Integer.parseInt(line);
+			for (int i = 0; i < universe_size; i++) {
+				universe[i] = i+1;
 			}
 			// Signature
-			line = br.readLine();
-			String[] relations = line.split(";");
+			// All relations are listed in the next lines, where the last relation ends on ';'
+			ArrayList<String> relations = new ArrayList<String>();
+			line = br.readLine(); 
+			while(true) {
+				// if this is the last line, ending on ';'
+				if(line.charAt(line.length()-1) == ';') {
+					// Delete ';' and add line, then leave
+					relations.add(line.substring(0, line.length()-1));
+					break;
+				} else {
+					relations.add(line);					
+				}
+				line = br.readLine();
+			}
 			// Solution S is not contained in rels
 			rels = new HashMap<String, Relation>();
 			for (String s : relations) {
@@ -179,9 +193,6 @@ public class Formula {
 				}
 				rels.put(identifier, new Relation(identifier, arity, hs));
 			}
-			// Parameter k
-			line = br.readLine();
-			// TODO remove k from file format
 			// Bound variables
 			line = br.readLine();
 			bound_vars = line.split(",");
