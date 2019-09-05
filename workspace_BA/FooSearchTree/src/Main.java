@@ -134,7 +134,7 @@ public class Main {
 		// Test pipelines
 		int start_k = 1;
 		int k_increment = 1;
-		int stop_k = 15;
+		int stop_k = 9;
 		boolean skip_search_tree = false;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
@@ -162,6 +162,8 @@ public class Main {
 //		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
 		
+		int counter = 0;
+		int maxcount = 10;
 		// Construct Formulas and reduced graphs
 		for( int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
@@ -174,7 +176,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size == 1500) {
+					if(curr_graph_size == 500) {
 						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 						graph_sizes.add(curr_graph_size);
 						// Construction
@@ -188,6 +190,12 @@ public class Main {
 						double time_passed = (double)(stop_time-start_time)/(double)1000;
 						reduction_times.add(time_passed);
 						printTime(time_passed);
+						// Only test 10 graphs 
+						counter++;
+						if(counter >= maxcount) {
+							System.out.println("Reached maxcount of " + maxcount + ".");
+							break;
+						}
 					} else {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
@@ -195,7 +203,7 @@ public class Main {
 //					break;
 				}
 			}
-			// TODO only the first formula works right now
+			// TODO only use the first formula<
 			break;
 		}
 		

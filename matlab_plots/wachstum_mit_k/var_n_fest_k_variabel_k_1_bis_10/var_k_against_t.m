@@ -3,6 +3,7 @@ close all
 files = dir('*.csv');
 
 figure
+subplot(1,2,1);
 hold on;
 for file = files'
     file_content = importdata(file.name);
@@ -16,8 +17,8 @@ xlabel 'k';
 ylabel 'time (sec)';
 hold off;
 
-figure
-hold on;   
+hold on;
+subplot(1,2,2);
 for file = files'
     file_content = importdata(file.name);
     y_ke = file_content.data(:,3);

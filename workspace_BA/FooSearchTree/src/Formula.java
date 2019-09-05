@@ -404,6 +404,13 @@ public class Formula {
 					return true;
 				}
 				// Else: look in all other available relations
+			} else if(id.equals("=")) {
+				// Check if the elements are equal
+				int reference = assi_elements[0];
+				for(int other_element : assi_elements) {
+					if(reference != other_element) return false;
+				}
+				return true;
 			} else {
 				Relation r = rels.get(id);
 				if (r != null) {
