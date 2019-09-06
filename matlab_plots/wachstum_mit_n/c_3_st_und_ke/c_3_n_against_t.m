@@ -11,7 +11,7 @@ for file = files'
     y_st = file_content.data(:,2);
     boxplot(y_st,x);
 end
-title 'Varianz der ST-Laufzeiten auf festem k'
+title 'Varianz der ST-Laufzeiten auf festem k, c = 3'
 xlabel 'n';
 ylabel 'time (sec)';
 hold off;
@@ -24,7 +24,7 @@ for file = files'
     y_ke = file_content.data(:,3);
     boxplot(y_ke,x);
 end
-title 'Varianz der KE-Laufzeiten auf festem k'
+title 'Varianz der KE-Laufzeiten auf festem k, c = 3'
 xlabel 'nodes';
 ylabel 'time (sec)';
 hold off;

@@ -1,7 +1,7 @@
 close all
 
 c_2_files = dir('c_2*.csv');
-c_3_files = dir('c_3*.csv')
+c_3_files = dir('c_3*.csv');
 
 % c = 2
 figure
