@@ -132,9 +132,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 7;
+		int start_k = 12;
 		int k_increment = 1;
-		int stop_k = 7;
+		int stop_k = 12;
 		boolean skip_search_tree = false;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
@@ -156,7 +156,11 @@ public class Main {
 		ArrayList<Double> reduction_times = new ArrayList<Double>();
 		ArrayList<Double> search_tree_times = new ArrayList<Double>();
 		ArrayList<Double> kernel_times = new ArrayList<Double>();
+		ArrayList<Double> kernel_edges = new ArrayList<Double>();
+		ArrayList<Double> kernel_nodes = new ArrayList<Double>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
+		ArrayList<Double> c_list = new ArrayList<Double>();
+		ArrayList<Double> dens_list = new ArrayList<Double>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
 //		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
@@ -174,14 +178,16 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size <= 250) {
-						System.out.println("  Accepted " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+					if(curr_graph_size <= 1000) {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
+						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size + " nodes on formula \"" + curr_formula.form_name + "\".");
 						forms.add(curr_formula);
+						c_list.add((double) curr_formula.c_par);
+						dens_list.add((double) curr_formula.graph_density);
 						// Reduction
-						System.out.println("> Reduction, " + curr_formula.graph_name);
+						System.out.println("> Reduction");
 						start_time = System.currentTimeMillis();
 						reduced_graphs.add(curr_formula.reduceToHS(mute));					
 						stop_time = System.currentTimeMillis();
@@ -244,8 +250,10 @@ public class Main {
 					System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 				}
 				double kernel_time_passed = (double)(stop_time-start_time)/(double)1000;
-				kernel_times.add(kernel_time_passed );
-				printTime(kernel_time_passed );
+				kernel_times.add(kernel_time_passed);
+				kernel_edges.add((double) curr_kernel.edges.size());
+				kernel_nodes.add((double) curr_kernel.nodes.length);
+				printTime(kernel_time_passed);
 				
 				// HS SearchTree
 				System.out.println("> HS-SearchTree, graph " + curr_graph.name);
@@ -266,7 +274,7 @@ public class Main {
 		System.out.println("\n------------------------------------");
 		int curr_k_par = start_k;
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		String headline = "nodes;pipe 1;pipe 2;reduction;kernel;hs_st;k;st_result;ke_result;equal\n"; 
+		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density\n"; 
 		write_buffer.add(headline);
 		String file_name = "";
 		for(int i = 0; i < number_of_iterations; i++) {
@@ -282,6 +290,7 @@ public class Main {
 			System.out.println("   Kernelisation: " + kernel_times.get(i));
 			System.out.println("   HS-SearchTree: " + hs_times.get(i));
 			System.out.println("   " + ke_results.get(i));
+			
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(form_and_redu_index) + kernel_times.get(i) + hs_times.get(i);
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
@@ -290,13 +299,13 @@ public class Main {
 				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res
-						+ "\n");
+						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
+						+ ";" + "-1" + ";" + dens_list.get(i) + "\n");
 			} else {
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1"
-						+ "\n");
+						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
+						+ ";" + c_list.get(i) + ";" + dens_list.get(i) + "\n");
 			}
 
 			// Prepare next iteration and save to csv

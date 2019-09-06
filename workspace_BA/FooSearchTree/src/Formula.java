@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 public class Formula {
 	String form_name;
 	String graph_name;
+	int graph_density;
 	int[] universe;
 	HashMap<String, Relation> rels;
 	String[] bound_vars;
@@ -61,6 +62,7 @@ public class Formula {
 			}
 			rels = new HashMap<String, Relation>();
 			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
+			graph_density = (int) Math.round(((double)(edge_set.size()/2)/(double)universe.length));
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			rels.put("E", edge_relation);
 			// Bound variables
