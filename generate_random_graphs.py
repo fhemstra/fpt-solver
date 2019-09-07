@@ -14,6 +14,8 @@ for density in range(2,20,2):
 
 	# variance
 	for i in range(10):
+		# list of known edges
+		known_edges = []
 		nr_of_edges = nr_of_nodes * density
 		filename = dest_dir + os.sep + 'rand_n_' + str(nr_of_nodes) + '_dens_' + str(density) + '_' + str(i) +  '.txt'
 		with open(filename, 'w') as curr_file:
@@ -21,6 +23,8 @@ for density in range(2,20,2):
 			while nr_of_edges != 0:
 				curr_start = randint(1, nr_of_nodes)
 				curr_end = randint(1, nr_of_nodes)
+				# Add edge to list of known edges
+				known_edges.append([curr_start,curr_end])
 				curr_file.write(str(curr_start) + ' ' + str(curr_end) + '\n')
 				nr_of_edges -= 1
 
