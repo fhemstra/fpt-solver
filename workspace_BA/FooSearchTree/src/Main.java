@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-	static boolean mute = false;
+	static boolean mute = true;
 	
 	public static void main(String[] args) {
 		// Test PACE parser
@@ -132,9 +132,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 12;
+		int start_k = 8;
 		int k_increment = 1;
-		int stop_k = 12;
+		int stop_k = 8;
 		boolean skip_search_tree = false;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
