@@ -3,7 +3,7 @@ from random import randint
 
 for density in range(2,20,2):
 	# for nr_of_nodes in range(100,600,100):
-	nr_of_nodes = 150
+	nr_of_nodes = 200
 	nr_of_edges = nr_of_nodes * 4
 
 	dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -23,3 +23,5 @@ for density in range(2,20,2):
 				curr_end = randint(1, nr_of_nodes)
 				curr_file.write(str(curr_start) + ' ' + str(curr_end) + '\n')
 				nr_of_edges -= 1
+
+# TODO: right now there can be edges more than once
