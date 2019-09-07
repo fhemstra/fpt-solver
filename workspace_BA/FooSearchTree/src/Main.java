@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-	static boolean mute = true;
+	static boolean mute = false;
 	
 	public static void main(String[] args) {
 		// Test PACE parser
@@ -141,6 +141,7 @@ public class Main {
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
 		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+		
 //		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
 //		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
@@ -158,6 +159,8 @@ public class Main {
 		ArrayList<Double> kernel_times = new ArrayList<Double>();
 		ArrayList<Double> kernel_edges = new ArrayList<Double>();
 		ArrayList<Double> kernel_nodes = new ArrayList<Double>();
+		ArrayList<Double> reduced_nodes = new ArrayList<Double>();
+		ArrayList<Double> reduced_edges  = new ArrayList<Double>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
 		ArrayList<Double> c_list = new ArrayList<Double>();
 		ArrayList<Double> dens_list = new ArrayList<Double>();
@@ -189,8 +192,11 @@ public class Main {
 						// Reduction
 						System.out.println("> Reduction");
 						start_time = System.currentTimeMillis();
-						reduced_graphs.add(curr_formula.reduceToHS(mute));					
+						Hypergraph reduction_result = curr_formula.reduceToHS(mute);
 						stop_time = System.currentTimeMillis();
+						reduced_graphs.add(reduction_result);
+						reduced_edges.add((double) reduction_result.edges.size());
+						reduced_nodes.add((double) reduction_result.nodes.length);
 						double time_passed = (double)(stop_time-start_time)/(double)1000;
 						reduction_times.add(time_passed);
 						printTime(time_passed);
@@ -198,7 +204,7 @@ public class Main {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
 					// TODO remove break, only test one graph
-//					break;
+					break;
 				}
 			}
 			// TODO only use the first formula<
@@ -274,7 +280,7 @@ public class Main {
 		System.out.println("\n------------------------------------");
 		int curr_k_par = start_k;
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density\n"; 
+		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges\n"; 
 		write_buffer.add(headline);
 		String file_name = "";
 		for(int i = 0; i < number_of_iterations; i++) {
@@ -300,12 +306,12 @@ public class Main {
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
 						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
-						+ ";" + "-1" + ";" + dens_list.get(i) + "\n");
+						+ ";" + "-1" + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			} else {
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
 						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
-						+ ";" + c_list.get(i) + ";" + dens_list.get(i) + "\n");
+						+ ";" + c_list.get(i) + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			}
 
 			// Prepare next iteration and save to csv
