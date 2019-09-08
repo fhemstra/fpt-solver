@@ -3,7 +3,7 @@ from random import randint
 
 for density in range(2,20,2):
 	# for nr_of_nodes in range(100,600,100):
-	nr_of_nodes = 200
+	nr_of_nodes = 1000
 	nr_of_edges = nr_of_nodes * 4
 
 	dir_path = os.path.dirname(os.path.realpath(__file__))

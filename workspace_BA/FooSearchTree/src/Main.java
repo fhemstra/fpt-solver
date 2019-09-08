@@ -204,10 +204,10 @@ public class Main {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
 					// TODO remove break, only test one graph
-					break;
+//					break;
 				}
 			}
-			// TODO only use the first formula<
+			// TODO only use the first formula
 			break;
 		}
 		
