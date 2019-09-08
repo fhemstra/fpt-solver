@@ -1,9 +1,10 @@
 import os
 from random import randint
 
-for density in range(2,20,2):
+density = 4
+
+for nr_of_nodes in range(500,3100,100):
 	# for nr_of_nodes in range(100,600,100):
-	nr_of_nodes = 1000
 	nr_of_edges = nr_of_nodes * 4
 
 	dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,11 +22,9 @@ for density in range(2,20,2):
 		with open(filename, 'w') as curr_file:
 			curr_file.write('p td ' + str(nr_of_nodes) + ' ' + str(nr_of_edges) + ' \n')
 			while nr_of_edges != 0:
-				curr_start = randint(1, nr_of_nodes)
-				curr_end = randint(1, nr_of_nodes)
-				# Add edge to list of known edges
-				known_edges.append([curr_start,curr_end])
-				curr_file.write(str(curr_start) + ' ' + str(curr_end) + '\n')
+				# curr_start = randint(1, nr_of_nodes)
+				# curr_end = randint(1, nr_of_nodes)
+				# # Add edge to list of known edges
+				# known_edges.append([curr_start,curr_end])
+				# curr_file.write(str(curr_start) + ' ' + str(curr_end) + '\n')
 				nr_of_edges -= 1
-
-# TODO: right now there can be edges more than once

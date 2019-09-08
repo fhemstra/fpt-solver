@@ -132,9 +132,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 8;
+		int start_k = 14;
 		int k_increment = 1;
-		int stop_k = 8;
+		int stop_k = 14;
 		boolean skip_search_tree = false;
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
@@ -170,7 +170,7 @@ public class Main {
 		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
 
 		// Construct Formulas and reduced graphs
-		for( int i = 0; i < form_files.length; i++) {
+		for(int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
 			for (int j = 0; j < graph_files.length; j++) {
@@ -181,7 +181,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size <= 1000) {
+					if(curr_graph_size <= 6000) {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
