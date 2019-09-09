@@ -1,31 +1,51 @@
 import os
-from random import randint
+import random
+
+# Creates random graphs using the GNP model
 
 density = 4
+propability = 0.001
+variance_count = 10
 
 for nr_of_nodes in range(600,4200,200):
-	# for nr_of_nodes in range(100,600,100):
-	nr_of_edges = nr_of_nodes * 4
-
-	dir_path = os.path.dirname(os.path.realpath(__file__))
 	# create directory if it does not exist yet
+	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'random_graphs'
 	if not os.path.exists(dest_dir):
 		os.makedirs(dest_dir) 
 
-	# variance
-	for i in range(10):
-		# list of known edges
-		known_edges = []
-		nr_of_edges = nr_of_nodes * density
-		filename = dest_dir + os.sep + 'rand_n_' + str(nr_of_nodes) + '_dens_' + str(density) + '_' + str(i) +  '.txt'
-		with open(filename, 'w') as curr_file:
-			curr_file.write('p td ' + str(nr_of_nodes) + ' ' + str(nr_of_edges) + ' \n')
-			while nr_of_edges != 0:
-				# Comment this to create empty graphs
-				# curr_start = randint(1, nr_of_nodes)
-				# curr_end = randint(1, nr_of_nodes)
-				# # Add edge to list of known edges
-				# known_edges.append([curr_start,curr_end])
-				# curr_file.write(str(curr_start) + ' ' + str(curr_end) + '\n')
-				nr_of_edges -= 1
+	# Make multiple examples for variance
+	for i in range(variance_count):
+		# Calculate possible number of edges and reset actual number
+		actual_edges = 0
+		possible_edges = int(pow(nr_of_nodes,2)/2)
+		# print("Possible edges: " + str(possible_edges))
+		# Generate filename
+		filename = 'rand_n_' + str(nr_of_nodes) + '_prob_' + str(propability) + '_' + str(i) +  '.txt'
+		full_path = dest_dir + os.sep + filename
+		print("Creating " + filename)
+		with open(full_path, 'w') as curr_file:			
+			# Create edges and 
+			for j in range(1,nr_of_nodes+1):
+				for k in range(1,nr_of_nodes+1):
+					# Don't handle both (1,2) and (2,1)
+					if j < k:
+						rand_number = random.random()
+						# Decide, if the edge (j,k) should exist
+						if(rand_number <= propability):
+							# Add edge
+							curr_file.write(str(j) + ' ' + str(k) + '\n')
+							actual_edges += 1
+
+		# PACE-headline is supposed to be the first line
+		headline = 'p td ' + str(nr_of_nodes) + ' ' + str(actual_edges) + ' \n'
+		file_content = None
+		# Read current file content
+		with open(full_path, 'r') as curr_file:
+			file_content = curr_file.readlines()
+		# Prepend headline
+		file_content.insert(0,headline)
+		with open(full_path, 'w') as curr_file:
+			curr_file.writelines(file_content)
+		# print("Actual edges:   " + str(actual_edges))
+		# print("Ratio: " + str(round(actual_edges/possible_edges, 5)))
