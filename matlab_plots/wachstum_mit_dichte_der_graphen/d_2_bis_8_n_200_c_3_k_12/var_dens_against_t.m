@@ -3,7 +3,7 @@ close all
 files = dir('*.csv');
 
 figure
-subplot(1,2,1);
+subplot(2,1,1);
 hold on;
 for file = files'
     file_content = importdata(file.name);
@@ -11,12 +11,12 @@ for file = files'
     y_st = file_content.data(:,2);
     boxplot(y_st,x);
 end
-title 'Varianz der ST-Laufzeiten, k = 12, n = 250, c = 3'
+title 'SearchTree, n = 250, c = 3, k = 12'
 xlabel 'density';
 ylabel 'time (sec)';
 hold off;
 
-subplot(1,2,2);
+subplot(2,1,2);
 hold on;   
 for file = files'
     file_content = importdata(file.name);
@@ -24,7 +24,9 @@ for file = files'
     y_ke = file_content.data(:,3);
     boxplot(y_ke,x);
 end
-title 'Varianz der KE-Laufzeiten, k = 12, n = 250, c = 3'
+title 'Red. + Kern., n = 250, c = 3, k = 12'
 xlabel 'density';
 ylabel 'time (sec)';
 hold off;
+
+print('d_gegen_t_n_250_c_3_k_12.pdf','-fillpage','-dpdf');
