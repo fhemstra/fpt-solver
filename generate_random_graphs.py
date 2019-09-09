@@ -3,7 +3,7 @@ from random import randint
 
 density = 4
 
-for nr_of_nodes in range(500,3100,100):
+for nr_of_nodes in range(600,4200,200):
 	# for nr_of_nodes in range(100,600,100):
 	nr_of_edges = nr_of_nodes * 4
 
@@ -22,6 +22,7 @@ for nr_of_nodes in range(500,3100,100):
 		with open(filename, 'w') as curr_file:
 			curr_file.write('p td ' + str(nr_of_nodes) + ' ' + str(nr_of_edges) + ' \n')
 			while nr_of_edges != 0:
+				# Comment this to create empty graphs
 				# curr_start = randint(1, nr_of_nodes)
 				# curr_end = randint(1, nr_of_nodes)
 				# # Add edge to list of known edges

@@ -31,4 +31,4 @@ xlabel 'nodes';
 ylabel 'time (sec)';
 hold off;
 
-print('n_gegen_t_k_2.pdf','-fillpage','-dpdf');
+print('n_gegen_t_k_12_c_2_leere_graphen_4000.pdf','-fillpage','-dpdf');
