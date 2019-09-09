@@ -3,7 +3,7 @@ import random
 
 # Creates random graphs which contain a vertex-cover of size k 
 
-propability = 0.1
+propability = 0.2
 variance_count = 10
 k_par = 12
 
