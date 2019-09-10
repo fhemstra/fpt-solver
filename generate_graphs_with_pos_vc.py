@@ -26,25 +26,31 @@ for nr_of_nodes in range(600,4200,200):
 		full_path = dest_dir + os.sep + filename
 		print("Creating " + filename)
 
-		# Choose, which k_par nodes should be the vertex-cover
+		# Choose, which k nodes should be the vertex-cover
 		cover_nodes = []
-		for j in range(1,k_par+1):
-			node = random.randrange(1, nr_of_nodes)
-			cover_nodes.append(node)
+		# Prevent endless loops
+		if k_par < nr_of_nodes:
+			for j in range(1,k_par+1):
+				node = random.randrange(1, nr_of_nodes)
+				# In case node is aleady contained in cover_nodes, roll until we find a new element
+				while node in cover_nodes:
+					node = random.randrange(1, nr_of_nodes)
+				cover_nodes.append(node)
+
+		for tmp in cover_nodes:
+			print(str(tmp))
 
 		# Write to file
 		with open(full_path, 'w') as curr_file:			
 			# Create edges and write them to the file
 			for j in range(0,len(cover_nodes)):
 				for k in range(1,nr_of_nodes+1):
-					# Don't handle both (1,2) and (2,1)
-					if j < k:
-						rand_number = random.random()
-						# Decide, if the edge (cover_nodes[j],k) should exist
-						if(rand_number <= probability):
-							# Add edge
-							curr_file.write(str(cover_nodes[j]) + ' ' + str(k) + '\n')
-							actual_edges += 1
+					rand_number = random.random()
+					# Decide, if the edge (cover_nodes[j],k) should exist
+					if(rand_number <= probability):
+						# Add edge
+						curr_file.write(str(cover_nodes[j]) + ' ' + str(k) + '\n')
+						actual_edges += 1
 
 		# PACE-headline is supposed to be the first line
 		headline = 'p td ' + str(nr_of_nodes) + ' ' + str(actual_edges) + ' \n'
