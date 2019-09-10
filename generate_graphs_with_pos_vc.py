@@ -7,7 +7,7 @@ probability = 0.2
 variance_count = 10
 k_par = 12
 
-for nr_of_nodes in range(600,4200,200):
+for nr_of_nodes in range(600,6200,200):
 	# create directory if it does not exist yet
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'vc_pos_graphs'
@@ -36,9 +36,6 @@ for nr_of_nodes in range(600,4200,200):
 				while node in cover_nodes:
 					node = random.randrange(1, nr_of_nodes)
 				cover_nodes.append(node)
-
-		for tmp in cover_nodes:
-			print(str(tmp))
 
 		# Write to file
 		with open(full_path, 'w') as curr_file:			
