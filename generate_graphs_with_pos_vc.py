@@ -5,7 +5,7 @@ import random
 
 probability = 0.2
 variance_count = 10
-k_par = 12
+k_par = 14
 
 for nr_of_nodes in range(600,6200,200):
 	# create directory if it does not exist yet

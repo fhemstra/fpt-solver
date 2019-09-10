@@ -132,9 +132,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 12;
+		int start_k = 14;
 		int k_increment = 1;
-		int stop_k = 12;
+		int stop_k = 14;
 		boolean skip_search_tree = false;
 //		String graph_mode = "random";
 		String graph_mode = "vc_pos";
