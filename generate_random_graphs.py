@@ -3,7 +3,7 @@ import random
 
 # Creates random graphs using the GNP model
 
-propability = 0.001
+probability = 0.001
 variance_count = 10
 
 for nr_of_nodes in range(600,4200,200):
@@ -20,7 +20,7 @@ for nr_of_nodes in range(600,4200,200):
 		possible_edges = int(pow(nr_of_nodes,2)/2)
 		# print("Possible edges: " + str(possible_edges))
 		# Generate filename
-		filename = 'rand_n_' + str(nr_of_nodes) + '_prob_' + str(propability) + '_' + str(i) +  '.txt'
+		filename = 'rand_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.txt'
 		full_path = dest_dir + os.sep + filename
 		print("Creating " + filename)
 		with open(full_path, 'w') as curr_file:			
@@ -31,7 +31,7 @@ for nr_of_nodes in range(600,4200,200):
 					if j < k:
 						rand_number = random.random()
 						# Decide, if the edge (j,k) should exist
-						if(rand_number <= propability):
+						if(rand_number <= probability):
 							# Add edge
 							curr_file.write(str(j) + ' ' + str(k) + '\n')
 							actual_edges += 1

@@ -3,7 +3,7 @@ import random
 
 # Creates random graphs which contain a vertex-cover of size k 
 
-propability = 0.2
+probability = 0.2
 variance_count = 10
 k_par = 12
 
@@ -22,7 +22,7 @@ for nr_of_nodes in range(600,4200,200):
 		# print("Possible edges: " + str(possible_edges))
 
 		# Generate filename
-		filename = 'vc_pos_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(propability) + '_' + str(i) +  '.txt'
+		filename = 'vc_pos_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.txt'
 		full_path = dest_dir + os.sep + filename
 		print("Creating " + filename)
 
@@ -41,7 +41,7 @@ for nr_of_nodes in range(600,4200,200):
 					if j < k:
 						rand_number = random.random()
 						# Decide, if the edge (cover_nodes[j],k) should exist
-						if(rand_number <= propability):
+						if(rand_number <= probability):
 							# Add edge
 							curr_file.write(str(cover_nodes[j]) + ' ' + str(k) + '\n')
 							actual_edges += 1
