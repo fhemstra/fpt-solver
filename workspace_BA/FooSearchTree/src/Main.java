@@ -136,16 +136,22 @@ public class Main {
 		int k_increment = 1;
 		int stop_k = 12;
 		boolean skip_search_tree = false;
+//		String graph_mode = "random";
+		String graph_mode = "vc_pos";
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
-		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
+//		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
+//		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+		
+		File graph_folder = new File("../vc_pos_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 		
 //		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
 //		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File pace_folder = new File("pace"); // Use this inside of eclipse
 //		File form_folder = new File("instances"); // Use this for execution inside of eclipse
+		
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		ArrayList<Formula> forms = new ArrayList<Formula>();
@@ -317,7 +323,7 @@ public class Main {
 			// Prepare next iteration and save to csv
 			if((i+1)%forms.size() == 0) {
 				// Save buffer to csv
-				file_name = Integer.toString((int) System.currentTimeMillis()) + "_random_k_" + curr_k_par + ".csv";
+				file_name = Integer.toString((int) System.currentTimeMillis()) + "_" + graph_mode + "_k_" + curr_k_par + ".csv";
 				writeToCsv(write_buffer, file_name);
 				write_buffer.clear();
 				write_buffer.add(headline);
