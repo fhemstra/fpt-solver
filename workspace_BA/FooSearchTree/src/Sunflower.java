@@ -18,12 +18,13 @@ public class Sunflower {
 	 */
 	public String toOutputString() {
 		String res = "Petals: ";
-		for(Tuple t : petals) {
+		for (Tuple t : petals) {
 			res += t.toOutputString(true) + " ";
 		}
 		res += "\nCore: ";
-		if(core.isEmpty()) res += "empty";
-		for(int c : core) {
+		if (core.isEmpty())
+			res += "empty";
+		for (int c : core) {
 			res += c + " ";
 		}
 		return res;

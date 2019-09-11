@@ -10,7 +10,8 @@ public class Relation {
 	HashSet<Tuple> elements;
 
 	/**
-	 * Constructs a Relation consisting of an identifier, its arity (number of elements per Tuple) and a set of Tuples contained in this Relation.
+	 * Constructs a Relation consisting of an identifier, its arity (number of
+	 * elements per Tuple) and a set of Tuples contained in this Relation.
 	 */
 	public Relation(String s, int i, HashSet<Tuple> hs) {
 		name = s;

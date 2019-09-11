@@ -21,8 +21,8 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Generates a hypergraph from a vertex cover file, formated like the ones used by the PACE
-	 * Challenge.
+	 * Generates a hypergraph from a vertex cover file, formated like the ones used
+	 * by the PACE Challenge.
 	 */
 	public Hypergraph(String vc_file_path) {
 		try {
@@ -57,25 +57,32 @@ public class Hypergraph {
 	 * If there is no Sunflower which can be easily found, this returns null.
 	 */
 	public Sunflower findSunflower(Hypergraph local_hyp, int k_par, boolean mute) {
-		if(!mute) System.out.println(">> findSunflower()");
+		if (!mute)
+			System.out.println(">> findSunflower()");
 		if (local_hyp.edges.isEmpty()) {
-			if(!mute) System.out.println("<< Graph has no edges, return null.\n---");
+			if (!mute)
+				System.out.println("<< Graph has no edges, return null.\n---");
 			return null;
 		}
 		ArrayList<Tuple> f = findMaxDisjEdges(local_hyp.edges);
-		if(!mute) System.out.println("Found f of size " + f.size() + ".");
+		if (!mute)
+			System.out.println("Found f of size " + f.size() + ".");
 		if (f.size() > k_par) {
 			// Empty core
-			if(!mute) System.out.println("<< Found more than k (" + k_par + ") petals, return sunflower with empty core.");
+			if (!mute)
+				System.out.println("<< Found more than k (" + k_par + ") petals, return sunflower with empty core.");
 			return new Sunflower(f, new ArrayList<Integer>());
 		} else {
-			if(!mute) System.out.println("f.size() <= k, (" + f.size() + " <= " + k_par + "). Look for most common node.");
+			if (!mute)
+				System.out.println("f.size() <= k, (" + f.size() + " <= " + k_par + "). Look for most common node.");
 			int u = findCommonNode(local_hyp.edges);
 			if (u == -1) {
-				if(!mute) System.out.println("<< Common node is -1 (only edge left is empty), return null.");
+				if (!mute)
+					System.out.println("<< Common node is -1 (only edge left is empty), return null.");
 				return null;
 			}
-			if(!mute) System.out.println("Found common node u: " + u + ". Removing " + u + " from edges.");
+			if (!mute)
+				System.out.println("Found common node u: " + u + ". Removing " + u + " from edges.");
 			ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
 			// Remove u from edges that contain u
 			for (Tuple edge : local_hyp.edges) {
@@ -88,10 +95,11 @@ public class Hypergraph {
 			}
 			// Print
 			if (updated_e.isEmpty()) {
-				if(!mute) System.out.println("<< No edges left, returning null.");
+				if (!mute)
+					System.out.println("<< No edges left, returning null.");
 				return null;
 			}
-			if(!mute) {
+			if (!mute) {
 				System.out.println(updated_e.size() + " edges that are left after removing " + u + ":");
 				if (printGraphs) {
 					for (Tuple t : updated_e) {
@@ -105,11 +113,13 @@ public class Hypergraph {
 			// recur
 			Sunflower sun = findSunflower(new Hypergraph(local_hyp.nodes, updated_e), k_par, mute);
 			if (sun == null) {
-				if(!mute) System.out.println("<< sun is null, return null.");
+				if (!mute)
+					System.out.println("<< sun is null, return null.");
 				return null;
 			}
 			// re-add u
-			if(!mute) System.out.println("Got sunflower, re-adding " + u + ":");
+			if (!mute)
+				System.out.println("Got sunflower, re-adding " + u + ":");
 			ArrayList<Tuple> petals_with_u = sun.petals;
 			for (Tuple petal : petals_with_u) {
 				petal.addElement(u);
@@ -117,7 +127,7 @@ public class Hypergraph {
 			ArrayList<Integer> core_with_u = sun.core;
 			core_with_u.add(u);
 			Sunflower updated_sun = new Sunflower(petals_with_u, core_with_u);
-			if(!mute) {
+			if (!mute) {
 				if (printGraphs) {
 					System.out.println(updated_sun.toOutputString());
 				} else {
@@ -130,22 +140,27 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns a kernel for the given hypergraph using the Sunflower-lemma with the given parameter k_par.
+	 * Returns a kernel for the given hypergraph using the Sunflower-lemma with the
+	 * given parameter k_par.
 	 */
 	public Hypergraph kernelize(Hypergraph local_hyp, int k_par, boolean mute) {
 		// TODO handle this better
-		if(k_par < 1) return null;
+		if (k_par < 1)
+			return null;
 		// "Clone" hyp
 		Hypergraph kernel = new Hypergraph(local_hyp.nodes, local_hyp.edges);
 		int sf_counter = 0;
-		if(!mute) System.out.println(">> kernelize()");
+		if (!mute)
+			System.out.println(">> kernelize()");
 		Sunflower sun = findSunflower(kernel, k_par, mute);
 		if (sun == null) {
-			if(!mute) System.out.println("Initial sunflower is already null, nothing to kernelize.");
+			if (!mute)
+				System.out.println("Initial sunflower is already null, nothing to kernelize.");
 		}
 		while (sun != null) { // TODO not sure if this is right
-			if(!mute) System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
-			if(!mute)  {
+			if (!mute)
+				System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
+			if (!mute) {
 				if (printGraphs) {
 					System.out.println(sun.toOutputString());
 				} else {
@@ -154,8 +169,9 @@ public class Hypergraph {
 			}
 			// Reduction Rule: Only remove Sunflowers with at least k+1 petals
 			if (!(sun.petals.size() >= k_par + 1)) {
-				if(!mute) System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k_par + 1)
-						+ " or bigger, break kernelize().");
+				if (!mute)
+					System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k_par + 1)
+							+ " or bigger, break kernelize().");
 				break;
 			}
 			// Remove petals from graph
@@ -175,7 +191,7 @@ public class Hypergraph {
 			// Convert core to int[] and fill up with -1
 			int[] int_core = new int[kernel.d_par];
 			for (int i = 0; i < kernel.d_par; i++) {
-				if(i < sun.core.size()) {
+				if (i < sun.core.size()) {
 					int_core[i] = sun.core.get(i);
 				} else {
 					int_core[i] = -1;
@@ -203,10 +219,12 @@ public class Hypergraph {
 			kernel.nodes = int_nodes;
 			kernel.edges = updated_e;
 			sf_counter++;
-			if(!mute) System.out.print("  SFs removed:   " + sf_counter + "\r");
+			if (!mute)
+				System.out.print("  SFs removed:   " + sf_counter + "\r");
 			// print kernel
-			if(!mute) System.out.println("KERNELIZED hyp:");
-			if(!mute) {
+			if (!mute)
+				System.out.println("KERNELIZED hyp:");
+			if (!mute) {
 				if (printGraphs) {
 					System.out.println(kernel.toOutputString());
 				} else {
@@ -214,12 +232,16 @@ public class Hypergraph {
 				}
 			}
 			// Repeat
-			if(!mute) System.out.println("Go find another sunflower.");
+			if (!mute)
+				System.out.println("Go find another sunflower.");
 			sun = findSunflower(kernel, k_par, mute);
-			if(!mute) System.out.println("LOOP KERNELIZE.");
+			if (!mute)
+				System.out.println("LOOP KERNELIZE.");
 		}
-		if(sf_counter > 0 && !mute) System.out.println();
-		if(!mute) System.out.println("<< END KERNELIZE.");
+		if (sf_counter > 0 && !mute)
+			System.out.println();
+		if (!mute)
+			System.out.println("<< END KERNELIZE.");
 		return kernel;
 	}
 
@@ -236,7 +258,8 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns the most common node in the handed list of edges. Returns -1 if all edges are empty.
+	 * Returns the most common node in the handed list of edges. Returns -1 if all
+	 * edges are empty.
 	 */
 	private int findCommonNode(ArrayList<Tuple> edges_to_search) {
 		HashMap<Integer, Integer> occurences = new HashMap<Integer, Integer>();
@@ -253,7 +276,7 @@ public class Hypergraph {
 					occurences.put(node, occurences.get(node) + 1);
 				}
 				if (occurences.get(node) > occurences.get(max_node)) {
-					max_node = node;					
+					max_node = node;
 				}
 			}
 		}
@@ -261,26 +284,26 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns an inclusion-wise maximal subset of the given set of edges.
-	 * Maximal means there is no edge to add greedily.
+	 * Returns an inclusion-wise maximal subset of the given set of edges. Maximal
+	 * means there is no edge to add greedily.
 	 */
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
-		HashSet<Integer> marked_elements = new HashSet<Integer>(); 
+		HashSet<Integer> marked_elements = new HashSet<Integer>();
 		for (Tuple e : edges_to_search) {
-			// Check if e contains any marked nodes 
+			// Check if e contains any marked nodes
 			boolean flag = true;
 			for (int node : e.elements) {
-				if(marked_elements.contains(node)) {
+				if (marked_elements.contains(node)) {
 					flag = false;
 					break;
 				}
 			}
 			// e can be added
-			if(flag) {
+			if (flag) {
 				res.add(e);
 				// Mark all nodes in e
-				for(int node : e.elements) {
+				for (int node : e.elements) {
 					marked_elements.add(node);
 				}
 			}
@@ -289,12 +312,14 @@ public class Hypergraph {
 	}
 
 	/*
-	 * Returns the parameter d for this Hypergraph, which is the maximal number of nodes that exist in any Hyperedge.
+	 * Returns the parameter d for this Hypergraph, which is the maximal number of
+	 * nodes that exist in any Hyperedge.
 	 */
 	private int computeD() {
 		int max = 0;
-		for(Tuple e : edges) {
-			if(max < e.elements.length) max = e.elements.length;
+		for (Tuple e : edges) {
+			if (max < e.elements.length)
+				max = e.elements.length;
 		}
 		return max;
 	}
@@ -325,46 +350,47 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph or not.
-	 * Initially the solution sol is supposed to be empty.
+	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
+	 * or not. Initially the solution sol is supposed to be empty.
 	 */
 	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute) {
 		// TODO return solution
 		int[] local_nodes = local_hyp.nodes;
 		ArrayList<Tuple> local_edges = local_hyp.edges;
 		// check for empty edges at the start
-		for(Tuple edge : local_edges) {
-			if(edge.elements.length == 0) {
+		for (Tuple edge : local_edges) {
+			if (edge.elements.length == 0) {
 				System.out.println("Empty edge."); // should not be reached
 				return false;
 			}
 		}
-		for(int i = 0; i < local_edges.size(); i++) {
+		for (int i = 0; i < local_edges.size(); i++) {
 			Tuple curr_edge = local_edges.get(i);
 			boolean edge_is_covered = false;
-			for(int j = 0; j < local_hyp.d_par; j++) {
-				if(sol.contains(curr_edge.elements[j])) {
+			for (int j = 0; j < local_hyp.d_par; j++) {
+				if (sol.contains(curr_edge.elements[j])) {
 					edge_is_covered = true;
 				}
 			}
-			if(!edge_is_covered) {
+			if (!edge_is_covered) {
 				boolean flag = false;
-				if(sol.size() < k_par) {
+				if (sol.size() < k_par) {
 					// branch into d branches, adding every element of the edge
-					for(int j = 0; j < local_hyp.d_par; j++) {
+					for (int j = 0; j < local_hyp.d_par; j++) {
 						// Don't add -1
-						if(curr_edge.elements[j] == -1)
+						if (curr_edge.elements[j] == -1)
 							continue;
 						// Try adding this
 						sol.add(curr_edge.elements[j]);
 						// print
-						if(!mute) System.out.print("  Sol size: " + sol.size() + "\r");
+						if (!mute)
+							System.out.print("  Sol size: " + sol.size() + "\r");
 						flag = flag || hsSearchTree(local_hyp, k_par, sol, mute);
-						if(flag) {
+						if (flag) {
 							return true;
 						} else {
-							// This branch failed, remove element again, to clean up for next branch 
-							sol.remove((Object) curr_edge.elements[j]);							
+							// This branch failed, remove element again, to clean up for next branch
+							sol.remove((Object) curr_edge.elements[j]);
 						}
 					}
 					return flag;
