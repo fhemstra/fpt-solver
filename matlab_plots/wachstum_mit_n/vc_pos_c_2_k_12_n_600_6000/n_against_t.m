@@ -26,9 +26,9 @@ for file = files'
     boxplot(y_ke,x);
 end
 title 'Red. + Kern., vc-pos, k = 12, c = 2'
-xlabel 'nodes';
+xlabel 'n';
 xtickangle(70);
 ylabel 'time (sec)';
 hold off;
 
-print('vc_pos_k_12_n_600_4000.pdf','-fillpage','-dpdf');
+print('vc_pos_k_12_n_600_6000.pdf','-fillpage','-dpdf');
