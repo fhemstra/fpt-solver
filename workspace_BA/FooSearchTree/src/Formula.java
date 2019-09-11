@@ -151,6 +151,7 @@ public class Formula {
 			// Universe
 			line = br.readLine();
 			int universe_size = Integer.parseInt(line);
+			universe = new int[universe_size];
 			for (int i = 0; i < universe_size; i++) {
 				universe[i] = i+1;
 			}

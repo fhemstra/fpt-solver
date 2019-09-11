@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -271,15 +272,24 @@ public class Hypergraph {
 	 */
 	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
+		HashSet<Integer> marked_elements = new HashSet<Integer>(); 
 		for (Tuple e : edges_to_search) {
-			boolean add_curr_edge = true;
-			for (Tuple f : res) {
-				if (e.intersectsWith(f)) {
-					add_curr_edge = false;
+			// Check if e contains any marked nodes 
+			boolean flag = true;
+			for (int node : e.elements) {
+				if(marked_elements.contains(node)) {
+					flag = false;
+					break;
 				}
 			}
-			if (add_curr_edge)
+			// e can be added
+			if(flag) {
 				res.add(e);
+				// Mark all nodes in e
+				for(int node : e.elements) {
+					marked_elements.add(node);
+				}
+			}
 		}
 		return res;
 	}
