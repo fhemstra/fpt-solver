@@ -9,12 +9,18 @@ public class Relation {
 	int arity;
 	HashSet<Tuple> elements;
 
+	/**
+	 * Constructs a Relation consisting of an identifier, its arity (number of elements per Tuple) and a set of Tuples contained in this Relation.
+	 */
 	public Relation(String s, int i, HashSet<Tuple> hs) {
 		name = s;
 		arity = i;
 		elements = hs;
 	}
 
+	/**
+	 * Returns a String which represents this Relation for debugging.
+	 */
 	public String toOutputString() {
 		String res = "";
 		res += name + arity + " = ";
@@ -34,7 +40,7 @@ public class Relation {
 	}
 
 	/**
-	 * Returns the number of elements the Relation has.
+	 * Returns the number of Tuples this Relation holds.
 	 */
 	public int size() {
 		if (elements != null)

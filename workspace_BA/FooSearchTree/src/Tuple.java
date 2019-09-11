@@ -5,12 +5,15 @@
 public class Tuple {
 	int[] elements;
 
+	/**
+	 * Constructs a Tuple containing the given elements.
+	 */
 	public Tuple(int[] i) {
 		elements = i;
 	}
 
 	/**
-	 * Compares two tuples, returns true if the contains the same elements in the
+	 * Compares two tuples, returns true if they contain the same elements in the
 	 * same order. Ignores entries that are -1.
 	 */
 	public boolean equals(Object obj) {
@@ -44,6 +47,9 @@ public class Tuple {
 		return false;
 	}
 
+	/**
+	 * Returns the result of removing "-1"-entries from the given array. The size of the resulting array is the same as given in the second parameter to enable re-adding elements. 
+	 */
 	private int[] trimArray(int[] arr, int common_size) {
 		int[] res = new int[common_size];
 		int it_1 = 0;
@@ -93,6 +99,9 @@ public class Tuple {
 		return res;
 	}
 
+	/**
+	 * Retuns weather this Tuple intersects with the given Tuple. Therefore, if this returns false, the Tuples are disjoint.
+	 */
 	public boolean intersectsWith(Tuple f) {
 		for (int i = 0; i < this.elements.length; i++) {
 			for (int j = 0; j < f.elements.length; j++) {
@@ -103,6 +112,9 @@ public class Tuple {
 		return false;
 	}
 
+	/**
+	 * Returns weather this Tuple only contains "-1"-entries.
+	 */
 	public boolean onlyMinusOne() {
 		for (int i : elements) {
 			if (i != -1)
@@ -112,7 +124,7 @@ public class Tuple {
 	}
 
 	/**
-	 * Adds an element to the tuple.
+	 * Adds the given element to this tuple.
 	 */
 	public void addElement(int u) {
 		for (int i = 0; i < elements.length; i++) {
@@ -124,7 +136,7 @@ public class Tuple {
 	}
 
 	/**
-	 * Checks of elements contains u.
+	 * Checks if this Tuple contains the given element.
 	 */
 	public boolean arrContains(int u) {
 		for (int e : elements) {

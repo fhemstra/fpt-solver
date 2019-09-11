@@ -15,30 +15,39 @@ import java.util.Map.Entry;
  * and print the formula.
  */
 public class Formula {
-	String form_name;
+	String formula_name;
 	String graph_name;
-	int graph_density;
+	double graph_density;
 	int[] universe;
-	HashMap<String, Relation> rels;
-	String[] bound_vars;
+	HashMap<String, Relation> relation_map;
+	String[] bound_variables;
 	int c_par;
 	ArrayList<String[]> clauses;
 	long nr_of_assignments;
 
-	public Formula() {
-		// Do everything yourself.
-	}
-
+	// TODO make a format-file.
+	/**
+	 * Constructs a Formula from just a formula-file located at the given path.
+	 * The file must contain all information and must be formatted as can be seen in .
+	 */
 	public Formula(String path) {
 		parseInternalFormula(path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
 	}
 
+	// TODO make PACE-format file.
+	/**
+	 * Constructs a Formula for a graph problem. The formula itself must be specified in a formula file located at the first path.
+	 * The graph must be located at the second path and be formated as can be seen in .  
+	 */
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
 	}
 
+	/**
+	 * Parses a graph and a formula.
+	 */
 	private void parseExternalFormula(String form_path, String graph_path) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(form_path));
@@ -46,7 +55,7 @@ public class Formula {
 
 			// Name of the formula
 			line = br.readLine();
-			form_name = line;
+			formula_name = line;
 			graph_name = new File(graph_path).getName();
 			// Universe from .gr file -> skip a line
 			line = br.readLine();
@@ -60,16 +69,16 @@ public class Formula {
 				}
 				line = br.readLine();
 			}
-			rels = new HashMap<String, Relation>();
+			relation_map = new HashMap<String, Relation>();
 			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
-			graph_density = (int) Math.round(((double)(edge_set.size()/2)/(double)universe.length));
+			graph_density = (double)(edge_set.size()/2)/(double)universe.length;
 			Relation edge_relation = new Relation("E", 2, edge_set);
-			rels.put("E", edge_relation);
+			relation_map.put("E", edge_relation);
 			// Bound variables
 			line = br.readLine();
-			bound_vars = line.split(",");
+			bound_variables = line.split(",");
 			// Parameter c
-			c_par = bound_vars.length;
+			c_par = bound_variables.length;
 			// Formula as clauses
 			clauses = new ArrayList<String[]>();
 			while ((line = br.readLine()) != null) {
@@ -88,22 +97,25 @@ public class Formula {
 		}
 	}
 
+	/**
+	 * Returns the universe of the specified PACE-graph.
+	 */
 	private int[] getPaceUniverse(String graph_path) {
-		int arr_lenght = -1;
+		int arr_length = -1;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
 			// First line is the descriptor
 			String first_line = br.readLine();
 			String[] first_split_line = first_line.split(" ");
-			arr_lenght = Integer.parseInt(first_split_line[2]);
+			arr_length = Integer.parseInt(first_split_line[2]);
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (arr_lenght > -1) {
-			int[] universe = new int[arr_lenght];
+		if (arr_length > -1) {
+			int[] universe = new int[arr_length];
 			// PACE nodes go from 1 to arr_lenght
-			for (int i = 0; i < arr_lenght; i++) {
+			for (int i = 0; i < arr_length; i++) {
 				universe[i] = i+1;
 			}
 			return universe;
@@ -112,6 +124,9 @@ public class Formula {
 		}
 	}
 
+	/**
+	 * Returns the set of edges of the specified PACE-graph. For every entry (x,y) this adds the edges (x,y) and (y,x) because the graph is supposed to be undirected.
+	 */
 	private HashSet<Tuple> parsePaceGraph(String graph_path) {
 		HashSet<Tuple> edge_set = new HashSet<Tuple>();
 		try {
@@ -146,7 +161,7 @@ public class Formula {
 
 			// Name of the formula
 			line = br.readLine();
-			form_name = line;
+			formula_name = line;
 			graph_name = "internal";
 			// Universe
 			line = br.readLine();
@@ -171,7 +186,7 @@ public class Formula {
 				line = br.readLine();
 			}
 			// Solution S is not contained in rels
-			rels = new HashMap<String, Relation>();
+			relation_map = new HashMap<String, Relation>();
 			for (String s : relations) {
 				int negation_offset = (s.charAt(0) == '~') ? 1 : 0;
 				String identifier = s.substring(negation_offset, negation_offset + 1);
@@ -180,7 +195,7 @@ public class Formula {
 				int to = s.indexOf("}");
 				// Check if Relation is empty
 				if (!(to > from)) {
-					rels.put(identifier, new Relation(identifier, arity, new HashSet<Tuple>()));
+					relation_map.put(identifier, new Relation(identifier, arity, new HashSet<Tuple>()));
 					continue;
 				}
 				String content = s.substring(from, to);
@@ -194,13 +209,13 @@ public class Formula {
 					}
 					hs.add(new Tuple(elements[i]));
 				}
-				rels.put(identifier, new Relation(identifier, arity, hs));
+				relation_map.put(identifier, new Relation(identifier, arity, hs));
 			}
 			// Bound variables
 			line = br.readLine();
-			bound_vars = line.split(",");
+			bound_variables = line.split(",");
 			// Parameter c
-			c_par = bound_vars.length;
+			c_par = bound_variables.length;
 			// Formula as clauses
 			clauses = new ArrayList<String[]>();
 			while ((line = br.readLine()) != null) {
@@ -219,6 +234,9 @@ public class Formula {
 		}
 	}
 
+	/**
+	 * Returns the Hyphergraph which results when this formula is reduced to hitting-set.
+	 */
 	public Hypergraph reduceToHS(boolean mute) {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
@@ -263,10 +281,13 @@ public class Formula {
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		// Copy name from this formula
-		hyp.name = graph_name;
+		hyp.hypergraph_name = graph_name;
 		return hyp;
 	}
 
+	/**
+	 * Returns the assignment which comes after the given one. In the |U|-group this would just be the next number. 
+	 */
 	private int[] nextAssignment(int[] curr_assignment) {
 		int mode = universe.length;
 		for(int i = c_par-1; i >= 0; i--) {
@@ -280,6 +301,9 @@ public class Formula {
 		return null;
 	}
 
+	/**
+	 * Returns a Tuple of elements from the given assignment which are bound to S in the given clause, meaning they are candidates to branch over during solving or reducing this formula.
+	 */
 	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
 		// All edges have length c_par, but can contain null
 		int[] candidates = new int[c_par];
@@ -297,17 +321,17 @@ public class Formula {
 	}
 
 	/**
-	 * Assigns a literal wit the given assignment. Given ~R(y,x) and assignment
-	 * x=2,y=1 this returns [2,1].
+	 * Returns the result of assigning the given atom with the given assignment.
+	 * Given ~R(y,x) and the assignment x=2,y=1 this returns [2,1].
 	 */
-	private int[] assign(String literal, int[] assignment) {
+	private int[] assign(String atom, int[] assignment) {
 		// s = ~R(y,x)
 		// assignment = [1,2] (x=1,y=2)
 		// Extract variables
-		int negation_offset = (literal.charAt(0) == '~') ? 1 : 0;
-		String id = literal.substring(negation_offset, negation_offset + 1);
+		int negation_offset = (atom.charAt(0) == '~') ? 1 : 0;
+		String id = atom.substring(negation_offset, negation_offset + 1);
 		// id = "R"
-		String content = literal.substring(negation_offset + 1);
+		String content = atom.substring(negation_offset + 1);
 		// content = "(y,x)"
 		content = content.replaceAll("[()]", "");
 		// content = "y,x"
@@ -319,7 +343,7 @@ public class Formula {
 			for (int j = 0; j < universe.length; j++) {
 				// bound_vars = ["x","y","z"]
 				// y: i = 0, j = 1
-				if (variables[i].equals(bound_vars[j])) {
+				if (variables[i].equals(bound_variables[j])) {
 					assi_elements[i] = assignment[j];
 					// assi = [2,0]
 					break;
@@ -330,9 +354,7 @@ public class Formula {
 	}
 
 	/**
-	 * Recursively searches a solution sol of size k_par for the given formula.
-	 * 
-	 * @return True if a solution of size k is found, else false.
+	 * Returns weather this formula has a solution of size k_par. Initially, the solution should be empty, the last_index should be 0 and the last assignment an array containing c_par times the first element of the universe.
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index) {
 		// TODO return solution
@@ -398,8 +420,8 @@ public class Formula {
 	}
 
 	/**
-	 * Checks if the specified clause holds under the specified assignment with S
-	 * being sol.
+	 * Returns weather the specified clause holds under the given assignment with the Relation S
+	 * being sol. When ignore_S is true, the test on S is skipped. This is useful for Reduction, because there S stays empty and is therefore unnecessary to check.
 	 */
 	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol, boolean ignore_S) {
 		// Evaluate literals one at a time
@@ -426,7 +448,7 @@ public class Formula {
 				}
 				return true;
 			} else {
-				Relation r = rels.get(id);
+				Relation r = relation_map.get(id);
 				if (r != null) {
 					// Test if relation r contains the tuple t or not
 					// (v1, v2)
@@ -449,11 +471,11 @@ public class Formula {
 	}
 
 	/**
-	 * Prints info about this into sysout.
+	 * Returns a String which represents this Formula for debugging.
 	 */
 	public String toOutputString() {
 		String res = "";
-		res += form_name + ":\n";
+		res += formula_name + ":\n";
 		res += "U = {";
 		for (int i = 0; i < universe.length; i++) {
 			if (i + 1 != universe.length)
@@ -463,15 +485,15 @@ public class Formula {
 		}
 		res += "}\n";
 		res += "Relations:\n";
-		for (Entry<String, Relation> r : rels.entrySet()) {
+		for (Entry<String, Relation> r : relation_map.entrySet()) {
 			res += r.getValue().toOutputString() + "\n";
 		}
 		res += "Bound varibales: (";
-		for (int i = 0; i < bound_vars.length; i++) {
-			if (i + 1 != bound_vars.length)
-				res += bound_vars[i] + ",";
+		for (int i = 0; i < bound_variables.length; i++) {
+			if (i + 1 != bound_variables.length)
+				res += bound_variables[i] + ",";
 			else
-				res += bound_vars[i];
+				res += bound_variables[i];
 		}
 		res += ")\n";
 		res += "Clauses:\n";
@@ -489,10 +511,10 @@ public class Formula {
 	 */
 	public void saveToFile() {
 		try {
-			File out_file = new File("saves" + File.separator + this.form_name + "-save.txt");
+			File out_file = new File("saves" + File.separator + this.formula_name + "-save.txt");
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
 			// Name
-			bw.write(form_name + "\n");
+			bw.write(formula_name + "\n");
 			// Universe
 			for (int i = 0; i < universe.length; i++) {
 				if (i + 1 != universe.length)
@@ -501,7 +523,7 @@ public class Formula {
 					bw.write(universe[i] + "\n");
 			}
 			// Relations
-			Iterator<Entry<String, Relation>> it = rels.entrySet().iterator();
+			Iterator<Entry<String, Relation>> it = relation_map.entrySet().iterator();
 			while (it.hasNext()) {
 				bw.write(it.next().getValue().toOutputString());
 				if (it.hasNext())
@@ -511,11 +533,11 @@ public class Formula {
 			// Parameter k
 			bw.write("\n");
 			// Bound vars
-			for (int i = 0; i < bound_vars.length; i++) {
-				if (i < bound_vars.length - 1)
-					bw.write(bound_vars[i] + ",");
+			for (int i = 0; i < bound_variables.length; i++) {
+				if (i < bound_variables.length - 1)
+					bw.write(bound_variables[i] + ",");
 				else
-					bw.write(bound_vars[i]);
+					bw.write(bound_variables[i]);
 			}
 			bw.write("\n");
 			// Formula in clauses

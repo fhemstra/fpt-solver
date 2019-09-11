@@ -191,10 +191,10 @@ public class Main {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
-						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size + " nodes on formula \"" + curr_formula.form_name + "\".");
+						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size + " nodes on formula \"" + curr_formula.formula_name + "\".");
 						forms.add(curr_formula);
 						c_list.add((double) curr_formula.c_par);
-						dens_list.add((double) curr_formula.graph_density);
+						dens_list.add(curr_formula.graph_density);
 						// Reduction
 						System.out.println("> Reduction");
 						start_time = System.currentTimeMillis();
@@ -210,7 +210,7 @@ public class Main {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
 					// TODO remove break, only test one graph
-//					break;
+					break;
 				}
 			}
 			// TODO only use the first formula
@@ -224,7 +224,7 @@ public class Main {
 			if(!skip_search_tree) {
 				for(int j = 0; j < forms.size(); j++) {
 					Formula curr_form = forms.get(j);
-					System.out.println("> SearchTree, " + curr_form.form_name + ", " + curr_form.graph_name + ", k = " + k_par);
+					System.out.println("> SearchTree, " + curr_form.formula_name + ", " + curr_form.graph_name + ", k = " + k_par);
 					int[] start_assignment = new int[curr_form.c_par];
 					// generate first assignment 
 					for(int i = 0; i < curr_form.c_par; i++) {
@@ -245,7 +245,7 @@ public class Main {
 			for(int j = 0; j < reduced_graphs.size(); j++) {
 				// Kernel
 				Hypergraph curr_graph =  reduced_graphs.get(j);
-				System.out.println("> Kernelization, " + curr_graph.name + ", k = " + k_par + ", d = " + curr_graph.d_par);
+				System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = " + curr_graph.d_par);
 				start_time = System.currentTimeMillis();
 				Hypergraph curr_kernel = curr_graph.kernelize(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
@@ -333,6 +333,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Writes all lines from the given list to the specified csv-file.
+	 */
 	private static void writeToCsv(ArrayList<String> write_buffer, String file_name) {
 		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
 				+ File.separator + file_name);
@@ -348,6 +351,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Returns the number of nodes the given PACE-formatted graph has.
+	 */
 	private static int graphSize(String graph_path) {
 		int size = 0;
 		try {
@@ -363,10 +369,16 @@ public class Main {
 		return size;
 	}
 
+	/**
+	 * Prints the given time in a nice format.
+	 */
 	private static void printTime(double time) {
 		System.out.println("- Time elapsed:  " + String.format("%.3f", time) + " sec");
 	}
 
+	/**
+	 * Calculates the factorial of var.
+	 */
 	private static long factorial(int var) {
 		long res = 1;
 		for(int i = 2; i <= var; i++) {
