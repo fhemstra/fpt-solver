@@ -268,7 +268,7 @@ public class Main {
 				printTime(kernel_time_passed);
 				
 				// HS SearchTree
-				System.out.println("> HS-SearchTree, graph " + curr_graph.name);
+				System.out.println("> HS-SearchTree");
 				start_time = System.currentTimeMillis();
 				boolean hs_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute);
 				stop_time = System.currentTimeMillis();
