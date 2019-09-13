@@ -167,32 +167,34 @@ public class Main {
 		ArrayList<Double> kernel_edges = new ArrayList<Double>();
 		ArrayList<Double> kernel_nodes = new ArrayList<Double>();
 		ArrayList<Double> reduced_nodes = new ArrayList<Double>();
-		ArrayList<Double> reduced_edges  = new ArrayList<Double>();
+		ArrayList<Double> reduced_edges = new ArrayList<Double>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
 		ArrayList<Double> c_list = new ArrayList<Double>();
 		ArrayList<Double> dens_list = new ArrayList<Double>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
-//		System.out.println("> Constructing " + form_files.length + " formulas with " + graph_files.length + " vc-instances and reducing them to hypergraphs.");
+		// System.out.println("> Constructing " + form_files.length + " formulas with "
+		// + graph_files.length + " vc-instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with vc-instances and reducing them to hypergraphs.");
 
 		// Construct Formulas and reduced graphs
-		for(int i = 0; i < form_files.length; i++) {
+		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// TODO j = 0; j < graph_files.length
 			for (int j = 0; j < graph_files.length; j++) {
 				// TODO remove condition
-//				if(j%2 == 1) {
-				if(true) {
+				// if(j%2 == 1) {
+				if (true) {
 					String graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size <= 1000) {
+					if (curr_graph_size <= 1000) {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
-						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size + " nodes on formula \"" + curr_formula.formula_name + "\".");
+						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
+								+ " nodes on formula \"" + curr_formula.formula_name + "\".");
 						forms.add(curr_formula);
 						c_list.add((double) curr_formula.c_par);
 						dens_list.add(curr_formula.graph_density);
@@ -204,53 +206,58 @@ public class Main {
 						reduced_graphs.add(reduction_result);
 						reduced_edges.add((double) reduction_result.edges.size());
 						reduced_nodes.add((double) reduction_result.nodes.length);
-						double time_passed = (double)(stop_time-start_time)/(double)1000;
+						double time_passed = (double) (stop_time - start_time) / (double) 1000;
 						reduction_times.add(time_passed);
 						printTime(time_passed);
 					} else {
-						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+						System.out.println(
+								"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
 					// TODO remove break, only test one graph
-//					break;
+					// break;
 				}
 			}
 			// TODO only use the first formula
 			break;
 		}
-		
+
 		// Solving formulas
-		for(int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
+		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 			System.out.println("--- k = " + k_par + " ---");
 			// Pipeline 1: Solve formulas with SearchTree
-			if(!skip_search_tree) {
-				for(int j = 0; j < forms.size(); j++) {
+			if (!skip_search_tree) {
+				for (int j = 0; j < forms.size(); j++) {
 					Formula curr_form = forms.get(j);
-					System.out.println("> SearchTree, " + curr_form.formula_name + ", " + curr_form.graph_name + ", k = " + k_par);
+					System.out.println(
+							"> SearchTree, " + curr_form.formula_name + ", " + curr_form.graph_name + ", k = " + k_par);
 					int[] start_assignment = new int[curr_form.c_par];
-					// generate first assignment 
-					for(int i = 0; i < curr_form.c_par; i++) {
+					// generate first assignment
+					for (int i = 0; i < curr_form.c_par; i++) {
 						start_assignment[i] = curr_form.universe[0];
 					}
 					start_time = System.currentTimeMillis();
-					boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0);
+					boolean st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment,
+							0);
 					stop_time = System.currentTimeMillis();
-					if(!mute) System.out.println();
-					System.out.println("  result: " + st_result );
+					if (!mute)
+						System.out.println();
+					System.out.println("  result: " + st_result);
 					search_tree_results.add(st_result);
-					double time_passed = (double)(stop_time-start_time)/(double)1000;
+					double time_passed = (double) (stop_time - start_time) / (double) 1000;
 					search_tree_times.add(time_passed);
 					printTime(time_passed);
 				}
 			}
 			// Pipeline 2: (Reduce) + Kernel + HS SearchTree
-			for(int j = 0; j < reduced_graphs.size(); j++) {
+			for (int j = 0; j < reduced_graphs.size(); j++) {
 				// Kernel
-				Hypergraph curr_graph =  reduced_graphs.get(j);
-				System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = " + curr_graph.d_par);
+				Hypergraph curr_graph = reduced_graphs.get(j);
+				System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = "
+						+ curr_graph.d_par);
 				start_time = System.currentTimeMillis();
 				Hypergraph curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
-				if(!mute) {
+				if (!mute) {
 					System.out.println("  hyp edges:     " + curr_graph.edges.size());
 					System.out.println("  hyp nodes:     " + curr_graph.nodes.length);
 					int edges_removed = curr_graph.edges.size() - curr_kernel.edges.size();
@@ -262,21 +269,22 @@ public class Main {
 					long sf_lemma_boundary = factorial(curr_graph.d_par) * (long) Math.pow(k_par, curr_graph.d_par);
 					System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 				}
-				double kernel_time_passed = (double)(stop_time-start_time)/(double)1000;
+				double kernel_time_passed = (double) (stop_time - start_time) / (double) 1000;
 				kernel_times.add(kernel_time_passed);
 				kernel_edges.add((double) curr_kernel.edges.size());
 				kernel_nodes.add((double) curr_kernel.nodes.length);
 				printTime(kernel_time_passed);
-				
+
 				// HS SearchTree
 				System.out.println("> HS-SearchTree");
 				start_time = System.currentTimeMillis();
 				boolean hs_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute);
 				stop_time = System.currentTimeMillis();
-				if(!mute) System.out.println();
+				if (!mute)
+					System.out.println();
 				System.out.println("  result: " + hs_result);
 				ke_results.add(hs_result);
-				double hs_time_passed = (double)(stop_time-start_time)/(double)1000;
+				double hs_time_passed = (double) (stop_time - start_time) / (double) 1000;
 				hs_times.add(hs_time_passed);
 				printTime(hs_time_passed);
 			}
