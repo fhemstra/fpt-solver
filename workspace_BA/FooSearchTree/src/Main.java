@@ -248,7 +248,7 @@ public class Main {
 				Hypergraph curr_graph =  reduced_graphs.get(j);
 				System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = " + curr_graph.d_par);
 				start_time = System.currentTimeMillis();
-				Hypergraph curr_kernel = curr_graph.kernelizeNonUniform(curr_graph, k_par, mute);
+				Hypergraph curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
 				if(!mute) {
 					System.out.println("  hyp edges:     " + curr_graph.edges.size());
@@ -287,15 +287,16 @@ public class Main {
 		System.out.println("\n------------------------------------");
 		int curr_k_par = start_k;
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges\n"; 
+		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges\n";
 		write_buffer.add(headline);
 		String file_name = "";
-		for(int i = 0; i < number_of_iterations; i++) {
+		for (int i = 0; i < number_of_iterations; i++) {
 			int form_and_redu_index = i % forms.size();
-			System.out.println("--- Graph: " + forms.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
-			if(!skip_search_tree) {
+			System.out.println(
+					"--- Graph: " + forms.get(form_and_redu_index).graph_name + ", k = " + curr_k_par + " ---");
+			if (!skip_search_tree) {
 				System.out.println("1. SearchTree:    " + search_tree_times.get(i));
-				System.out.println("   " + search_tree_results.get(i));				
+				System.out.println("   " + search_tree_results.get(i));
 			} else {
 				System.out.println("1. SearchTree: skipped");
 			}
@@ -303,28 +304,31 @@ public class Main {
 			System.out.println("   Kernelisation: " + kernel_times.get(i));
 			System.out.println("   HS-SearchTree: " + hs_times.get(i));
 			System.out.println("   " + ke_results.get(i));
-			
+
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(form_and_redu_index) + kernel_times.get(i) + hs_times.get(i);
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
-			if(!skip_search_tree) {
+			if (!skip_search_tree) {
 				double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
 				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
-				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
-						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";" + kernel_nodes.get(i) + ";" + kernel_edges.get(i)
-						+ ";" + "-1" + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
+				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";"
+						+ pipe_2_sum + ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";"
+						+ hs_times.get(i) + ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res
+						+ ";" + kernel_nodes.get(i) + ";" + kernel_edges.get(i) + ";" + "-1" + ";" + dens_list.get(i)
+						+ ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			} else {
-				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum
-						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";" + kernel_edges.get(i)
-						+ ";" + c_list.get(i) + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
+				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum + ";"
+						+ reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
+						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i)
+						+ ";" + kernel_edges.get(i) + ";" + c_list.get(i) + ";" + dens_list.get(i) + ";"
+						+ reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			}
 
 			// Prepare next iteration and save to csv
-			if((i+1)%forms.size() == 0) {
+			if ((i + 1) % forms.size() == 0) {
 				// Save buffer to csv
-				file_name = Integer.toString((int) System.currentTimeMillis()) + "_" + graph_mode + "_k_" + curr_k_par + ".csv";
+				file_name = Integer.toString((int) System.currentTimeMillis()) + "_" + graph_mode + "_k_" + curr_k_par
+						+ ".csv";
 				writeToCsv(write_buffer, file_name);
 				write_buffer.clear();
 				write_buffer.add(headline);
