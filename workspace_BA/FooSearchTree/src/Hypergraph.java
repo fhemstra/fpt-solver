@@ -140,10 +140,10 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns a kernel for the given hypergraph using the Sunflower-lemma with the
-	 * given parameter k_par.
+	 * Returns a kernel for the given hypergraph with the parameter k_par. By using
+	 * non-uniform graphs this does not exactly use the Sunflower-Lemma correctly.
 	 */
-	public Hypergraph kernelize(Hypergraph local_hyp, int k_par, boolean mute) {
+	public Hypergraph kernelizeNonUniform(Hypergraph local_hyp, int k_par, boolean mute) {
 		// TODO handle this better
 		if (k_par < 1)
 			return null;
@@ -151,7 +151,7 @@ public class Hypergraph {
 		Hypergraph kernel = new Hypergraph(local_hyp.nodes, local_hyp.edges);
 		int sf_counter = 0;
 		if (!mute)
-			System.out.println(">> kernelize()");
+			System.out.println(">> kernelizeNonUniform()");
 		Sunflower sun = findSunflower(kernel, k_par, mute);
 		if (sun == null) {
 			if (!mute)
@@ -243,6 +243,188 @@ public class Hypergraph {
 		if (!mute)
 			System.out.println("<< END KERNELIZE.");
 		return kernel;
+	}
+
+	/**
+	 * 
+	 */
+	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute) {
+		// TODO handle this better
+		if (k_par < 1)
+			return null;
+		// Init kernel as empty hypergraph
+		Hypergraph kernel = new Hypergraph(new int[local_hyp.nodes.length], new ArrayList<Tuple>());
+		int sf_counter = 0;
+		if (!mute)
+			System.out.println(">> kernelizeUniform()");
+		// Loop through {1,...,d}-uniform subgraphs
+		for(int curr_d = 1; curr_d <= local_hyp.d_par; curr_d++) {
+			// Find curr_d-uniform subgraph
+			Hypergraph subgraph = getUniformSubgraph(local_hyp, curr_d);
+			// Search first Sunflower
+			Sunflower sun = findSunflower(subgraph, k_par, mute);
+			if (sun == null) {
+				if (!mute)
+					System.out.println("Initial sunflower is already null, nothing to kernelize.");
+			}
+			while (sun != null) { // TODO not sure if this is right
+				if (!mute)
+					System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
+				if (!mute) {
+					if (printGraphs) {
+						System.out.println(sun.toOutputString());
+					} else {
+						System.out.println("* hidden *");
+					}
+				}
+				// Reduction Rule: Only remove Sunflowers with at least k+1 petals
+				if (!(sun.petals.size() >= k_par + 1)) {
+					if (!mute)
+						System.out.println("Sunflower of size " + sun.petals.size() + " not >= " + (k_par + 1)
+								+ " or bigger, break kernelize().");
+					break;
+				}
+				// Remove petals from graph
+				ArrayList<Tuple> updated_e = new ArrayList<Tuple>();
+				for (Tuple edge : subgraph.edges) {
+					boolean add_edge = true;
+					for (Tuple petal : sun.petals) {
+						if (petal.equals(edge)) {
+							add_edge = false;
+							break;
+						}
+					}
+					// If break is not reached, add edge.
+					if (add_edge)
+						updated_e.add(edge);
+				}
+				// Convert core to int[] and fill up with -1
+				int[] int_core = new int[subgraph.d_par];
+				for (int i = 0; i < subgraph.d_par; i++) {
+					if (i < sun.core.size()) {
+						int_core[i] = sun.core.get(i);
+					} else {
+						int_core[i] = -1;
+					}
+				}
+				// Add core
+				Tuple core = new Tuple(int_core);
+				if (!updated_e.contains(core)) {
+					updated_e.add(core);
+				}
+				// Update nodes
+				ArrayList<Integer> updated_nodes = new ArrayList<Integer>();
+				for (Tuple edge : updated_e) {
+					for (int node : edge.elements) {
+						if (!updated_nodes.contains(node) && node != -1)
+							updated_nodes.add(node);
+					}
+				}
+				// Change nodes to int[]
+				int[] int_nodes = new int[updated_nodes.size()];
+				for (int i = 0; i < updated_nodes.size(); i++) {
+					int_nodes[i] = updated_nodes.get(i);
+				}
+				// Update subgraph-kernel
+				subgraph.nodes = int_nodes;
+				subgraph.edges = updated_e;
+				sf_counter++;
+				if (!mute)
+					System.out.print("  SFs removed:   " + sf_counter + "\r");
+				// print kernel
+				if (!mute)
+					System.out.println("KERNELIZED hyp:");
+				if (!mute) {
+					if (printGraphs) {
+						System.out.println(subgraph.toOutputString());
+					} else {
+						System.out.println("* hidden *");
+					}
+				}
+				// Repeat
+				if (!mute)
+					System.out.println("Go find another sunflower.");
+				sun = findSunflower(subgraph, k_par, mute);
+				if (!mute)
+					System.out.println("LOOP KERNELIZE.");
+			}
+			// Update global kernel
+			kernel = kernel.mergeWith(subgraph);
+		}
+		// Prints
+		if (sf_counter > 0 && !mute)
+			System.out.println();
+		if (!mute)
+			System.out.println("<< END KERNELIZE.");
+		return kernel;
+	}
+	
+	/**
+	 * Returns the result of merging this and another Hypergraph.
+	 */
+	private Hypergraph mergeWith(Hypergraph subgraph) {
+		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
+		// Collect edges
+		for(Tuple edge : this.edges) {
+			if(!res_edges.contains(edge)) res_edges.add(edge);
+		}
+		for(Tuple edge : subgraph.edges) {
+			if(!res_edges.contains(edge)) res_edges.add(edge);
+		}
+		// Collect nodes from new edge set
+		ArrayList<Integer> node_list = new ArrayList<Integer>();
+		for(Tuple edge : res_edges) {
+			for(int node : edge.elements) {
+				if(node != -1 && !node_list.contains(node)) node_list.add(node);
+			}
+		}
+		// Convert to array
+		int[] res_nodes = new int[node_list.size()];
+		for(int i = 0; i < res_nodes.length; i++) {
+			res_nodes[i] = node_list.get(i);
+		}
+		// Construct resulting graph
+		Hypergraph merged_graph = new Hypergraph(res_nodes, res_edges);
+		return merged_graph;
+	}
+
+	/**
+	 * Returns a maximal d-uniform subgraph of the given hypergraph.
+	 */
+	private Hypergraph getUniformSubgraph(Hypergraph local_hyp, int curr_d) {
+		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
+		// Collect edges
+		for(Tuple edge: local_hyp.edges) {
+			if(actualSize(edge.elements) == curr_d) {
+				res_edges.add(edge);
+			}
+		}
+		// Collect nodes from new edge set
+		ArrayList<Integer> node_list = new ArrayList<Integer>();
+		for(Tuple edge : res_edges) {
+			for(int node : edge.elements) {
+				if(node != -1 && !node_list.contains(node)) node_list.add(node);
+			}
+		}
+		// Convert to array
+		int[] res_nodes = new int[node_list.size()];
+		for(int i = 0; i < res_nodes.length; i++) {
+			res_nodes[i] = node_list.get(i);
+		}
+		// Construct resulting graph
+		Hypergraph res_graph = new Hypergraph(res_nodes, res_edges);
+		return res_graph;
+	}
+
+	/**
+	 * Returns the number of elements in the given array that are not -1.
+	 */
+	private int actualSize(int[] elements) {
+		int counter = 0;
+		for(int e : elements) {
+			if(e != -1) counter++; 
+		}
+		return counter;
 	}
 
 	/**

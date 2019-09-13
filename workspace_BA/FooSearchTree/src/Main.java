@@ -41,7 +41,7 @@ public class Main {
 //			System.out.println("edges:         " + edges_before);
 //			System.out.println("nodes:         " + nodes_before);
 //			long start_time = System.currentTimeMillis();
-//			current_graph.kernelize(current_graph, chosen_k, mute);
+//			current_graph.kernelizeNonUniform(current_graph, chosen_k, mute);
 //			long stop_time = System.currentTimeMillis();
 //			int edges_removed = edges_before - current_graph.edges.size();
 //			int nodes_removed = nodes_before - current_graph.nodes.length;
@@ -68,7 +68,6 @@ public class Main {
 //
 //		// Solve each File
 //		for (Formula form : formulas) {
-//
 //			System.out.println("--- FORMULA ---");
 //			System.out.println(form.toOutputString());
 //			System.out.println("\n--- SEARCH TREE ---");
@@ -77,28 +76,28 @@ public class Main {
 //			Hypergraph hyp = form.reduceToHS(mute);
 //			System.out.println(hyp.toOutputString());
 //			System.out.println("\n--- KERNELIZATION ---"); // Kernelization Hypergraph
-//			Hypergraph hyp_kernel = hyp.kernelize(hyp, 3, mute);
+//			Hypergraph hyp_kernel = hyp.kernelizeUniform(hyp, 3, mute);
 //			System.out.println("<< Main\nKernel:");
 //			System.out.println(hyp_kernel.toOutputString());
 //			System.out.println("--- END FORMULA ---\n");
-//			// Hypergraph doc example
-//			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-//			ArrayList<Tuple> ex_edges = new	ArrayList<Tuple>();
-//			ex_edges.add(new Tuple(new int[]{1,4}));
-//			ex_edges.add(new Tuple(new int[]{2,4,5}));
-//			ex_edges.add(new Tuple(new int[]{3,4}));
-//			ex_edges.add(new Tuple(new int[]{4}));
-//			ex_edges.add(new Tuple(new int[]{4,6}));
-//			ex_edges.add(new Tuple(new int[]{6,8,9}));
-//			ex_edges.add(new Tuple(new int[]{7,8,9}));
-//			ex_edges.add(new Tuple(new int[]{8,9,10,11}));
-//			ex_edges.add(new Tuple(new int[]{8,9,13}));
-//			ex_edges.add(new Tuple(new int[]{11,12,14,15}));
-//			ex_edges.add(new Tuple(new int[]{13,15}));
-//			Hypergraph doc_ex_1 = new Hypergraph(ex_nodes, ex_edges);
-//			System.out.println("doc_ex:\n" + doc_ex_1.toOutputString() + "\n"); // k = 3
-//			Hypergraph doc_ex_1_kernel = doc_ex_1.kernelize(doc_ex_1, 3, mute);
-//			System.out.println("+++\nex_kernel:\n" + doc_ex_1_kernel.toOutputString());
+////			// Hypergraph doc example
+////			int[] ex_nodes = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+////			ArrayList<Tuple> ex_edges = new	ArrayList<Tuple>();
+////			ex_edges.add(new Tuple(new int[]{1,4}));
+////			ex_edges.add(new Tuple(new int[]{2,4,5}));
+////			ex_edges.add(new Tuple(new int[]{3,4}));
+////			ex_edges.add(new Tuple(new int[]{4}));
+////			ex_edges.add(new Tuple(new int[]{4,6}));
+////			ex_edges.add(new Tuple(new int[]{6,8,9}));
+////			ex_edges.add(new Tuple(new int[]{7,8,9}));
+////			ex_edges.add(new Tuple(new int[]{8,9,10,11}));
+////			ex_edges.add(new Tuple(new int[]{8,9,13}));
+////			ex_edges.add(new Tuple(new int[]{11,12,14,15}));
+////			ex_edges.add(new Tuple(new int[]{13,15}));
+////			Hypergraph doc_ex_1 = new Hypergraph(ex_nodes, ex_edges);
+////			System.out.println("doc_ex:\n" + doc_ex_1.toOutputString() + "\n"); // k = 3
+////			Hypergraph doc_ex_1_kernel = doc_ex_1.kernelizeNonUniform(doc_ex_1, 3, mute);
+////			System.out.println("+++\nex_kernel:\n" + doc_ex_1_kernel.toOutputString());
 //			
 //			break;
 //		}
@@ -122,7 +121,7 @@ public class Main {
 //		boolean hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
 //		System.out.println();
 //		System.out.println(hs_st_result);
-//		Hypergraph doc_ex_kernel = doc_ex.kernelize(doc_ex, 3, mute);
+//		Hypergraph doc_ex_kernel = doc_ex.kernelizeNonUniform(doc_ex, 3, mute);
 //		System.out.println("After kernelize:");
 //		System.out.println(doc_ex_kernel.toOutputString());
 //		hs_st_result = doc_ex.hsSearchTree(doc_ex, 3, new ArrayList<Integer>(), mute);
@@ -132,9 +131,9 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 14;
+		int start_k = 5;
 		int k_increment = 1;
-		int stop_k = 14;
+		int stop_k = 5;
 		boolean skip_search_tree = false;
 //		String graph_mode = "random";
 		String graph_mode = "vc_pos";
@@ -146,6 +145,8 @@ public class Main {
 		
 		File graph_folder = new File("../vc_pos_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+//		File graph_folder = new File("vc_pos_graphs"); // Use this for execution in eclipse
+//		File form_folder = new File("instances"); // Use this for execution in eclipse
 		
 //		File graph_folder = new File("../pace"); // Use this for execution in windows cmd
 //		File form_folder = new File("../instances"); // Use this for execution in windows cmd
@@ -187,7 +188,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if(curr_graph_size <= 6000) {
+					if(curr_graph_size <= 1000) {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);
@@ -210,7 +211,7 @@ public class Main {
 						System.out.println("  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 					}
 					// TODO remove break, only test one graph
-					break;
+//					break;
 				}
 			}
 			// TODO only use the first formula
@@ -247,7 +248,7 @@ public class Main {
 				Hypergraph curr_graph =  reduced_graphs.get(j);
 				System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = " + curr_graph.d_par);
 				start_time = System.currentTimeMillis();
-				Hypergraph curr_kernel = curr_graph.kernelize(curr_graph, k_par, mute);
+				Hypergraph curr_kernel = curr_graph.kernelizeNonUniform(curr_graph, k_par, mute);
 				stop_time = System.currentTimeMillis();
 				if(!mute) {
 					System.out.println("  hyp edges:     " + curr_graph.edges.size());
@@ -311,12 +312,12 @@ public class Main {
 				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
+						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";" + kernel_nodes.get(i) + ";" + kernel_edges.get(i)
 						+ ";" + "-1" + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			} else {
 				write_buffer.add(graph_sizes.get(form_and_redu_index) + ";" + "-1" + ";" + pipe_2_sum
 						+ ";" + reduction_times.get(form_and_redu_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_edges.get(i) + ";" + kernel_nodes.get(i)
+						+ ";" + curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";" + kernel_edges.get(i)
 						+ ";" + c_list.get(i) + ";" + dens_list.get(i) + ";" + reduced_nodes.get(i) + ";" + reduced_edges.get(i) + "\n");
 			}
 
