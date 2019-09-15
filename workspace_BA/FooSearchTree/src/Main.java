@@ -131,20 +131,20 @@ public class Main {
 		
 		
 		// Test pipelines
-		int start_k = 5;
+		int start_k = 12;
 		int k_increment = 1;
-		int stop_k = 5;
+		int stop_k = 12;
 		boolean skip_search_tree = false;
-//		String graph_mode = "random";
-		String graph_mode = "vc_pos";
+		String graph_mode = "random";
+//		String graph_mode = "vc_pos";
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
-//		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
-//		File form_folder = new File("../instances"); // Use this for execution in windows cmd
-		
-		File graph_folder = new File("../vc_pos_graphs"); // Use this for execution in windows cmd
+		File graph_folder = new File("../random_graphs"); // Use this for execution in windows cmd
 		File form_folder = new File("../instances"); // Use this for execution in windows cmd
+		
+//		File graph_folder = new File("../vc_pos_graphs"); // Use this for execution in windows cmd
+//		File form_folder = new File("../instances"); // Use this for execution in windows cmd
 //		File graph_folder = new File("vc_pos_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
 		

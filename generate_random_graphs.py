@@ -6,7 +6,7 @@ import random
 probability = 0.001
 variance_count = 10
 
-for nr_of_nodes in range(600,4200,200):
+for nr_of_nodes in range(600,6200,200):
 	# create directory if it does not exist yet
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'random_graphs'
@@ -44,6 +44,7 @@ for nr_of_nodes in range(600,4200,200):
 			file_content = curr_file.readlines()
 		# Prepend headline
 		file_content.insert(0,headline)
+		# Write other content back into file
 		with open(full_path, 'w') as curr_file:
 			curr_file.writelines(file_content)
 		# print("Actual edges:   " + str(actual_edges))
