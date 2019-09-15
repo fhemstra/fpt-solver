@@ -189,7 +189,7 @@ public class Main {
 					int curr_graph_size = graphSize(graph_path);
 					// Only take graphs, that are not too big
 					// TODO change this, fixed n
-					if (curr_graph_size <= 1000) {
+					if (curr_graph_size <= 10000) {
 						graph_sizes.add(curr_graph_size);
 						// Construction
 						Formula curr_formula = new Formula(form_path, graph_path);

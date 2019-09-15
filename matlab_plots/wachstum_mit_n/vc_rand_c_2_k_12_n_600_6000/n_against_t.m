@@ -11,7 +11,7 @@ for file = files'
     y_st = file_content.data(:,2);
     boxplot(y_st,x);
 end
-title 'SearchTree, vc-pos, k = 12, c = 2'
+title 'SearchTree, vc-rand, k = 12, c = 2'
 xtickangle(70);
 xlabel 'n';
 ylabel 'time (sec)';
@@ -25,10 +25,10 @@ for file = files'
     y_ke = file_content.data(:,3);
     boxplot(y_ke,x);
 end
-title 'Red. + Kern., vc-pos, k = 12, c = 2'
+title 'Red. + Kern., vc-rand, k = 12, c = 2'
 xlabel 'n';
 xtickangle(70);
 ylabel 'time (sec)';
 hold off;
 
-print('vc_pos_k_12_n_600_6000.pdf','-fillpage','-dpdf');
+print('vc_rand_k_12_n_600_6000.pdf','-fillpage','-dpdf');
