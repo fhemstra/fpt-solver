@@ -140,6 +140,7 @@ public class Main {
 		String graph_mode = "random";
 //		String graph_mode = "vc_pos";
 		boolean accumulate_time_over_k = false; // set this for PACE
+		long main_init_time = System.currentTimeMillis();
 		
 //		File graph_folder = new File("random_graphs"); // Use this for execution in eclipse
 //		File form_folder = new File("instances"); // Use this for execution in eclipse
@@ -193,7 +194,6 @@ public class Main {
 		// Construct Formulas and reduced graphs
 		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
-			// TODO j = 0; j < graph_files.length
 			for (int j = 0; j < graph_files.length; j++) {
 				// TODO remove condition
 				// if(j%2 == 1) {
@@ -449,11 +449,10 @@ public class Main {
 			// Prepare next iteration and save to csv
 			if ((i + 1) % forms.size() == 0) {
 				// Save buffer to csv
-				file_name = Integer.toString((int) System.currentTimeMillis()) + "_" + graph_mode + "_k_" + curr_k_par
-						+ ".csv";
+				file_name = Long.toString(main_init_time) + "_" + graph_mode + "_k_" + start_k
+						+ "-" + stop_k + ".csv";
 				writeToCsv(write_buffer, file_name);
 				write_buffer.clear();
-				write_buffer.add(headline);
 				// go to next k
 				curr_k_par += k_increment;
 			}
@@ -467,7 +466,7 @@ public class Main {
 		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
 				+ File.separator + file_name);
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file, true)); // true for append mode 
 			// TODO sort write buffer
 			for (String s : write_buffer) {
 				bw.write(s);
