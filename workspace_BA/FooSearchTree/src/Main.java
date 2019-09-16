@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
@@ -159,6 +161,16 @@ public class Main {
 		
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
+		Arrays.sort(graph_files, new Comparator<File>() {
+			@Override
+			public int compare(File o1, File o2) {
+				int o1_size = graphSize(o1.getAbsolutePath());
+				int o2_size = graphSize(o2.getAbsolutePath());
+				if(o1_size == o2_size) return 0;
+				else if(o1_size > o2_size) return 1;
+				else return -1;
+			}
+		});
 		ArrayList<Formula> forms = new ArrayList<Formula>();
 		ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
 		// Timer
