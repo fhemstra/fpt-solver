@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Holds information about a logical formula. Provides methods to parse, solve
@@ -236,8 +237,10 @@ public class Formula {
 
 	/**
 	 * Returns the Hyphergraph which results when this formula is reduced to hitting-set.
+	 * @param reduction_timeout 
+	 * @throws TimeoutException 
 	 */
-	public Hypergraph reduceToHS(boolean mute) {
+	public Hypergraph reduceToHS(boolean mute, long reduction_timeout) throws TimeoutException {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
@@ -251,6 +254,12 @@ public class Formula {
 		String curr_assignment_str = "";
 		double progress = 0;
 		for (long i = 0; i < nr_of_assignments; i++) {
+			// Check timeout
+			if(i % 20000 == 0) {
+				if(System.currentTimeMillis() > reduction_timeout) {
+					throw new TimeoutException(); 
+				}
+			}
 			// prints
 //			if(!mute && i % 100 == 0) {
 			if(!mute && i % 500000 == 0) {
@@ -354,9 +363,14 @@ public class Formula {
 	}
 
 	/**
-	 * Returns weather this formula has a solution of size k_par. Initially, the solution should be empty, the last_index should be 0 and the last assignment an array containing c_par times the first element of the universe.
+	 * Returns weather this formula has a solution of size k_par. Initially, the
+	 * solution should be empty, the last_index should be 0 and the last assignment
+	 * an array containing c_par times the first element of the universe.
+	 * 
+	 * @param st_timeout
+	 * @throws TimeoutException 
 	 */
-	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index) {
+	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index, long st_timeout) throws TimeoutException {
 		// TODO return solution
 		
 		// Return if |S| > k
@@ -370,6 +384,12 @@ public class Formula {
 		}
 		// Check all clauses considering S
 		for (long i = last_index; i < nr_of_assignments; i++) {
+			// Check timeout
+			if(i % 1000 == 0) {
+				if(System.currentTimeMillis() > st_timeout) {
+					throw new TimeoutException(); 
+				}
+			}
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
@@ -398,7 +418,7 @@ public class Formula {
 								System.out.print(prnt);
 							}
 							// if one branch is successful we win, else go back through recursion.
-							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i);
+							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i, st_timeout);
 							if (flag) {
 								return true;								
 							} else {

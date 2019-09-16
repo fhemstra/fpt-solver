@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.TimeoutException;
 
 public class Hypergraph {
 	public String hypergraph_name;
@@ -246,9 +247,10 @@ public class Hypergraph {
 	}
 
 	/**
+	 * @throws TimeoutException 
 	 * 
 	 */
-	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute) {
+	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout) throws TimeoutException {
 		// TODO handle this better
 		if (k_par < 1)
 			return null;
@@ -257,6 +259,7 @@ public class Hypergraph {
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
+		
 		// Loop through {1,...,d}-uniform subgraphs
 		for(int curr_d = 1; curr_d <= local_hyp.d_par; curr_d++) {
 			// Find curr_d-uniform subgraph
@@ -267,7 +270,12 @@ public class Hypergraph {
 				if (!mute)
 					System.out.println("Initial sunflower is already null, nothing to kernelize.");
 			}
+			
 			while (sun != null) { // TODO not sure if this is right
+				// Check timeout
+				if(System.currentTimeMillis() > kernel_timeout) {
+					throw new TimeoutException(); 
+				}
 				if (!mute)
 					System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
 				if (!mute) {
@@ -534,8 +542,10 @@ public class Hypergraph {
 	/**
 	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
 	 * or not. Initially the solution sol is supposed to be empty.
+	 * @param hs_timeout 
+	 * @throws TimeoutException 
 	 */
-	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute) {
+	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout) throws TimeoutException {
 		// TODO return solution
 		int[] local_nodes = local_hyp.nodes;
 		ArrayList<Tuple> local_edges = local_hyp.edges;
@@ -547,6 +557,10 @@ public class Hypergraph {
 			}
 		}
 		for (int i = 0; i < local_edges.size(); i++) {
+			// Check for timeout
+			if(System.currentTimeMillis() > hs_timeout) {
+				throw new TimeoutException();
+			}
 			Tuple curr_edge = local_edges.get(i);
 			boolean edge_is_covered = false;
 			for (int j = 0; j < local_hyp.d_par; j++) {
@@ -567,7 +581,7 @@ public class Hypergraph {
 						// print
 						if (!mute)
 							System.out.print("  Sol size: " + sol.size() + "\r");
-						flag = flag || hsSearchTree(local_hyp, k_par, sol, mute);
+						flag = flag || hsSearchTree(local_hyp, k_par, sol, mute, hs_timeout);
 						if (flag) {
 							return true;
 						} else {
