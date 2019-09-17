@@ -20,8 +20,8 @@ public class Main {
 	// Set this to mute debug output
 	static boolean mute = true;
 	
-	// Set timeout, 30 min: 1800000
-	static long timeout_value = 100000;
+	// Set timeout, 30 min: 1800000, 10 min: 600000
+	static long timeout_value = 600000;
 	
 	// Set range of k
 	static int start_k = 1;
@@ -29,7 +29,7 @@ public class Main {
 	static int stop_k = 200;
 	
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 198;
+	static int max_graph_size = -1;
 	
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
