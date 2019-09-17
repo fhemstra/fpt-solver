@@ -14,48 +14,48 @@ public class Main {
 
 	static boolean mute = true;
 
+	// +++++++++++ Settings +++++++++++++	
+	// Set this if the software is called from cmd
+	static boolean call_from_cmd = true;
+	
+	// Set timeout, 30 min: 1800000
+	static long timeout_value = 20000;
+	
+	// Set range of k
+	static int start_k = 2;
+	static int k_increment = 1;
+	static int stop_k = 16;
+	
+	// Set this to discard big graphs, set to -1 to discard nothing
+	static int max_graph_size = 1000;
+	
+	// Set this if the first pipeline should be skipped
+	static boolean skip_search_tree = true;
+	
+	// Set this if the timeout per graph should be accumulated over all k (for PACE)
+	static boolean accumulate_time_over_k = true;
+	
+	// Select a dataset
+	// String current_dataset = "random_graphs";
+	static String current_dataset = "vc_pos_graphs";
+	// String current_dataset = "pace";
+	
+	// ++++++++++ Settings done +++++++++
+	
 	public static void main(String[] args) {
 		// Get time stamp for the name of the result file
 		long main_init_time = System.currentTimeMillis();
 
-		// +++++++++++ Settings +++++++++++++
-		// Set timeout, 30 min: 1800000
-		long timeout_value = 20000;
-
-		// Set range of k
-		int start_k = 2;
-		int k_increment = 1;
-		int stop_k = 16;
-
-		// Set this to discard big graphs, set to -1 to discard nothing
-		int max_graph_size = 1000;
-
-		// Set this if the first pipeline should be skipped
-		boolean skip_search_tree = true;
-
-		// Set this if the timeout per graph should be accumulated over all k (for PACE)
-		boolean accumulate_time_over_k = true;
-
-		// Set this if the software is called from cmd
-		boolean start_from_cmd = true;
-
-		// Select a dataset
-		// String current_dataset = "random_graphs";
-		String current_dataset = "vc_pos_graphs";
-		// String current_dataset = "pace";
-
-		// ++++++++++ Settings done +++++++++
-
 		// Construct path to graph dir
 		String graph_dir_path = "";
-		if (start_from_cmd) {
+		if (call_from_cmd) {
 			graph_dir_path = "../" + current_dataset;
 		} else {
 			graph_dir_path = current_dataset;
 		}
 		// Construct path to form dir
 		String form_dir_path = "";
-		if (start_from_cmd) {
+		if (call_from_cmd) {
 			form_dir_path = "../" + "instances";
 		} else {
 			form_dir_path = "instances";
@@ -170,10 +170,10 @@ public class Main {
 		}
 
 		// Init time_used array for the first pipeline
-		if(!skip_search_tree) {
+		if (!skip_search_tree) {
 			while (pipe_1_time_used_per_instance.size() < forms.size()) {
 				pipe_1_time_used_per_instance.add((long) 0);
-			}			
+			}
 		}
 		// Iterate over k
 		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
@@ -232,7 +232,7 @@ public class Main {
 					kernel_edges.add((double) -1);
 					kernel_nodes.add((double) -1);
 					hs_times.add((double) 0);
-					ke_results.add(false);
+					ke_results.add(false); // false for timeout
 					if (!timeout_noted) {
 						pipe_2_timeouts.add(true);
 						timeout_noted = true;
@@ -240,8 +240,12 @@ public class Main {
 				}
 				// Graph has already been solved and we dont wnat to keep solving for bigger k
 				else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
-					// Go to next graph
-					continue;
+					// Make empty entries and go to next graph
+					kernel_times.add((double) 0);
+					kernel_edges.add((double) -1);
+					kernel_nodes.add((double) -1);
+					hs_times.add((double) 0);
+					ke_results.add(true); // true for already solved
 				} else {
 					// Kernelization
 					Hypergraph curr_graph = reduced_graphs.get(j);
@@ -346,29 +350,34 @@ public class Main {
 		}
 
 		// Collect and save results
-		System.out.println("\n------------------------------------");
-		int number_of_iterations = Math.max(search_tree_results.size(), ke_results.size()); // TODO wir iterieren nicht gnaz weit genug
+		if (!mute)
+			System.out.println("\n------------------------------------");
+		int number_of_results = Math.max(search_tree_results.size(), ke_results.size()); // TODO wir iterieren nicht
+																							// ganz weit genug
 		// Init write buffer
 		ArrayList<String> write_buffer = new ArrayList<String>();
 		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges;pipe_1_timeout;pipe_2_timeout\n";
 		write_buffer.add(headline);
 		int curr_k_par = start_k;
 		// Loop over all results
-		for (int i = 0; i < number_of_iterations; i++) {
+		for (int i = 0; i < number_of_results; i++) {
 			// Formula and Reduction are the same for every k
 			int k_indep_index = i % forms.size();
 			// Prints
-			System.out.println("--- Graph: " + forms.get(k_indep_index).graph_name + ", k = " + curr_k_par + " ---");
-			if (!skip_search_tree) {
-				System.out.println("1. SearchTree:    " + search_tree_times.get(i));
-				System.out.println("   " + search_tree_results.get(i));
-			} else {
-				System.out.println("1. SearchTree: skipped");
+			if (!mute) {
+				System.out
+						.println("--- Graph: " + forms.get(k_indep_index).graph_name + ", k = " + curr_k_par + " ---");
+				if (!skip_search_tree) {
+					System.out.println("1. SearchTree:    " + search_tree_times.get(i));
+					System.out.println("   " + search_tree_results.get(i));
+				} else {
+					System.out.println("1. SearchTree: skipped");
+				}
+				System.out.println("2. Reduction:     " + reduction_times.get(k_indep_index));
+				System.out.println("   Kernelisation: " + kernel_times.get(i));
+				System.out.println("   HS-SearchTree: " + hs_times.get(i));
+				System.out.println("   " + ke_results.get(i));
 			}
-			System.out.println("2. Reduction:     " + reduction_times.get(k_indep_index));
-			System.out.println("   Kernelisation: " + kernel_times.get(i));
-			System.out.println("   HS-SearchTree: " + hs_times.get(i));
-			System.out.println("   " + ke_results.get(i));
 
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
@@ -398,11 +407,12 @@ public class Main {
 			}
 
 			// Prepare next iteration of k and save to csv
+			// TODO das stimmt nicht, sobald einige Graphen fertig sind
 			if ((i + 1) % forms.size() == 0) {
 				// Save buffer to csv
 				String file_name = Long.toString(main_init_time) + "_" + current_dataset + "_k_" + start_k + "-"
 						+ stop_k + ".csv";
-				writeToCsv(write_buffer, file_name, start_from_cmd);
+				writeToCsv(write_buffer, file_name, call_from_cmd);
 				write_buffer.clear();
 				// go to next k
 				curr_k_par += k_increment;
