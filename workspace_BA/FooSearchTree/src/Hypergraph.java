@@ -581,7 +581,7 @@ public class Hypergraph {
 						// Don't add -1
 						if (curr_edge.elements[j] == -1)
 							continue;
-						// Try adding this
+						// Try adding current element
 						sol.add(curr_edge.elements[j]);
 						// print
 						if (!mute)

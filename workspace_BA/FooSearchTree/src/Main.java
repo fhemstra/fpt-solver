@@ -21,15 +21,15 @@ public class Main {
 	static boolean mute = true;
 	
 	// Set timeout, 30 min: 1800000
-	static long timeout_value = 1000;
+	static long timeout_value = 100000;
 	
 	// Set range of k
-	static int start_k = 2;
+	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 16;
+	static int stop_k = 200;
 	
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 1000;
+	static int max_graph_size = 198;
 	
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -38,9 +38,9 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 	
 	// Select a dataset
-	// String current_dataset = "random_graphs";
-	static String current_dataset = "vc_pos_graphs";
-	// String current_dataset = "pace";
+	// static String current_dataset = "random_graphs";
+//	static String current_dataset = "vc_pos_graphs";
+	static String current_dataset = "pace";
 	
 	// ++++++++++ Settings done +++++++++
 	
@@ -268,7 +268,7 @@ public class Main {
 					} catch (TimeoutException e) {
 						long emergency_stop = System.currentTimeMillis();
 						double additional_time = (double)((double)(emergency_stop - start_time)/1000);
-						System.out.println("! Kernelize timed out after additional " + String.format("%.3f",additional_time) + "sec.");
+						System.out.println("! Kernelize timed out after additional " + String.format("%.3f",additional_time) + " sec.");
 						if(timeout_noted) return;
 						if (!timeout_noted) {
 							pipe_2_timeouts.add(true);
@@ -316,11 +316,13 @@ public class Main {
 						try {
 							hs_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute,
 									hs_timeout);
+							if (!mute)
+								System.out.println("\n");
+							System.out.println("  result: " + hs_result);
 						} catch (TimeoutException e) {
 							long emergency_stop = System.currentTimeMillis();
 							double additional_time = (double)((double)(emergency_stop - start_time)/1000);
-							System.out.println("! HS-SearchTree timed out after additional " + String.format("%.3f",additional_time) + "sec.");
-							if(timeout_noted) return;
+							System.out.println("\n! HS-SearchTree timed out after additional " + String.format("%.3f",additional_time) + " sec.");
 							if (!timeout_noted) {
 								pipe_2_timeouts.add(true);
 								timed_out_graphs.add(curr_graph.hypergraph_name);
@@ -328,9 +330,6 @@ public class Main {
 							}
 						}
 						stop_time = System.currentTimeMillis();
-						if (!mute)
-							System.out.println("\n");
-						System.out.println("  result: " + hs_result);
 						// Add results
 						ke_results.add(hs_result);
 						double hs_time_passed = (double) (stop_time - start_time) / (double) 1000;
@@ -393,13 +392,14 @@ public class Main {
 			// Create String for csv file
 			double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 			double pipe_2_sum = 0;
-			if(timeout_2 == 1.0) {
+			double curr_ke_res = ke_results.get(i) ? 1 : 0;
+			// pipe_2_sum should be -1 when the instance timed out or is solved 
+			if(timeout_2 == 1.0 || curr_ke_res == 1.0) {
 				pipe_2_sum = -1;
 			} else {
 				pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 				all_graphs_timed_out = false;
 			}
-			double curr_ke_res = ke_results.get(i) ? 1 : 0;
 			// With ST
 			if (!skip_search_tree) {
 				double timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
@@ -409,7 +409,7 @@ public class Main {
 						+ ";" + reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
 						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";"
 						+ kernel_nodes.get(i) + ";" + kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index)
+						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index)
 						+ ";" + reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
 			}
 			// Without ST
@@ -418,7 +418,7 @@ public class Main {
 						+ reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + ";"
 						+ curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";"
 						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index)
+						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index)
 						+ ";" + reduced_edges.get(k_indep_index) + ";" + "-1" + ";" + timeout_2 + "\n");
 			}
 
