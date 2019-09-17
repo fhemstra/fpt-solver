@@ -19,15 +19,18 @@ public class Main {
 
 		// +++++++++++ Settings +++++++++++++
 		// Set timeout, 30 min: 1800000
-		long timeout_intervall = 1000;
+		long timeout_value = 1000;
 
 		// Set range of k
 		int start_k = 2;
 		int k_increment = 1;
 		int stop_k = 10;
+		
+		// Set this to discard big graphs, set to -1 to discard nothing
+		int max_graph_size = -1; 
 
 		// Set this if the first pipeline should be skipped
-		boolean skip_search_tree = false;
+		boolean skip_search_tree = true;
 
 		// Set this if the timeout per graph should be accumulated over all k (for PACE)
 		boolean accumulate_time_over_k = false;
@@ -37,8 +40,8 @@ public class Main {
 
 		// Select a dataset
 		String current_dataset = "random_graphs";
-		// String graph_mode = "vc_pos_graphs";
-		// String graph_mode = "pace";
+//		String current_dataset = "vc_pos_graphs";
+//		String current_dataset = "pace";
 
 		// ++++++++++ Settings done +++++++++
 
@@ -102,9 +105,8 @@ public class Main {
 			for (int j = 0; j < graph_files.length; j++) {
 				String curr_graph_path = graph_files[j].getAbsolutePath();
 				int curr_graph_size = graphSize(curr_graph_path);
-				// Only take graphs, that are not too big
-				// TODO change this
-				if (curr_graph_size <= 1000) {
+				// Only take graphs, that are small enough
+				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
 					graph_sizes.add(curr_graph_size);
 					// Constructing Formula
 					Formula curr_formula = new Formula(form_path, curr_graph_path);
@@ -116,7 +118,7 @@ public class Main {
 					// Reducing Formula to Hypergraph
 					System.out.println("> Reduction");
 					start_time = System.currentTimeMillis();
-					reduction_timeout = start_time + timeout_intervall;
+					reduction_timeout = start_time + timeout_value;
 					// Reduce
 					Hypergraph reduction_result = null;
 					try {
@@ -175,9 +177,9 @@ public class Main {
 					start_time = System.currentTimeMillis();
 					// Set timer
 					if (!accumulate_time_over_k) {
-						st_timeout = start_time + timeout_intervall;
+						st_timeout = start_time + timeout_value;
 					} else {
-						st_timeout = start_time + timeout_intervall - pipe_1_time_used_per_instance.get(j);
+						st_timeout = start_time + timeout_value - pipe_1_time_used_per_instance.get(j);
 					}
 					// SearchTree
 					boolean st_result = false;
@@ -229,9 +231,9 @@ public class Main {
 					Hypergraph curr_kernel = null;
 					start_time = System.currentTimeMillis();
 					if (!accumulate_time_over_k) {
-						kernel_timeout = start_time + reduction_times.get(j).longValue() + timeout_intervall;
+						kernel_timeout = start_time + reduction_times.get(j).longValue() + timeout_value;
 					} else {
-						kernel_timeout = start_time + timeout_intervall - pipe_2_time_used_per_instance.get(j);
+						kernel_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
 					}
 					// Kernelize
 					try {
@@ -274,9 +276,9 @@ public class Main {
 						// Set timer
 						if (!accumulate_time_over_k) {
 							hs_timeout = start_time + reduction_times.get(j).longValue()
-									+ kernel_times.get(j).longValue() + timeout_intervall;
+									+ kernel_times.get(j).longValue() + timeout_value;
 						} else {
-							hs_timeout = start_time + timeout_intervall - pipe_2_time_used_per_instance.get(j);
+							hs_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
 						}
 						// Start HS-SearchTree
 						try {
@@ -346,9 +348,10 @@ public class Main {
 			// Create String for csv file
 			double pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
-			double timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
-			double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
+			// With ST
 			if (!skip_search_tree) {
+				double timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
+				double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 				double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
 				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
 				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
@@ -357,13 +360,16 @@ public class Main {
 						+ kernel_nodes.get(i) + ";" + kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
 						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index)
 						+ ";" + reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
-			} else {
+			}
+			// Without ST
+			else {
+				double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + "-1" + ";" + pipe_2_sum + ";"
 						+ reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + ";"
 						+ curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";"
 						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ String.format("%.3f", dens_list.get(i)) + ";" + reduced_nodes.get(k_indep_index) + ";"
-						+ reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
+						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index) + ";"
+						+ reduced_edges.get(k_indep_index) + ";" + "-1" + ";" + timeout_2 + "\n");
 			}
 
 			// Prepare next iteration of k and save to csv

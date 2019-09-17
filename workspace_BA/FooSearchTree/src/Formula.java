@@ -255,13 +255,12 @@ public class Formula {
 		double progress = 0;
 		for (long i = 0; i < nr_of_assignments; i++) {
 			// Check timeout
-			if(i % 20000 == 0) {
+			if(i % 10000 == 0) {
 				if(System.currentTimeMillis() > reduction_timeout) {
 					throw new TimeoutException(); 
 				}
 			}
 			// prints
-//			if(!mute && i % 100 == 0) {
 			if(!mute && i % 500000 == 0) {
 				curr_assignment_str = "";
 				for(int j = 0; j < c_par; j++) {
@@ -272,6 +271,7 @@ public class Formula {
 				String tmp = String.format("%.2f", progress);
 				System.out.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
 			}
+			// Check current assignment on all clauses
 			for (int j = 0; j < clauses.size(); j++) {
 				String[] curr_clause = clauses.get(j);
 				// If clause does not hold, add edge containing current assignment (only
