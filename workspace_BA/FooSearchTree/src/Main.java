@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.concurrent.TimeoutException;
 
 public class Main {
@@ -19,29 +20,29 @@ public class Main {
 
 		// +++++++++++ Settings +++++++++++++
 		// Set timeout, 30 min: 1800000
-		long timeout_value = 1000;
+		long timeout_value = 20000;
 
 		// Set range of k
 		int start_k = 2;
 		int k_increment = 1;
-		int stop_k = 10;
-		
+		int stop_k = 16;
+
 		// Set this to discard big graphs, set to -1 to discard nothing
-		int max_graph_size = -1; 
+		int max_graph_size = 1000;
 
 		// Set this if the first pipeline should be skipped
 		boolean skip_search_tree = true;
 
 		// Set this if the timeout per graph should be accumulated over all k (for PACE)
-		boolean accumulate_time_over_k = false;
+		boolean accumulate_time_over_k = true;
 
 		// Set this if the software is called from cmd
 		boolean start_from_cmd = true;
 
 		// Select a dataset
-		String current_dataset = "random_graphs";
-//		String current_dataset = "vc_pos_graphs";
-//		String current_dataset = "pace";
+		// String current_dataset = "random_graphs";
+		String current_dataset = "vc_pos_graphs";
+		// String current_dataset = "pace";
 
 		// ++++++++++ Settings done +++++++++
 
@@ -52,10 +53,17 @@ public class Main {
 		} else {
 			graph_dir_path = current_dataset;
 		}
+		// Construct path to form dir
+		String form_dir_path = "";
+		if (start_from_cmd) {
+			form_dir_path = "../" + "instances";
+		} else {
+			form_dir_path = "instances";
+		}
 
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
-		File form_folder = new File("../instances");
+		File form_folder = new File(form_dir_path);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		Arrays.sort(graph_files, new Comparator<File>() {
@@ -95,6 +103,11 @@ public class Main {
 		ArrayList<Boolean> pipe_2_timeouts = new ArrayList<Boolean>();
 		ArrayList<Long> pipe_1_time_used_per_instance = new ArrayList<Long>();
 		ArrayList<Long> pipe_2_time_used_per_instance = new ArrayList<Long>();
+		// Keep track of graphs that have been solved already (only used when
+		// accumulate_time_over_k is set)
+		HashSet<String> solved_graphs = new HashSet<String>();
+
+		// Prints
 		// System.out.println("> Constructing " + form_files.length + " formulas with "
 		// + graph_files.length + " instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
@@ -157,8 +170,10 @@ public class Main {
 		}
 
 		// Init time_used array for the first pipeline
-		while (pipe_1_time_used_per_instance.size() < forms.size()) {
-			pipe_1_time_used_per_instance.add((long) 0);
+		if(!skip_search_tree) {
+			while (pipe_1_time_used_per_instance.size() < forms.size()) {
+				pipe_1_time_used_per_instance.add((long) 0);
+			}			
 		}
 		// Iterate over k
 		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
@@ -206,8 +221,8 @@ public class Main {
 				}
 			}
 
-			// Pipeline 2: Reduce (already done, only once for all k) + Kernelization + HS
-			// SearchTree
+			// Pipeline 2: Reduce (already done, only once for all k) + Kernelize +
+			// HS-Search
 			for (int j = 0; j < reduced_graphs.size(); j++) {
 				// Prevent adding multiple timeouts for single pipeline
 				boolean timeout_noted = false;
@@ -222,6 +237,11 @@ public class Main {
 						pipe_2_timeouts.add(true);
 						timeout_noted = true;
 					}
+				}
+				// Graph has already been solved and we dont wnat to keep solving for bigger k
+				else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
+					// Go to next graph
+					continue;
 				} else {
 					// Kernelization
 					Hypergraph curr_graph = reduced_graphs.get(j);
@@ -246,6 +266,7 @@ public class Main {
 						}
 					}
 					stop_time = System.currentTimeMillis();
+					// Prints
 					if (!mute && curr_graph != null) {
 						System.out.println("  hyp edges:     " + curr_graph.edges.size());
 						System.out.println("  hyp nodes:     " + curr_graph.nodes.length);
@@ -302,6 +323,10 @@ public class Main {
 						pipe_2_time_used_per_instance.set(j,
 								pipe_2_time_used_per_instance.get(j) + (stop_time - start_time));
 						printTime(hs_time_passed);
+						if (hs_result) {
+							// Note that the current graph has been solved
+							solved_graphs.add(curr_graph.hypergraph_name);
+						}
 					}
 					// Timeout happened during kernelization
 					else {
@@ -322,7 +347,7 @@ public class Main {
 
 		// Collect and save results
 		System.out.println("\n------------------------------------");
-		int number_of_iterations = Math.max(search_tree_results.size(), ke_results.size());
+		int number_of_iterations = Math.max(search_tree_results.size(), ke_results.size()); // TODO wir iterieren nicht gnaz weit genug
 		// Init write buffer
 		ArrayList<String> write_buffer = new ArrayList<String>();
 		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges;pipe_1_timeout;pipe_2_timeout\n";
@@ -368,8 +393,8 @@ public class Main {
 						+ reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + ";"
 						+ curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";"
 						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index) + ";"
-						+ reduced_edges.get(k_indep_index) + ";" + "-1" + ";" + timeout_2 + "\n");
+						+ String.format("%.3f", dens_list.get(k_indep_index)) + ";" + reduced_nodes.get(k_indep_index)
+						+ ";" + reduced_edges.get(k_indep_index) + ";" + "-1" + ";" + timeout_2 + "\n");
 			}
 
 			// Prepare next iteration of k and save to csv
@@ -377,7 +402,7 @@ public class Main {
 				// Save buffer to csv
 				String file_name = Long.toString(main_init_time) + "_" + current_dataset + "_k_" + start_k + "-"
 						+ stop_k + ".csv";
-				writeToCsv(write_buffer, file_name);
+				writeToCsv(write_buffer, file_name, start_from_cmd);
 				write_buffer.clear();
 				// go to next k
 				curr_k_par += k_increment;
@@ -388,9 +413,16 @@ public class Main {
 	/**
 	 * Writes all lines from the given list to the specified csv-file.
 	 */
-	private static void writeToCsv(ArrayList<String> write_buffer, String file_name) {
-		File out_file = new File(".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
-				+ File.separator + file_name);
+	private static void writeToCsv(ArrayList<String> write_buffer, String file_name, boolean cmd) {
+		String result_file_path = "";
+		if (cmd) {
+			result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
+					+ File.separator + file_name;
+		} else {
+			result_file_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
+					+ file_name;
+		}
+		File out_file = new File(result_file_path);
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file, true)); // true for append mode
 			for (String s : write_buffer) {
