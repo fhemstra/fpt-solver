@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.concurrent.TimeoutException;
 
 public class Main {
-
-
 	// +++++++++++ Settings +++++++++++++	
 	// Set this if the software is called from cmd instead of eclipse
 	static boolean call_from_cmd = true;
@@ -20,8 +18,8 @@ public class Main {
 	// Set this to mute debug output
 	static boolean mute = true;
 	
-	// Set timeout, 30 min: 1800000, 10 min: 600000
-	static long timeout_value = 600000;
+	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
+	static long timeout_value = 300000;
 	
 	// Set range of k
 	static int start_k = 1;
