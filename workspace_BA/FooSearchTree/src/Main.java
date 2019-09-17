@@ -369,6 +369,7 @@ public class Main {
 		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges;pipe_1_timeout;pipe_2_timeout\n";
 		write_buffer.add(headline);
 		int curr_k_par = start_k;
+		boolean all_graphs_timed_out = true;
 		// Loop over all results
 		for (int i = 0; i < number_of_results; i++) {
 			// Formula and Reduction are the same for every k
@@ -396,6 +397,7 @@ public class Main {
 				pipe_2_sum = -1;
 			} else {
 				pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
+				all_graphs_timed_out = false;
 			}
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
 			// With ST
@@ -427,8 +429,14 @@ public class Main {
 						+ stop_k + ".csv";
 				writeToCsv(write_buffer, file_name, call_from_cmd);
 				write_buffer.clear();
+				// If all graphs are timed out, leave 
+				if(all_graphs_timed_out) {
+					break;
+				}
 				// go to next k
 				curr_k_par += k_increment;
+				// reset flag
+				all_graphs_timed_out = true;
 			}
 		}
 	}
