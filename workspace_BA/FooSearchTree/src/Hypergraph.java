@@ -251,6 +251,11 @@ public class Hypergraph {
 	 * 
 	 */
 	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout) throws TimeoutException {
+		// Check Timeout
+		if(System.currentTimeMillis() > kernel_timeout) {
+			throw new TimeoutException(); 
+		}
+		
 		// TODO handle this better
 		if (k_par < 1)
 			return null;
