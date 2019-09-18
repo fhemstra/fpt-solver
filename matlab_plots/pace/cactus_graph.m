@@ -1,6 +1,6 @@
 close all
 
-files = dir('*all*.csv');
+files = dir('*.csv');
 file = files(1);
 file_content = importdata(file.name);
 
