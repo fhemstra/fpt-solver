@@ -23,7 +23,7 @@ public class Main {
 	
 	// Set to only test one graph
 	static boolean only_single_graph = true;
-	static String single_graph_name = "vc-exact_037.gr";
+	static String single_graph_name = "vc-exact_001.gr";
 	
 	// Set range of k
 	static int start_k = 1;
@@ -35,6 +35,9 @@ public class Main {
 	
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
+	
+	// Set to decide which kernel to use
+	static boolean use_bevern_kernel = true;
 	
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
@@ -269,8 +272,11 @@ public class Main {
 					}
 					// Kernelize
 					try {
-//						curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);
-						curr_kernel = curr_graph.kernelizeBevern(curr_graph, k_par, mute, kernel_timeout);
+						if(use_bevern_kernel) {
+							curr_kernel = curr_graph.kernelizeBevern(curr_graph, k_par, mute, kernel_timeout);							
+						} else {
+							curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);							
+						}
 					} catch (TimeoutException e) {
 						long emergency_stop = System.currentTimeMillis();
 						double additional_time = (double)((double)(emergency_stop - start_time)/1000);
