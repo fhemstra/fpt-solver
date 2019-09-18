@@ -19,10 +19,11 @@ public class Main {
 	static boolean mute = true;
 	
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
-	static long timeout_value = 300000;
+	static long timeout_value = 1800000;
 	
 	// Set to only test one graph
-	static boolean only_first_graph = false;
+	static boolean only_single_graph = true;
+	static String single_graph_name = "vc-exact_037.gr";
 	
 	// Set range of k
 	static int start_k = 1;
@@ -39,7 +40,7 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 	
 	// Select a dataset
-	// static String current_dataset = "random_graphs";
+//	 static String current_dataset = "random_graphs";
 //	static String current_dataset = "vc_pos_graphs";
 	static String current_dataset = "pace";
 	
@@ -124,6 +125,11 @@ public class Main {
 				int curr_graph_size = graphSize(curr_graph_path);
 				// Only take graphs, that are small enough
 				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
+					if(only_single_graph) {
+						if(!curr_graph_path.contains(single_graph_name)) {
+							continue;
+						}
+					}
 					graph_sizes.add(curr_graph_size);
 					// Constructing Formula
 					Formula curr_formula = new Formula(form_path, curr_graph_path);
@@ -166,8 +172,6 @@ public class Main {
 					System.out.println(
 							"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 				}
-				
-				if(only_first_graph) break;
 			}
 			// TODO only use the first formula
 			// break;
@@ -265,7 +269,8 @@ public class Main {
 					}
 					// Kernelize
 					try {
-						curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);
+//						curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);
+						curr_kernel = curr_graph.kernelizeBevern(curr_graph, k_par, mute, kernel_timeout);
 					} catch (TimeoutException e) {
 						long emergency_stop = System.currentTimeMillis();
 						double additional_time = (double)((double)(emergency_stop - start_time)/1000);

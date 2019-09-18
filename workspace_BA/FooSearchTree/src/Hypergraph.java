@@ -247,15 +247,16 @@ public class Hypergraph {
 	}
 
 	/**
-	 * @throws TimeoutException 
+	 * @throws TimeoutException
 	 * 
 	 */
-	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout) throws TimeoutException {
+	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout)
+			throws TimeoutException {
 		// Check Timeout
-		if(System.currentTimeMillis() > kernel_timeout) {
-			throw new TimeoutException(); 
+		if (System.currentTimeMillis() > kernel_timeout) {
+			throw new TimeoutException();
 		}
-		
+
 		// TODO handle this better
 		if (k_par < 1)
 			return null;
@@ -264,9 +265,9 @@ public class Hypergraph {
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
-		
+
 		// Loop through {1,...,d}-uniform subgraphs
-		for(int curr_d = 1; curr_d <= local_hyp.d_par; curr_d++) {
+		for (int curr_d = 1; curr_d <= local_hyp.d_par; curr_d++) {
 			// Find curr_d-uniform subgraph
 			Hypergraph subgraph = getUniformSubgraph(local_hyp, curr_d);
 			// Search first Sunflower
@@ -275,11 +276,11 @@ public class Hypergraph {
 				if (!mute)
 					System.out.println("Initial sunflower is already null, nothing to kernelize.");
 			}
-			
+
 			while (sun != null) { // TODO not sure if this is right
 				// Check timeout
-				if(System.currentTimeMillis() > kernel_timeout) {
-					throw new TimeoutException(); 
+				if (System.currentTimeMillis() > kernel_timeout) {
+					throw new TimeoutException();
 				}
 				if (!mute)
 					System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
@@ -371,29 +372,130 @@ public class Hypergraph {
 			System.out.println("<< END KERNELIZE.");
 		return kernel;
 	}
-	
+
+	public Hypergraph kernelizeBevern(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout)
+			throws TimeoutException {
+		// Check Timeout
+		if (System.currentTimeMillis() > kernel_timeout) {
+			throw new TimeoutException();
+		}
+
+		// Declare edge set
+		ArrayList<Tuple> edge_set = new ArrayList<Tuple>();
+
+		// Declare maps
+		HashMap<Tuple, Integer> petals_per_core = new HashMap<Tuple, Integer>();
+		HashMap<Tuple, HashSet<Integer>> used_verts_per_core = new HashMap<Tuple, HashSet<Integer>>();
+
+		// Init maps
+		for (Tuple edge : local_hyp.edges) {
+			ArrayList<Tuple> possible_cores_for_edge = getPossibleCores(edge);
+			for (Tuple possible_core : possible_cores_for_edge) {
+				petals_per_core.put(possible_core, 0);
+				used_verts_per_core.put(possible_core, new HashSet<Integer>());
+			}
+		}
+
+		// Kernelize
+		for (Tuple edge : local_hyp.edges) {
+			ArrayList<Tuple> possible_cores_for_edge = getPossibleCores(edge);
+			boolean no_core_more_than_k_petals = true;
+			for (Tuple possible_core : possible_cores_for_edge) {
+				if (petals_per_core.get(possible_core) > k_par) {
+					no_core_more_than_k_petals = false;
+				}
+			}
+
+			if (no_core_more_than_k_petals) {
+				edge_set.add(edge);
+				for (Tuple possible_core : possible_cores_for_edge) {
+					int[] verts_of_edge_wo_core = edge.elements;
+					// Remove core verts
+					for (int core_vert : possible_core.elements) {
+						verts_of_edge_wo_core = arrWithout(verts_of_edge_wo_core, core_vert);
+					}
+					boolean no_vert_of_edge_used = true;
+					for (int edge_vert : verts_of_edge_wo_core) {
+						if (used_verts_per_core.get(possible_core).contains(edge_vert)) {
+							no_vert_of_edge_used = false;
+						}
+					}
+					if (no_vert_of_edge_used) {
+						petals_per_core.put(possible_core, petals_per_core.get(possible_core) + 1);
+						HashSet<Integer> used_set = used_verts_per_core.get(possible_core);
+						for (int edge_vert : verts_of_edge_wo_core) {
+							used_set.add(edge_vert);
+						}
+						used_verts_per_core.put(possible_core, used_set);
+					}
+				}
+			}
+		}
+
+		// Collect nodes
+		ArrayList<Integer> nodes_list = new ArrayList<Integer>();
+		for (Tuple edge : edge_set) {
+			for (int edge_node : edge.elements) {
+				if (!nodes_list.contains(edge_node) && edge_node != -1)
+					nodes_list.add(edge_node);
+			}
+		}
+		// Change nodes to int[]
+		int[] nodes_arr = new int[nodes_list.size()];
+		for (int i = 0; i < nodes_list.size(); i++) {
+			nodes_arr[i] = nodes_list.get(i);
+		}
+
+		// Result
+		Hypergraph kernel = new Hypergraph(nodes_arr, edge_set);
+		return kernel;
+	}
+
+	private ArrayList<Tuple> getPossibleCores(Tuple edge) {
+		int[] elements = edge.elements;
+		ArrayList<Tuple> possible_cores = new ArrayList<Tuple>();
+		for (int i = 0; i < (1 << elements.length); i++) {
+			ArrayList<Integer> current_core = new ArrayList<Integer>();
+			for (int j = 0; j < elements.length; j++) {
+				if ((i & (1 << j)) > 0) {
+					current_core.add(elements[j]);
+				}
+			}
+			// Change to int[]
+			int[] current_core_arr = new int[current_core.size()];
+			for (int k = 0; k < current_core.size(); k++) {
+				current_core_arr[k] = current_core.get(k);
+			}
+			possible_cores.add(new Tuple(current_core_arr));
+		}
+		return possible_cores;
+	}
+
 	/**
 	 * Returns the result of merging this and another Hypergraph.
 	 */
 	private Hypergraph mergeWith(Hypergraph subgraph) {
 		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
 		// Collect edges
-		for(Tuple edge : this.edges) {
-			if(!res_edges.contains(edge)) res_edges.add(edge);
+		for (Tuple edge : this.edges) {
+			if (!res_edges.contains(edge))
+				res_edges.add(edge);
 		}
-		for(Tuple edge : subgraph.edges) {
-			if(!res_edges.contains(edge)) res_edges.add(edge);
+		for (Tuple edge : subgraph.edges) {
+			if (!res_edges.contains(edge))
+				res_edges.add(edge);
 		}
 		// Collect nodes from new edge set
 		ArrayList<Integer> node_list = new ArrayList<Integer>();
-		for(Tuple edge : res_edges) {
-			for(int node : edge.elements) {
-				if(node != -1 && !node_list.contains(node)) node_list.add(node);
+		for (Tuple edge : res_edges) {
+			for (int node : edge.elements) {
+				if (node != -1 && !node_list.contains(node))
+					node_list.add(node);
 			}
 		}
 		// Convert to array
 		int[] res_nodes = new int[node_list.size()];
-		for(int i = 0; i < res_nodes.length; i++) {
+		for (int i = 0; i < res_nodes.length; i++) {
 			res_nodes[i] = node_list.get(i);
 		}
 		// Construct resulting graph
@@ -407,21 +509,22 @@ public class Hypergraph {
 	private Hypergraph getUniformSubgraph(Hypergraph local_hyp, int curr_d) {
 		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
 		// Collect edges
-		for(Tuple edge: local_hyp.edges) {
-			if(actualSize(edge.elements) == curr_d) {
+		for (Tuple edge : local_hyp.edges) {
+			if (actualSize(edge.elements) == curr_d) {
 				res_edges.add(edge);
 			}
 		}
 		// Collect nodes from new edge set
 		ArrayList<Integer> node_list = new ArrayList<Integer>();
-		for(Tuple edge : res_edges) {
-			for(int node : edge.elements) {
-				if(node != -1 && !node_list.contains(node)) node_list.add(node);
+		for (Tuple edge : res_edges) {
+			for (int node : edge.elements) {
+				if (node != -1 && !node_list.contains(node))
+					node_list.add(node);
 			}
 		}
 		// Convert to array
 		int[] res_nodes = new int[node_list.size()];
-		for(int i = 0; i < res_nodes.length; i++) {
+		for (int i = 0; i < res_nodes.length; i++) {
 			res_nodes[i] = node_list.get(i);
 		}
 		// Construct resulting graph
@@ -434,8 +537,9 @@ public class Hypergraph {
 	 */
 	private int actualSize(int[] elements) {
 		int counter = 0;
-		for(int e : elements) {
-			if(e != -1) counter++; 
+		for (int e : elements) {
+			if (e != -1)
+				counter++;
 		}
 		return counter;
 	}
@@ -547,10 +651,12 @@ public class Hypergraph {
 	/**
 	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
 	 * or not. Initially the solution sol is supposed to be empty.
-	 * @param hs_timeout 
-	 * @throws TimeoutException 
+	 * 
+	 * @param hs_timeout
+	 * @throws TimeoutException
 	 */
-	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout) throws TimeoutException {
+	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
+			throws TimeoutException {
 		// TODO return solution
 		int[] local_nodes = local_hyp.nodes;
 		ArrayList<Tuple> local_edges = local_hyp.edges;
@@ -563,7 +669,7 @@ public class Hypergraph {
 		}
 		for (int i = 0; i < local_edges.size(); i++) {
 			// Check for timeout
-			if(System.currentTimeMillis() > hs_timeout) {
+			if (System.currentTimeMillis() > hs_timeout) {
 				throw new TimeoutException();
 			}
 			Tuple curr_edge = local_edges.get(i);
