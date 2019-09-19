@@ -153,4 +153,16 @@ public class Tuple {
 			}
 		}
 	}
+	
+	/**
+	 * Returns the number of elements in the given array that are not -1.
+	 */
+	public int actualSize() {
+		int counter = 0;
+		for (int e : this.elements) {
+			if (e != -1)
+				counter++;
+		}
+		return counter;
+	}
 }

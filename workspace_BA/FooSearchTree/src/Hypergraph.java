@@ -253,7 +253,7 @@ public class Hypergraph {
 	 * @throws TimeoutException
 	 * 
 	 */
-	public Hypergraph kernelizeUniform(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout)
+	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout)
 			throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout) {
@@ -264,15 +264,15 @@ public class Hypergraph {
 		if (k_par < 1)
 			return null;
 		// Init kernel as empty hypergraph
-		Hypergraph kernel = new Hypergraph(new int[local_hyp.nodes.length], new ArrayList<Tuple>());
+		Hypergraph kernel = new Hypergraph(new int[this.nodes.length], new ArrayList<Tuple>());
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
 
 		// Loop through {1,...,d}-uniform subgraphs
-		for (int curr_d = 1; curr_d <= local_hyp.d_par; curr_d++) {
+		for (int curr_d = 1; curr_d <= this.d_par; curr_d++) {
 			// Find curr_d-uniform subgraph
-			Hypergraph subgraph = getUniformSubgraph(local_hyp, curr_d);
+			Hypergraph subgraph = getUniformSubgraph(this, curr_d);
 			// Search first Sunflower
 			Sunflower sun = findSunflower(subgraph, k_par, mute);
 			if (sun == null) {
@@ -376,7 +376,7 @@ public class Hypergraph {
 		return kernel;
 	}
 
-	public Hypergraph kernelizeBevern(Hypergraph local_hyp, int k_par, boolean mute, long kernel_timeout)
+	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout)
 			throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout) {
@@ -391,7 +391,7 @@ public class Hypergraph {
 		HashMap<Tuple, HashSet<Integer>> used_verts_per_core = new HashMap<Tuple, HashSet<Integer>>();
 
 		// Init maps
-		for (Tuple edge : local_hyp.edges) {
+		for (Tuple edge : this.edges) {
 			ArrayList<Tuple> possible_cores_for_edge = getPossibleCores(edge);
 			for (Tuple possible_core : possible_cores_for_edge) {
 				petals_per_core.put(possible_core, 0);
@@ -400,7 +400,7 @@ public class Hypergraph {
 		}
 
 		// Kernelize
-		for (Tuple edge : local_hyp.edges) {
+		for (Tuple edge : this.edges) {
 			ArrayList<Tuple> possible_cores_for_edge = getPossibleCores(edge);
 			boolean no_core_more_than_k_petals = true;
 			for (Tuple possible_core : possible_cores_for_edge) {
@@ -513,7 +513,7 @@ public class Hypergraph {
 		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
 		// Collect edges
 		for (Tuple edge : local_hyp.edges) {
-			if (actualSize(edge.elements) == curr_d) {
+			if (edge.actualSize() == curr_d) {
 				res_edges.add(edge);
 			}
 		}
@@ -533,18 +533,6 @@ public class Hypergraph {
 		// Construct resulting graph
 		Hypergraph res_graph = new Hypergraph(res_nodes, res_edges);
 		return res_graph;
-	}
-
-	/**
-	 * Returns the number of elements in the given array that are not -1.
-	 */
-	private int actualSize(int[] elements) {
-		int counter = 0;
-		for (int e : elements) {
-			if (e != -1)
-				counter++;
-		}
-		return counter;
 	}
 
 	/**
@@ -661,19 +649,17 @@ public class Hypergraph {
 	public boolean hsSearchTree(int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
 			throws TimeoutException {
 		// TODO return solution
-		// check for empty (only -1) edges at the start
-		for (Tuple edge : this.edges) {
-			if (edge.onlyMinusOne()) {
-				System.out.println("! Empty edge."); // should not be reached
-				return false;
-			}
-		}
 		for (int i = 0; i < this.edges.size(); i++) {
 			// Check for timeout
 			if (System.currentTimeMillis() > hs_timeout) {
 				throw new TimeoutException();
 			}
+			// Check for empty (only -1) edges
 			Tuple curr_edge = this.edges.get(i);
+			if (curr_edge.onlyMinusOne()) {
+				System.out.println("! Empty edge.");
+				return false;
+			}
 			boolean edge_is_covered = false;
 			for (int j = 0; j < this.d_par; j++) {
 				if (sol.contains(curr_edge.elements[j])) {
@@ -726,7 +712,7 @@ public class Hypergraph {
 			// If this node is only contained in one edge
 			if (curr_occurences.size() == 1) {
 				// If this is a singleton edge
-				if (actualSize(curr_occurences.get(0).elements) == 1) {
+				if (curr_occurences.get(0).actualSize() == 1) {
 					// Remove edge, decrement k
 					this.edges.remove(curr_occurences.get(0));
 					this.dangling_nodes_removed++;

@@ -11,44 +11,44 @@ import java.util.HashSet;
 import java.util.concurrent.TimeoutException;
 
 public class Main {
-	// +++++++++++ Settings +++++++++++++	
+	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
 	static boolean call_from_cmd = false;
-	
+
 	// Set this to mute debug output
 	static boolean mute = true;
-	
+
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
 	static long timeout_value = 2000000;
-	
+
 	// Set to only test one graph
 	static boolean only_single_graph = true;
 	static String single_graph_name = "vc-exact_037.gr";
-	
+
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 91;
-	
+	static int stop_k = 93;
+
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 200;
-	
+
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
-	
+
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
-	
+
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
-	
+
 	// Select a dataset
-//	 static String current_dataset = "random_graphs";
-//	static String current_dataset = "vc_pos_graphs";
+	// static String current_dataset = "random_graphs";
+	// static String current_dataset = "vc_pos_graphs";
 	static String current_dataset = "pace";
-	
+
 	// ++++++++++ Settings done +++++++++
-	
+
 	public static void main(String[] args) {
 		// Get time stamp for the name of the result file
 		long main_init_time = System.currentTimeMillis();
@@ -75,12 +75,12 @@ public class Main {
 		File[] form_files = form_folder.listFiles();
 		Arrays.sort(graph_files, new Comparator<File>() {
 			@Override
-			public int compare(File o1, File o2) {
-				int o1_size = graphSize(o1.getAbsolutePath());
-				int o2_size = graphSize(o2.getAbsolutePath());
-				if (o1_size == o2_size)
+			public int compare(File file_1, File file_2) {
+				int graph_1_size = graphSize(file_1.getAbsolutePath());
+				int graph_2_size = graphSize(file_2.getAbsolutePath());
+				if (graph_1_size == graph_2_size)
 					return 0;
-				else if (o1_size > o2_size)
+				else if (graph_1_size > graph_2_size)
 					return 1;
 				else
 					return -1;
@@ -128,8 +128,8 @@ public class Main {
 				int curr_graph_size = graphSize(curr_graph_path);
 				// Only take graphs, that are small enough
 				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
-					if(only_single_graph) {
-						if(!curr_graph_path.contains(single_graph_name)) {
+					if (only_single_graph) {
+						if (!curr_graph_path.contains(single_graph_name)) {
 							continue;
 						}
 					}
@@ -171,7 +171,7 @@ public class Main {
 					printTime(time_passed);
 				}
 				// Graph is too big
-				else if(!mute) {
+				else if (!mute) {
 					System.out.println(
 							"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 				}
@@ -237,7 +237,8 @@ public class Main {
 			for (int j = 0; j < reduced_graphs.size(); j++) {
 				// Prevent adding multiple timeouts for single pipeline
 				boolean timeout_noted = false;
-				// Timeout happened during reduction or during previous kernelization with smaller k
+				// Timeout happened during reduction or during previous kernelization with
+				// smaller k
 				if (reduced_graphs.get(j) == null || timed_out_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
 					kernel_times.add((double) 0);
 					kernel_edges.add((double) -1);
@@ -274,26 +275,28 @@ public class Main {
 					int updated_k_par = k_par;
 					int k_decrease = 0;
 					try {
-						if(use_bevern_kernel) {
-							curr_kernel = curr_graph.kernelizeBevern(curr_graph, k_par, mute, kernel_timeout);							
+						if (use_bevern_kernel) {
+							curr_kernel = curr_graph.kernelizeBevern(k_par, mute, kernel_timeout);
 						} else {
-							curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);
+							curr_kernel = curr_graph.kernelizeUniform(k_par, mute, kernel_timeout);
 							// Remove dangling nodes and singletons
 							// TODO this does not work yet
-//							boolean done = false;
-//							while(updated_k_par > 0 && !done) {
-//								System.out.println("New k_par:" + updated_k_par);
-//								curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
-//								k_decrease += curr_kernel.dangling_nodes_removed;
-//								if(curr_kernel.dangling_nodes_removed == 0) done = true;
-//								updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
-//							}
+							// boolean done = false;
+							// while(updated_k_par > 0 && !done) {
+							// System.out.println("New k_par:" + updated_k_par);
+							// curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
+							// k_decrease += curr_kernel.dangling_nodes_removed;
+							// if(curr_kernel.dangling_nodes_removed == 0) done = true;
+							// updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
+							// }
 						}
 					} catch (TimeoutException e) {
 						long emergency_stop = System.currentTimeMillis();
-						double additional_time = (double)((double)(emergency_stop - start_time)/1000);
-						System.out.println("! Kernelize timed out after additional " + String.format("%.3f",additional_time) + " sec.");
-						if(timeout_noted) return;
+						double additional_time = (double) ((double) (emergency_stop - start_time) / 1000);
+						System.out.println("! Kernelize timed out after additional "
+								+ String.format("%.3f", additional_time) + " sec.");
+						if (timeout_noted)
+							return;
 						if (!timeout_noted) {
 							pipe_2_timeouts.add(true);
 							timed_out_graphs.add(curr_graph.hypergraph_name);
@@ -325,6 +328,19 @@ public class Main {
 						kernel_edges.add((double) curr_kernel.edges.size());
 						kernel_nodes.add((double) curr_kernel.nodes.length);
 						printTime(kernel_time_passed);
+						// Sort edges of current_kernel to make the SearchTree faster
+						curr_kernel.edges.sort(new Comparator<Tuple>() {
+							@Override
+							public int compare(Tuple edge_1, Tuple edge_2) {
+								if (edge_1.actualSize() > edge_2.actualSize()) {
+									return 1;
+								} else if (edge_1.actualSize() < edge_2.actualSize()) {
+									return -1;
+								} else {
+									return 0;
+								}
+							}
+						});
 						// HS-SearchTree
 						System.out.print("> HS-SearchTree ");
 						start_time = System.currentTimeMillis();
@@ -345,8 +361,9 @@ public class Main {
 							System.out.println("  result: " + hs_result);
 						} catch (TimeoutException e) {
 							long emergency_stop = System.currentTimeMillis();
-							double additional_time = (double)((double)(emergency_stop - start_time)/1000);
-							System.out.println("\n! HS-SearchTree timed out after additional " + String.format("%.3f",additional_time) + " sec.");
+							double additional_time = (double) ((double) (emergency_stop - start_time) / 1000);
+							System.out.println("\n! HS-SearchTree timed out after additional "
+									+ String.format("%.3f", additional_time) + " sec.");
 							if (!timeout_noted) {
 								pipe_2_timeouts.add(true);
 								timed_out_graphs.add(curr_graph.hypergraph_name);
@@ -417,8 +434,8 @@ public class Main {
 			double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 			double pipe_2_sum = 0;
 			double curr_ke_res = ke_results.get(i) ? 1 : 0;
-			// pipe_2_sum should be -1 when the instance timed out or is solved 
-			if(timeout_2 == 1.0 || curr_ke_res == 1.0) {
+			// pipe_2_sum should be -1 when the instance timed out or is solved
+			if (timeout_2 == 1.0 || curr_ke_res == 1.0) {
 				pipe_2_sum = -1;
 			} else {
 				pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
@@ -433,17 +450,17 @@ public class Main {
 						+ ";" + reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
 						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";"
 						+ kernel_nodes.get(i) + ";" + kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index)
-						+ ";" + reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
+						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index) + ";"
+						+ reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
 			}
 			// Without ST
 			else {
 				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + "-1" + ";" + pipe_2_sum + ";"
 						+ reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + ";"
 						+ curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";"
-						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index)
-						+ ";" + reduced_edges.get(k_indep_index) + ";" + "-1" + ";" + timeout_2 + "\n");
+						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";" + dens_list.get(k_indep_index)
+						+ ";" + reduced_nodes.get(k_indep_index) + ";" + reduced_edges.get(k_indep_index) + ";" + "-1"
+						+ ";" + timeout_2 + "\n");
 			}
 
 			// Prepare next iteration of k and save to csv
@@ -453,8 +470,8 @@ public class Main {
 						+ stop_k + ".csv";
 				writeToCsv(write_buffer, file_name, call_from_cmd);
 				write_buffer.clear();
-				// If all graphs are timed out, leave 
-				if(all_graphs_timed_out) {
+				// If all graphs are timed out, leave
+				if (all_graphs_timed_out) {
 					break;
 				}
 				// go to next k
