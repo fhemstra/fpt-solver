@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeoutException;
 
 public class Hypergraph {
@@ -12,6 +14,7 @@ public class Hypergraph {
 	boolean printGraphs = false;
 	int d_par;
 	int[] nodes;
+	int dangling_nodes_removed = 0;
 	// A hyperedge is a Tuple, which contains an array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 
@@ -545,7 +548,7 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns the given array, but with u removed.
+	 * Returns the given array, but with u replaced by -1.
 	 */
 	private int[] arrWithout(int[] elements, int u) {
 		int[] res = elements.clone();
@@ -655,26 +658,24 @@ public class Hypergraph {
 	 * @param hs_timeout
 	 * @throws TimeoutException
 	 */
-	public boolean hsSearchTree(Hypergraph local_hyp, int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
+	public boolean hsSearchTree(int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
 			throws TimeoutException {
 		// TODO return solution
-		int[] local_nodes = local_hyp.nodes;
-		ArrayList<Tuple> local_edges = local_hyp.edges;
-		// check for empty edges at the start
-		for (Tuple edge : local_edges) {
-			if (edge.elements.length == 0) {
-				System.out.println("Empty edge."); // should not be reached
+		// check for empty (only -1) edges at the start
+		for (Tuple edge : this.edges) {
+			if (edge.onlyMinusOne()) {
+				System.out.println("! Empty edge."); // should not be reached
 				return false;
 			}
 		}
-		for (int i = 0; i < local_edges.size(); i++) {
+		for (int i = 0; i < this.edges.size(); i++) {
 			// Check for timeout
 			if (System.currentTimeMillis() > hs_timeout) {
 				throw new TimeoutException();
 			}
-			Tuple curr_edge = local_edges.get(i);
+			Tuple curr_edge = this.edges.get(i);
 			boolean edge_is_covered = false;
-			for (int j = 0; j < local_hyp.d_par; j++) {
+			for (int j = 0; j < this.d_par; j++) {
 				if (sol.contains(curr_edge.elements[j])) {
 					edge_is_covered = true;
 				}
@@ -683,7 +684,7 @@ public class Hypergraph {
 				boolean flag = false;
 				if (sol.size() < k_par) {
 					// branch into d branches, adding every element of the edge
-					for (int j = 0; j < local_hyp.d_par; j++) {
+					for (int j = 0; j < this.d_par; j++) {
 						// Don't add -1
 						if (curr_edge.elements[j] == -1)
 							continue;
@@ -692,7 +693,7 @@ public class Hypergraph {
 						// print
 						if (!mute)
 							System.out.print("  Sol size: " + sol.size() + "\r");
-						flag = flag || hsSearchTree(local_hyp, k_par, sol, mute, hs_timeout);
+						flag = flag || hsSearchTree(k_par, sol, mute, hs_timeout);
 						if (flag) {
 							return true;
 						} else {
@@ -708,4 +709,87 @@ public class Hypergraph {
 		}
 		return true;
 	}
+
+	public void removeDanglingNodesAndSingletons(boolean mute, long kernel_timeout)
+			throws TimeoutException {
+		// Check for timeout
+		if (System.currentTimeMillis() > kernel_timeout) {
+			throw new TimeoutException();
+		}
+		HashMap<Integer, ArrayList<Tuple>> node_occurences = this.getNodeOccurences();
+		// Check for dangling nodes and singletons
+		Iterator<Entry<Integer, ArrayList<Tuple>>> it = node_occurences.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<Integer, ArrayList<Tuple>> pair = it.next();
+			int curr_node = pair.getKey();
+			ArrayList<Tuple> curr_occurences = pair.getValue();
+			// If this node is only contained in one edge
+			if (curr_occurences.size() == 1) {
+				// If this is a singleton edge
+				if (actualSize(curr_occurences.get(0).elements) == 1) {
+					// Remove edge, decrement k
+					this.edges.remove(curr_occurences.get(0));
+					this.dangling_nodes_removed++;
+					System.out.println("Edge");
+				}
+				// There are other nodes in this edge
+				else {
+					// Remove this node
+					this.nodes = arrWithout(this.nodes, curr_node);
+					System.out.println("Node " + curr_node);
+					// Now edges can contain deleted nodes -> update edges
+					this.edges = update_edges(this.nodes, this.edges);
+				}
+			}
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
+
+	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
+		HashMap<Integer, ArrayList<Tuple>> node_occurences = new HashMap<Integer, ArrayList<Tuple>>();
+		// Fill map
+		for (Tuple edge : this.edges) {
+			for (int node : edge.elements) {
+				if(node == -1) {
+					continue;
+				}
+				// Update current List of occurences
+				ArrayList<Tuple> curr_list = node_occurences.get(node);
+				if (curr_list == null) {
+					ArrayList<Tuple> list = new ArrayList<Tuple>();
+					list.add(edge);
+					node_occurences.put(node, list);
+				} else {
+					curr_list.add(edge);
+					node_occurences.put(node, curr_list);
+				}
+			}
+		}
+		return node_occurences;
+	}
+
+	private ArrayList<Tuple> update_edges(int[] local_nodes, ArrayList<Tuple> local_edges) {
+		ArrayList<Tuple> updated_edges = new ArrayList<>();
+		// Fill node set
+		HashSet<Integer> node_set = new HashSet<Integer>();
+		for(int node : local_nodes) {
+			node_set.add(node);
+		}
+		// Prevent the empty edge from being removed
+		node_set.add(-1);
+		// Check edges for deleted nodes
+		for(Tuple edge : local_edges) {
+			for(int edge_node : edge.elements) {
+				if(!node_set.contains(edge_node)) {
+					edge.removeElement(edge_node);
+				}
+			}
+			// Add edge, also if it is empty, // TODO Do this properly
+			if(!updated_edges.contains(edge) || edge.onlyMinusOne()) {
+				updated_edges.add(edge);				
+			}
+		}
+		return updated_edges;
+	}
+
 }

@@ -145,4 +145,12 @@ public class Tuple {
 		}
 		return false;
 	}
+
+	public void removeElement(int edge_node) {
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i] == edge_node) {
+				elements[i] = -1;
+			}
+		}
+	}
 }

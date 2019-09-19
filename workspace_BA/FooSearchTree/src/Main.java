@@ -13,31 +13,31 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++	
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 	
 	// Set this to mute debug output
 	static boolean mute = true;
 	
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
-	static long timeout_value = 1800000;
+	static long timeout_value = 2000000;
 	
 	// Set to only test one graph
 	static boolean only_single_graph = true;
-	static String single_graph_name = "vc-exact_001.gr";
+	static String single_graph_name = "vc-exact_037.gr";
 	
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 200;
+	static int stop_k = 91;
 	
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = -1;
+	static int max_graph_size = 200;
 	
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
 	
 	// Set to decide which kernel to use
-	static boolean use_bevern_kernel = true;
+	static boolean use_bevern_kernel = false;
 	
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
@@ -171,7 +171,7 @@ public class Main {
 					printTime(time_passed);
 				}
 				// Graph is too big
-				else {
+				else if(!mute) {
 					System.out.println(
 							"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 				}
@@ -271,11 +271,23 @@ public class Main {
 						kernel_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
 					}
 					// Kernelize
+					int updated_k_par = k_par;
+					int k_decrease = 0;
 					try {
 						if(use_bevern_kernel) {
 							curr_kernel = curr_graph.kernelizeBevern(curr_graph, k_par, mute, kernel_timeout);							
 						} else {
-							curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);							
+							curr_kernel = curr_graph.kernelizeUniform(curr_graph, k_par, mute, kernel_timeout);
+							// Remove dangling nodes and singletons
+							// TODO this does not work yet
+//							boolean done = false;
+//							while(updated_k_par > 0 && !done) {
+//								System.out.println("New k_par:" + updated_k_par);
+//								curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
+//								k_decrease += curr_kernel.dangling_nodes_removed;
+//								if(curr_kernel.dangling_nodes_removed == 0) done = true;
+//								updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
+//							}
 						}
 					} catch (TimeoutException e) {
 						long emergency_stop = System.currentTimeMillis();
@@ -314,7 +326,7 @@ public class Main {
 						kernel_nodes.add((double) curr_kernel.nodes.length);
 						printTime(kernel_time_passed);
 						// HS-SearchTree
-						System.out.print("> HS-SearchTree");
+						System.out.print("> HS-SearchTree ");
 						start_time = System.currentTimeMillis();
 						boolean hs_result = false;
 						// Set timer
@@ -326,7 +338,7 @@ public class Main {
 						}
 						// Start HS-SearchTree
 						try {
-							hs_result = curr_kernel.hsSearchTree(curr_kernel, k_par, new ArrayList<Integer>(), mute,
+							hs_result = curr_kernel.hsSearchTree(updated_k_par, new ArrayList<Integer>(), mute,
 									hs_timeout);
 							if (!mute)
 								System.out.println("\n");
