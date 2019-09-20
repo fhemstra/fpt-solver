@@ -13,13 +13,13 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 
 	// Set this to mute debug output
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
-	static long timeout_value = 2000000;
+	static long timeout_value = 300000;
 
 	// Set to only test one graph
 	static boolean only_single_graph = true;
@@ -35,6 +35,9 @@ public class Main {
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
+	
+	// Set this to use heuristics on the result of kernelization to improve HS ST runtime
+	static boolean use_dangling_heuristic = true;
 
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
@@ -270,9 +273,9 @@ public class Main {
 				
 				// Kernelization
 				else {
-					Hypergraph curr_graph = reduced_graphs.get(j);
-					System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = "
-							+ curr_graph.d_par);
+					Hypergraph curr_reduced_graph = reduced_graphs.get(j);
+					System.out.println("> Kernelization, " + curr_reduced_graph.hypergraph_name + ", k = " + k_par + ", d = "
+							+ curr_reduced_graph.d_par);
 					
 					// Set timer
 					Hypergraph curr_kernel = null;
@@ -288,19 +291,22 @@ public class Main {
 					int k_decrease = 0;
 					try {
 						if (use_bevern_kernel) {
-							curr_kernel = curr_graph.kernelizeBevern(k_par, mute, kernel_timeout);
+							curr_kernel = curr_reduced_graph.kernelizeBevern(k_par, mute, kernel_timeout);
 						} else {
-							curr_kernel = curr_graph.kernelizeUniform(k_par, mute, kernel_timeout);
+							curr_kernel = curr_reduced_graph.kernelizeUniform(k_par, mute, kernel_timeout);
 							// Remove dangling nodes and singletons
 							// TODO this does not work yet
-							// boolean done = false;
-							// while(updated_k_par > 0 && !done) {
-							// System.out.println("New k_par:" + updated_k_par);
-							// curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
-							// k_decrease += curr_kernel.dangling_nodes_removed;
-							// if(curr_kernel.dangling_nodes_removed == 0) done = true;
-							// updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
-							// }
+							if(use_dangling_heuristic) {
+								boolean done = false;
+								while (updated_k_par > 0 && !done) {
+									System.out.println("New k_par:" + updated_k_par);
+									curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
+									k_decrease += curr_kernel.dangling_nodes_removed;
+									if (curr_kernel.dangling_nodes_removed == 0)
+										done = true;
+									updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
+								}
+							}
 						}
 					} catch (TimeoutException e) {
 						long timeout_stop = System.currentTimeMillis();
@@ -311,23 +317,23 @@ public class Main {
 							return;
 						if (!timeout_noted) {
 							pipe_2_timeouts.add(true);
-							timed_out_graphs.add(curr_graph.hypergraph_name);
+							timed_out_graphs.add(curr_reduced_graph.hypergraph_name);
 							timeout_noted = true;
 						}
 					}
 					stop_time = System.currentTimeMillis();
 					
 					// Prints
-					if (!mute && curr_graph != null) {
-						System.out.println("  hyp edges:     " + curr_graph.edges.size());
-						System.out.println("  hyp nodes:     " + curr_graph.nodes.length);
-						int edges_removed = curr_graph.edges.size() - curr_kernel.edges.size();
+					if (!mute && curr_reduced_graph != null) {
+						System.out.println("  hyp edges:     " + curr_reduced_graph.edges.size());
+						System.out.println("  hyp nodes:     " + curr_reduced_graph.nodes.length);
+						int edges_removed = curr_reduced_graph.edges.size() - curr_kernel.edges.size();
 						System.out.println("  edges removed: " + edges_removed);
-						int nodes_removed = curr_graph.nodes.length - curr_kernel.nodes.length;
+						int nodes_removed = curr_reduced_graph.nodes.length - curr_kernel.nodes.length;
 						System.out.println("  nodes removed: " + nodes_removed);
 						System.out.println("  kernel edges:  " + curr_kernel.edges.size());
 						System.out.println("  kernel nodes:  " + curr_kernel.nodes.length);
-						long sf_lemma_boundary = factorial(curr_graph.d_par) * (long) Math.pow(k_par, curr_graph.d_par);
+						long sf_lemma_boundary = factorial(curr_reduced_graph.d_par) * (long) Math.pow(k_par, curr_reduced_graph.d_par);
 						System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 					}
 					
@@ -384,7 +390,7 @@ public class Main {
 									+ String.format("%.3f", additional_time) + " sec.");
 							if (!timeout_noted) {
 								pipe_2_timeouts.add(true);
-								timed_out_graphs.add(curr_graph.hypergraph_name);
+								timed_out_graphs.add(curr_reduced_graph.hypergraph_name);
 								timeout_noted = true;
 							}
 						}
@@ -399,7 +405,7 @@ public class Main {
 						printTime(hs_time_passed);
 						if (hs_result) {
 							// Note that the current graph has been solved
-							solved_graphs.add(curr_graph.hypergraph_name);
+							solved_graphs.add(curr_reduced_graph.hypergraph_name);
 						}
 					} // End of HS Search
 					

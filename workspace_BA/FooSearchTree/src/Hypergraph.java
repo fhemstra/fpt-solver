@@ -272,7 +272,7 @@ public class Hypergraph {
 		// Loop through {1,...,d}-uniform subgraphs
 		for (int curr_d = 1; curr_d <= this.d_par; curr_d++) {
 			// Find curr_d-uniform subgraph
-			Hypergraph subgraph = getUniformSubgraph(this, curr_d);
+			Hypergraph subgraph = this.getUniformSubgraph(curr_d);
 			// Search first Sunflower
 			Sunflower sun = findSunflower(subgraph, k_par, mute);
 			if (sun == null) {
@@ -509,12 +509,16 @@ public class Hypergraph {
 	/**
 	 * Returns a maximal d-uniform subgraph of the given hypergraph.
 	 */
-	private Hypergraph getUniformSubgraph(Hypergraph local_hyp, int curr_d) {
+	private Hypergraph getUniformSubgraph(int curr_d) {
 		ArrayList<Tuple> res_edges = new ArrayList<Tuple>();
-		// Collect edges
-		for (Tuple edge : local_hyp.edges) {
-			if (edge.actualSize() == curr_d) {
-				res_edges.add(edge);
+		// Copy edges
+		for (Tuple edge : this.edges) {
+			try {
+				res_edges.add(edge.copyThis());
+			} catch (Exception e) {
+				System.out.println("Copy Tuple broke.");
+				e.printStackTrace();
+				return null;
 			}
 		}
 		// Collect nodes from new edge set
@@ -712,9 +716,10 @@ public class Hypergraph {
 			// If this node is only contained in one edge
 			if (curr_occurences.size() == 1) {
 				// If this is a singleton edge
-				if (curr_occurences.get(0).actualSize() == 1) {
+				Tuple curr_edge = curr_occurences.get(0); 
+				if (curr_edge.actualSize() == 1) {
 					// Remove edge, decrement k
-					this.edges.remove(curr_occurences.get(0));
+					this.edges.remove(curr_edge);
 					this.dangling_nodes_removed++;
 					System.out.println("Edge");
 				}
