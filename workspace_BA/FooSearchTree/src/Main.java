@@ -13,22 +13,22 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 
 	// Set this to mute debug output
 	static boolean mute = true;
 
-	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000
-	static long timeout_value = 300000;
+	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
+	static long timeout_value = 60000;
 
 	// Set to only test one graph
-	static boolean only_single_graph = true;
+	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_037.gr";
 
 	// Set range of k
-	static int start_k = 26;
+	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 91;
+	static int stop_k = 50;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 200;
