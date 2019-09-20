@@ -28,7 +28,7 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 93;
+	static int stop_k = 91;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 200;
@@ -37,7 +37,7 @@ public class Main {
 	static boolean skip_search_tree = true;
 	
 	// Set this to use heuristics on the result of kernelization to improve HS ST runtime
-	static boolean use_dangling_heuristic = true;
+	static boolean use_heuristics = false;
 
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
@@ -296,13 +296,14 @@ public class Main {
 							curr_kernel = curr_reduced_graph.kernelizeUniform(k_par, mute, kernel_timeout);
 							// Remove dangling nodes and singletons
 							// TODO this does not work yet
-							if(use_dangling_heuristic) {
+							if(use_heuristics) {
 								boolean done = false;
 								while (updated_k_par > 0 && !done) {
 									System.out.println("New k_par:" + updated_k_par);
-									curr_kernel.removeDanglingNodesAndSingletons(mute, kernel_timeout);
-									k_decrease += curr_kernel.dangling_nodes_removed;
-									if (curr_kernel.dangling_nodes_removed == 0)
+									int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
+									int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
+									k_decrease += singletons_removed;
+									if (singletons_removed == 0)
 										done = true;
 									updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
 								}

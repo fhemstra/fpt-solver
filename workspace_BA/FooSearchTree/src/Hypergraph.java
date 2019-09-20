@@ -14,7 +14,6 @@ public class Hypergraph {
 	boolean printGraphs = false;
 	int d_par;
 	int[] nodes;
-	int dangling_nodes_removed = 0;
 	// A hyperedge is a Tuple, which contains an array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 
@@ -253,8 +252,7 @@ public class Hypergraph {
 	 * @throws TimeoutException
 	 * 
 	 */
-	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout)
-			throws TimeoutException {
+	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout) throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout) {
 			throw new TimeoutException();
@@ -376,8 +374,7 @@ public class Hypergraph {
 		return kernel;
 	}
 
-	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout)
-			throws TimeoutException {
+	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout) throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout) {
 			throw new TimeoutException();
@@ -700,12 +697,12 @@ public class Hypergraph {
 		return true;
 	}
 
-	public void removeDanglingNodesAndSingletons(boolean mute, long kernel_timeout)
-			throws TimeoutException {
+	public int removeDanglingNodes(boolean mute, long kernel_timeout) throws TimeoutException {
 		// Check for timeout
 		if (System.currentTimeMillis() > kernel_timeout) {
 			throw new TimeoutException();
 		}
+		int node_counter = 0;
 		HashMap<Integer, ArrayList<Tuple>> node_occurences = this.getNodeOccurences();
 		// Check for dangling nodes and singletons
 		Iterator<Entry<Integer, ArrayList<Tuple>>> it = node_occurences.entrySet().iterator();
@@ -715,25 +712,34 @@ public class Hypergraph {
 			ArrayList<Tuple> curr_occurences = pair.getValue();
 			// If this node is only contained in one edge
 			if (curr_occurences.size() == 1) {
-				// If this is a singleton edge
-				Tuple curr_edge = curr_occurences.get(0); 
-				if (curr_edge.actualSize() == 1) {
-					// Remove edge, decrement k
-					this.edges.remove(curr_edge);
-					this.dangling_nodes_removed++;
-					System.out.println("Edge");
-				}
+				Tuple curr_edge = curr_occurences.get(0);
 				// There are other nodes in this edge
-				else {
+				if (curr_edge.actualSize() > 1) {
 					// Remove this node
 					this.nodes = arrWithout(this.nodes, curr_node);
-					System.out.println("Node " + curr_node);
+					node_counter++;
 					// Now edges can contain deleted nodes -> update edges
 					this.edges = update_edges(this.nodes, this.edges);
 				}
 			}
 			it.remove(); // avoids a ConcurrentModificationException
 		}
+		return node_counter;
+	}
+
+	public int removeSingletons(boolean mute, long kernel_timeout) {
+		int singleton_counter = 0;
+		ArrayList<Tuple> edges_to_remove = new ArrayList<Tuple>();
+		for (Tuple edge : this.edges) {
+			if (edge.actualSize() == 1) {
+				edges_to_remove.add(edge);
+				singleton_counter++;
+			}
+		}
+		for(Tuple edge : edges_to_remove) {
+			this.edges.remove(edge);
+		}
+		return singleton_counter;
 	}
 
 	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
@@ -741,7 +747,7 @@ public class Hypergraph {
 		// Fill map
 		for (Tuple edge : this.edges) {
 			for (int node : edge.elements) {
-				if(node == -1) {
+				if (node == -1) {
 					continue;
 				}
 				// Update current List of occurences
@@ -759,25 +765,29 @@ public class Hypergraph {
 		return node_occurences;
 	}
 
+	/**
+	 * Returns a set of edges only containing the specified nodes. Edges containing
+	 * nodes, which have been deleted will shrink by doing this.
+	 */
 	private ArrayList<Tuple> update_edges(int[] local_nodes, ArrayList<Tuple> local_edges) {
 		ArrayList<Tuple> updated_edges = new ArrayList<>();
 		// Fill node set
 		HashSet<Integer> node_set = new HashSet<Integer>();
-		for(int node : local_nodes) {
+		for (int node : local_nodes) {
 			node_set.add(node);
 		}
 		// Prevent the empty edge from being removed
 		node_set.add(-1);
 		// Check edges for deleted nodes
-		for(Tuple edge : local_edges) {
-			for(int edge_node : edge.elements) {
-				if(!node_set.contains(edge_node)) {
+		for (Tuple edge : local_edges) {
+			for (int edge_node : edge.elements) {
+				if (!node_set.contains(edge_node)) {
 					edge.removeElement(edge_node);
 				}
 			}
 			// Add edge, also if it is empty, // TODO Do this properly
-			if(!updated_edges.contains(edge) || edge.onlyMinusOne()) {
-				updated_edges.add(edge);				
+			if (!updated_edges.contains(edge) || edge.onlyMinusOne()) {
+				updated_edges.add(edge);
 			}
 		}
 		return updated_edges;
