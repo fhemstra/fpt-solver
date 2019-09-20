@@ -31,7 +31,7 @@ public class Main {
 	static int stop_k = 50;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 200;
+	static int max_graph_size = -1;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
