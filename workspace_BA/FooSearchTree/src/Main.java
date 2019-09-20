@@ -186,22 +186,26 @@ public class Main {
 				pipe_1_time_used_per_instance.add((long) 0);
 			}
 		}
+		
 		// Iterate over k
 		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 			System.out.println("--- k = " + k_par + " ---");
+			
 			// Pipeline 1: Solve formulas with SearchTree
 			if (!skip_search_tree) {
 				for (int j = 0; j < forms.size(); j++) {
 					Formula curr_form = forms.get(j);
 					System.out.println(
 							"> SearchTree, " + curr_form.formula_name + ", " + curr_form.graph_name + ", k = " + k_par);
-					int[] start_assignment = new int[curr_form.c_par];
+					
 					// Generate first assignment
+					int[] start_assignment = new int[curr_form.c_par];
 					for (int i = 0; i < curr_form.c_par; i++) {
 						start_assignment[i] = curr_form.universe[0];
 					}
-					start_time = System.currentTimeMillis();
+					
 					// Set timer
+					start_time = System.currentTimeMillis();
 					if (!accumulate_time_over_k) {
 						st_timeout = start_time + timeout_value;
 					} else {
@@ -220,11 +224,13 @@ public class Main {
 					stop_time = System.currentTimeMillis();
 					if (!mute)
 						System.out.println();
+					
 					// Process results
 					System.out.println("  result: " + st_result);
 					search_tree_results.add(st_result);
 					double time_passed = (double) (stop_time - start_time) / (double) 1000;
 					search_tree_times.add(time_passed);
+					
 					// Update time passed
 					pipe_1_time_used_per_instance.set(j,
 							pipe_1_time_used_per_instance.get(j) + (stop_time - start_time));
@@ -237,6 +243,7 @@ public class Main {
 			for (int j = 0; j < reduced_graphs.size(); j++) {
 				// Prevent adding multiple timeouts for single pipeline
 				boolean timeout_noted = false;
+				
 				// Timeout happened during reduction or during previous kernelization with
 				// smaller k
 				if (reduced_graphs.get(j) == null || timed_out_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
@@ -250,6 +257,7 @@ public class Main {
 						timeout_noted = true;
 					}
 				}
+				
 				// Graph has already been solved and we don't want to keep solving for bigger k
 				else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
 					// Make empty entries and go to next graph
@@ -258,11 +266,14 @@ public class Main {
 					kernel_nodes.add((double) -1);
 					hs_times.add((double) 0);
 					ke_results.add(true); // true for already solved
-				} else {
-					// Kernelization
+				}
+				
+				// Kernelization
+				else {
 					Hypergraph curr_graph = reduced_graphs.get(j);
 					System.out.println("> Kernelization, " + curr_graph.hypergraph_name + ", k = " + k_par + ", d = "
 							+ curr_graph.d_par);
+					
 					// Set timer
 					Hypergraph curr_kernel = null;
 					start_time = System.currentTimeMillis();
@@ -271,6 +282,7 @@ public class Main {
 					} else {
 						kernel_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
 					}
+					
 					// Kernelize
 					int updated_k_par = k_par;
 					int k_decrease = 0;
@@ -291,8 +303,8 @@ public class Main {
 							// }
 						}
 					} catch (TimeoutException e) {
-						long emergency_stop = System.currentTimeMillis();
-						double additional_time = (double) ((double) (emergency_stop - start_time) / 1000);
+						long timeout_stop = System.currentTimeMillis();
+						double additional_time = (double) ((double) (timeout_stop - start_time) / 1000);
 						System.out.println("! Kernelize timed out after additional "
 								+ String.format("%.3f", additional_time) + " sec.");
 						if (timeout_noted)
@@ -304,6 +316,7 @@ public class Main {
 						}
 					}
 					stop_time = System.currentTimeMillis();
+					
 					// Prints
 					if (!mute && curr_graph != null) {
 						System.out.println("  hyp edges:     " + curr_graph.edges.size());
@@ -317,17 +330,20 @@ public class Main {
 						long sf_lemma_boundary = factorial(curr_graph.d_par) * (long) Math.pow(k_par, curr_graph.d_par);
 						System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 					}
+					
 					// Note time used
 					double kernel_time_passed = (double) (stop_time - start_time) / (double) 1000;
 					kernel_times.add(kernel_time_passed);
 					pipe_2_time_used_per_instance.set(j,
 							pipe_2_time_used_per_instance.get(j) + (stop_time - start_time));
-					// No timeout, kernelization successful
+					
+					// If kernelization was successful, go to HS Search
 					if (curr_kernel != null) {
 						// Add results
 						kernel_edges.add((double) curr_kernel.edges.size());
 						kernel_nodes.add((double) curr_kernel.nodes.length);
 						printTime(kernel_time_passed);
+						
 						// Sort edges of current_kernel to make the SearchTree faster
 						curr_kernel.edges.sort(new Comparator<Tuple>() {
 							@Override
@@ -341,17 +357,19 @@ public class Main {
 								}
 							}
 						});
+						
 						// HS-SearchTree
 						System.out.print("> HS-SearchTree ");
-						start_time = System.currentTimeMillis();
 						boolean hs_result = false;
 						// Set timer
+						start_time = System.currentTimeMillis();
 						if (!accumulate_time_over_k) {
 							hs_timeout = start_time + reduction_times.get(j).longValue()
 									+ kernel_times.get(j).longValue() + timeout_value;
 						} else {
 							hs_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
 						}
+						
 						// Start HS-SearchTree
 						try {
 							hs_result = curr_kernel.hsSearchTree(updated_k_par, new ArrayList<Integer>(), mute,
@@ -371,6 +389,7 @@ public class Main {
 							}
 						}
 						stop_time = System.currentTimeMillis();
+						
 						// Add results
 						ke_results.add(hs_result);
 						double hs_time_passed = (double) (stop_time - start_time) / (double) 1000;
@@ -382,7 +401,8 @@ public class Main {
 							// Note that the current graph has been solved
 							solved_graphs.add(curr_graph.hypergraph_name);
 						}
-					}
+					} // End of HS Search
+					
 					// Timeout happened during kernelization
 					else {
 						kernel_edges.add((double) -1);
@@ -390,30 +410,31 @@ public class Main {
 						ke_results.add(false);
 						hs_times.add((double) 0);
 					}
-				}
+				} // End of Kernelization
 				// If nothing timed out, note false
 				if (!timeout_noted) {
 					pipe_2_timeouts.add(false);
 					timeout_noted = true;
 				}
-			}
-		}
+			} // End of Pipeline 2
+		} // End of loop through k
 
 		// Collect and save results
 		if (!mute)
 			System.out.println("\n------------------------------------");
-		int number_of_results = Math.max(search_tree_results.size(), ke_results.size()); // TODO wir iterieren nicht
-																							// ganz weit genug
+		int number_of_results = Math.max(search_tree_results.size(), ke_results.size());
 		// Init write buffer
 		ArrayList<String> write_buffer = new ArrayList<String>();
 		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges;pipe_1_timeout;pipe_2_timeout\n";
 		write_buffer.add(headline);
 		int curr_k_par = start_k;
 		boolean all_graphs_timed_out = true;
+		
 		// Loop over all results
 		for (int i = 0; i < number_of_results; i++) {
 			// Formula and Reduction are the same for every k
 			int k_indep_index = i % forms.size();
+			
 			// Prints
 			if (!mute) {
 				System.out
@@ -441,6 +462,7 @@ public class Main {
 				pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 				all_graphs_timed_out = false;
 			}
+			
 			// With ST
 			if (!skip_search_tree) {
 				double timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
@@ -453,6 +475,7 @@ public class Main {
 						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index) + ";"
 						+ reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
 			}
+			
 			// Without ST
 			else {
 				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + "-1" + ";" + pipe_2_sum + ";"
