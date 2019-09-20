@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 
 	// Set this to mute debug output
 	static boolean mute = true;
@@ -26,7 +26,7 @@ public class Main {
 	static String single_graph_name = "vc-exact_037.gr";
 
 	// Set range of k
-	static int start_k = 1;
+	static int start_k = 26;
 	static int k_increment = 1;
 	static int stop_k = 91;
 
@@ -37,7 +37,7 @@ public class Main {
 	static boolean skip_search_tree = true;
 	
 	// Set this to use heuristics on the result of kernelization to improve HS ST runtime
-	static boolean use_heuristics = false;
+	static boolean use_heuristics = true;
 
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;

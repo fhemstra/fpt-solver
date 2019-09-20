@@ -710,15 +710,19 @@ public class Hypergraph {
 			Entry<Integer, ArrayList<Tuple>> pair = it.next();
 			int curr_node = pair.getKey();
 			ArrayList<Tuple> curr_occurences = pair.getValue();
+			// Remove any isolated nodes
+			if (curr_occurences.size() == 0) {
+				this.nodes = arrWithout(this.nodes, curr_node);
+			}
 			// If this node is only contained in one edge
-			if (curr_occurences.size() == 1) {
+			else if (curr_occurences.size() == 1) {
 				Tuple curr_edge = curr_occurences.get(0);
-				// There are other nodes in this edge
+				// If there are other nodes in this edge
 				if (curr_edge.actualSize() > 1) {
 					// Remove this node
 					this.nodes = arrWithout(this.nodes, curr_node);
 					node_counter++;
-					// Now edges can contain deleted nodes -> update edges
+					// Now this edge contains a deleted node -> update edges
 					this.edges = update_edges(this.nodes, this.edges);
 				}
 			}
@@ -737,6 +741,7 @@ public class Hypergraph {
 			}
 		}
 		for(Tuple edge : edges_to_remove) {
+			// Remove edge
 			this.edges.remove(edge);
 		}
 		return singleton_counter;
