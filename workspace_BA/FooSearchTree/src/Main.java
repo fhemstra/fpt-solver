@@ -165,7 +165,7 @@ public class Main {
 					} else {
 						reduced_graphs.add(reduction_result);
 						reduced_edges.add((double) reduction_result.edges.size());
-						reduced_nodes.add((double) reduction_result.nodes.length);
+						reduced_nodes.add((double) actualArraySize(reduction_result.nodes));
 					}
 					// Process results
 					double time_passed = (double) (stop_time - start_time) / (double) 1000;
@@ -327,13 +327,13 @@ public class Main {
 					// Prints
 					if (!mute && curr_reduced_graph != null) {
 						System.out.println("  hyp edges:     " + curr_reduced_graph.edges.size());
-						System.out.println("  hyp nodes:     " + curr_reduced_graph.nodes.length);
+						System.out.println("  hyp nodes:     " + actualArraySize(curr_reduced_graph.nodes));
 						int edges_removed = curr_reduced_graph.edges.size() - curr_kernel.edges.size();
 						System.out.println("  edges removed: " + edges_removed);
-						int nodes_removed = curr_reduced_graph.nodes.length - curr_kernel.nodes.length;
+						int nodes_removed = actualArraySize(curr_reduced_graph.nodes) - actualArraySize(curr_kernel.nodes);
 						System.out.println("  nodes removed: " + nodes_removed);
 						System.out.println("  kernel edges:  " + curr_kernel.edges.size());
-						System.out.println("  kernel nodes:  " + curr_kernel.nodes.length);
+						System.out.println("  kernel nodes:  " + actualArraySize(curr_kernel.nodes));
 						long sf_lemma_boundary = factorial(curr_reduced_graph.d_par) * (long) Math.pow(k_par, curr_reduced_graph.d_par);
 						System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 					}
@@ -348,7 +348,7 @@ public class Main {
 					if (curr_kernel != null) {
 						// Add results
 						kernel_edges.add((double) curr_kernel.edges.size());
-						kernel_nodes.add((double) curr_kernel.nodes.length);
+						kernel_nodes.add((double) actualArraySize(curr_kernel.nodes));
 						printTime(kernel_time_passed);
 						
 						// Sort edges of current_kernel to make the SearchTree faster
@@ -570,6 +570,19 @@ public class Main {
 			res *= i;
 		}
 		return res;
+	}
+	
+	/**
+	 * Returns the size of the given array without counting -1 entries.
+	 */
+	private static int actualArraySize(int[] arr_with_minus_one) {
+		int counter = 0;
+		for(int elem : arr_with_minus_one) {
+			if(elem != -1) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 
 }
