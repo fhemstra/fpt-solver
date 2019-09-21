@@ -19,10 +19,10 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 1800000;
+	static long timeout_value = 300000;
 
 	// Set to only test one graph
-	static boolean only_single_graph = true;
+	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_037.gr";
 
 	// Set range of k
