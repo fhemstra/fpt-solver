@@ -28,10 +28,10 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 200;
+	static int stop_k = 600;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = -1;
+	static int max_graph_size = 600;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -47,9 +47,9 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 
 	// Select a dataset
-	// static String current_dataset = "random_graphs";
+	static String current_dataset = "random_graphs";
 	// static String current_dataset = "vc_pos_graphs";
-	static String current_dataset = "pace";
+//	static String current_dataset = "pace";
 
 	// ++++++++++ Settings done +++++++++
 
