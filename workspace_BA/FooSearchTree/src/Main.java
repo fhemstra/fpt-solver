@@ -28,10 +28,10 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 600;
+	static int stop_k = 1200;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 600;
+	static int max_graph_size = 1200;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -101,12 +101,12 @@ public class Main {
 		ArrayList<Double> reduction_times = new ArrayList<Double>();
 		ArrayList<Double> search_tree_times = new ArrayList<Double>();
 		ArrayList<Double> kernel_times = new ArrayList<Double>();
-		ArrayList<Double> kernel_edges = new ArrayList<Double>();
-		ArrayList<Double> kernel_nodes = new ArrayList<Double>();
-		ArrayList<Double> reduced_nodes = new ArrayList<Double>();
-		ArrayList<Double> reduced_edges = new ArrayList<Double>();
+		ArrayList<Integer> kernel_edges = new ArrayList<Integer>();
+		ArrayList<Integer> kernel_nodes = new ArrayList<Integer>();
+		ArrayList<Integer> reduced_nodes = new ArrayList<Integer>();
+		ArrayList<Integer> reduced_edges = new ArrayList<Integer>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
-		ArrayList<Double> c_list = new ArrayList<Double>();
+		ArrayList<Integer> c_list = new ArrayList<Integer>();
 		ArrayList<Double> dens_list = new ArrayList<Double>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
@@ -143,7 +143,7 @@ public class Main {
 					System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
 							+ " nodes on formula \"" + curr_formula.formula_name + "\".");
 					forms.add(curr_formula);
-					c_list.add((double) curr_formula.c_par);
+					c_list.add(curr_formula.c_par);
 					dens_list.add(curr_formula.graph_density);
 					// Reducing Formula to Hypergraph
 					System.out.println("> Reduction");
@@ -161,12 +161,12 @@ public class Main {
 					if (reduction_result == null) {
 						// Add null, handle this during evaluation
 						reduced_graphs.add(null);
-						reduced_edges.add((double) -1);
-						reduced_nodes.add((double) -1);
+						reduced_edges.add(-1);
+						reduced_nodes.add(-1);
 					} else {
 						reduced_graphs.add(reduction_result);
-						reduced_edges.add((double) reduction_result.edges.size());
-						reduced_nodes.add((double) actualArraySize(reduction_result.nodes));
+						reduced_edges.add(reduction_result.edges.size());
+						reduced_nodes.add(actualArraySize(reduction_result.nodes));
 					}
 					// Process results
 					double time_passed = (double) (stop_time - start_time) / (double) 1000;
@@ -252,8 +252,8 @@ public class Main {
 				// smaller k
 				if (reduced_graphs.get(j) == null || timed_out_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
 					kernel_times.add((double) 0);
-					kernel_edges.add((double) -1);
-					kernel_nodes.add((double) -1);
+					kernel_edges.add(-1);
+					kernel_nodes.add(-1);
 					hs_times.add((double) 0);
 					ke_results.add(false); // false for timeout
 					if (!timeout_noted) {
@@ -266,8 +266,8 @@ public class Main {
 				else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
 					// Make empty entries and go to next graph
 					kernel_times.add((double) 0);
-					kernel_edges.add((double) -1);
-					kernel_nodes.add((double) -1);
+					kernel_edges.add(-1);
+					kernel_nodes.add(-1);
 					hs_times.add((double) 0);
 					ke_results.add(true); // true for already solved
 				}
@@ -351,8 +351,8 @@ public class Main {
 					// If kernelization was successful, go to HS Search
 					if (curr_kernel != null) {
 						// Add results
-						kernel_edges.add((double) curr_kernel.edges.size());
-						kernel_nodes.add((double) actualArraySize(curr_kernel.nodes));
+						kernel_edges.add(curr_kernel.edges.size());
+						kernel_nodes.add(actualArraySize(curr_kernel.nodes));
 						printTime(kernel_time_passed);
 
 						// Sort edges of current_kernel to make the SearchTree faster
@@ -416,8 +416,8 @@ public class Main {
 
 					// Timeout happened during kernelization
 					else {
-						kernel_edges.add((double) -1);
-						kernel_nodes.add((double) -1);
+						kernel_edges.add(-1);
+						kernel_nodes.add(-1);
 						ke_results.add(false);
 						hs_times.add((double) 0);
 					}
@@ -463,9 +463,9 @@ public class Main {
 			}
 
 			// Create String for csv file
-			double timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
+			int timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 			double pipe_2_sum = 0;
-			double curr_ke_res = ke_results.get(i) ? 1 : 0;
+			int curr_ke_res = ke_results.get(i) ? 1 : 0;
 			// pipe_2_sum should be -1 when the instance timed out or is solved
 			if (timeout_2 == 1.0 || curr_ke_res == 1.0) {
 				pipe_2_sum = -1;
@@ -476,25 +476,49 @@ public class Main {
 
 			// With ST
 			if (!skip_search_tree) {
-				double timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
-				double equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
-				double curr_st_res = search_tree_results.get(i) ? 1 : 0;
-				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + search_tree_times.get(i) + ";" + pipe_2_sum
-						+ ";" + reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i)
-						+ ";" + curr_k_par + ";" + curr_st_res + ";" + curr_ke_res + ";" + equal_res + ";"
-						+ kernel_nodes.get(i) + ";" + kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";"
-						+ dens_list.get(k_indep_index) + ";" + reduced_nodes.get(k_indep_index) + ";"
-						+ reduced_edges.get(k_indep_index) + ";" + timeout_1 + ";" + timeout_2 + "\n");
+				int timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
+				int equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
+				int curr_st_res = search_tree_results.get(i) ? 1 : 0;
+				write_buffer.add(Integer.toString(graph_sizes.get(k_indep_index)));
+				write_buffer.add(Double.toString(search_tree_times.get(i)));
+				write_buffer.add(Double.toString(pipe_2_sum));
+				write_buffer.add(Double.toString(reduction_times.get(k_indep_index)));
+				write_buffer.add(Double.toString(kernel_times.get(i)));
+				write_buffer.add(Double.toString(hs_times.get(i)));
+				write_buffer.add(Integer.toString(curr_k_par));
+				write_buffer.add(Integer.toString(curr_st_res));
+				write_buffer.add(Integer.toString(curr_ke_res));
+				write_buffer.add(Integer.toString(equal_res));
+				write_buffer.add(Integer.toString(kernel_nodes.get(i)));
+				write_buffer.add(Integer.toString(kernel_edges.get(i)));
+				write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
+				write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
+				write_buffer.add(Integer.toString(reduced_nodes.get(k_indep_index)));
+				write_buffer.add(Integer.toString(reduced_edges.get(k_indep_index)));
+				write_buffer.add(Integer.toString(timeout_1));
+				write_buffer.add(Integer.toString(timeout_2));
 			}
 
 			// Without ST
 			else {
-				write_buffer.add(graph_sizes.get(k_indep_index) + ";" + "-1" + ";" + pipe_2_sum + ";"
-						+ reduction_times.get(k_indep_index) + ";" + kernel_times.get(i) + ";" + hs_times.get(i) + ";"
-						+ curr_k_par + ";" + "-1" + ";" + curr_ke_res + ";" + "-1" + ";" + kernel_nodes.get(i) + ";"
-						+ kernel_edges.get(i) + ";" + c_list.get(k_indep_index) + ";" + dens_list.get(k_indep_index)
-						+ ";" + reduced_nodes.get(k_indep_index) + ";" + reduced_edges.get(k_indep_index) + ";" + "-1"
-						+ ";" + timeout_2 + "\n");
+				write_buffer.add(Integer.toString(graph_sizes.get(k_indep_index)));
+				write_buffer.add("-1");
+				write_buffer.add(Double.toString(pipe_2_sum));
+				write_buffer.add(Double.toString(reduction_times.get(k_indep_index)));
+				write_buffer.add(Double.toString(kernel_times.get(i)));
+				write_buffer.add(Double.toString(hs_times.get(i)));
+				write_buffer.add(Integer.toString(curr_k_par));
+				write_buffer.add("-1");
+				write_buffer.add(Integer.toString(curr_ke_res));
+				write_buffer.add("-1");
+				write_buffer.add(Integer.toString(kernel_nodes.get(i)));
+				write_buffer.add(Integer.toString(kernel_edges.get(i)));
+				write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
+				write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
+				write_buffer.add(Integer.toString(reduced_nodes.get(k_indep_index)));
+				write_buffer.add(Integer.toString(reduced_edges.get(k_indep_index)));
+				write_buffer.add("-1");
+				write_buffer.add(Integer.toString(timeout_2));
 			}
 
 			// Prepare next iteration of k and save to csv
@@ -532,8 +556,9 @@ public class Main {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file, true)); // true for append mode
 			for (String s : write_buffer) {
-				bw.write(s);
+				bw.write(s + ";");
 			}
+			bw.write("\n");
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
