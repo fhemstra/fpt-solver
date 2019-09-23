@@ -19,7 +19,7 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 300000;
+	static long timeout_value = 200000;
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
@@ -45,6 +45,9 @@ public class Main {
 
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
+	
+	// Set nr of columns the CSV file should have
+	static int nr_of_columns = 18;
 
 	// Select a dataset
 //	static String current_dataset = "random_graphs";
@@ -439,8 +442,10 @@ public class Main {
 		int number_of_results = Math.max(search_tree_results.size(), ke_results.size());
 		// Init write buffer
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		String headline = "nodes;pipe 1;pipe 2;reduction_time;kernel_time;hs_st_time;k;st_result;ke_result;equal;ke_nodes;ke_edges;c_par;density;reduced_nodes;reduced_edges;pipe_1_timeout;pipe_2_timeout\n";
-		write_buffer.add(headline);
+		String[] headline = new String[] {"nodes","pipe 1","pipe 2","reduction_time","kernel_time","hs_st_time","k","st_result","ke_result","equal","ke_nodes","ke_edges","c_par","density","reduced_nodes","reduced_edges","pipe_1_timeout","pipe_2_timeout"};
+		for(String s : headline) {
+			write_buffer.add(s);			
+		}
 		int curr_k_par = start_k;
 		boolean all_graphs_timed_out = true;
 
@@ -529,7 +534,7 @@ public class Main {
 				// Save buffer to csv
 				String file_name = Long.toString(main_init_time) + "_" + current_dataset + "_k_" + start_k + "-"
 						+ stop_k + ".csv";
-				writeToCsv(write_buffer, file_name, call_from_cmd);
+				writeLineToCsv(write_buffer, file_name, call_from_cmd, nr_of_columns);
 				write_buffer.clear();
 				// If all graphs are timed out, leave
 				if (all_graphs_timed_out) {
@@ -546,7 +551,7 @@ public class Main {
 	/**
 	 * Writes all lines from the given list to the specified csv-file.
 	 */
-	private static void writeToCsv(ArrayList<String> write_buffer, String file_name, boolean cmd) {
+	private static void writeLineToCsv(ArrayList<String> write_buffer, String file_name, boolean cmd, int number_of_columns) {
 		String result_file_path = "";
 		if (cmd) {
 			result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
@@ -558,8 +563,11 @@ public class Main {
 		File out_file = new File(result_file_path);
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file, true)); // true for append mode
-			for (String s : write_buffer) {
-				bw.write(s + ";");
+			for (int i = 0; i < write_buffer.size(); i++) {
+				if(i != 0 && i % number_of_columns == 0) {
+					bw.write("\n");
+				}
+				bw.write(write_buffer.get(i) + ";");
 			}
 			bw.write("\n");
 			bw.close();
