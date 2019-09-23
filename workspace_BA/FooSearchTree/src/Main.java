@@ -23,12 +23,12 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "vc-exact_037.gr";
+	static String single_graph_name = "bara_alb_n_200_m_1_9.txt";
 
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 200;
+	static int stop_k = 64;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 200;
@@ -50,11 +50,11 @@ public class Main {
 	static int nr_of_columns = 18;
 
 	// Select a dataset
-//	static String current_dataset = "random_graphs";
-	// static String current_dataset = "vc_pos_graphs";
 //	static String current_dataset = "pace";
-	static String current_dataset = "bara_alb_graphs";
+//	static String current_dataset = "k_star_graphs";
+//	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
+	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
 	// ++++++++++ Settings done +++++++++
@@ -68,7 +68,7 @@ public class Main {
 		if (call_from_cmd) {
 			graph_dir_path = ".." + File.separator + "input_graphs" + File.separator + current_dataset;
 		} else {
-			graph_dir_path = File.separator + "input_graphs" + File.separator + current_dataset;
+			graph_dir_path = "input_graphs" + File.separator + current_dataset;
 		}
 		// Construct path to form dir
 		String form_dir_path = "";
@@ -302,16 +302,15 @@ public class Main {
 						} else {
 							curr_kernel = curr_reduced_graph.kernelizeUniform(k_par, mute, kernel_timeout);
 							// Remove dangling nodes and singletons
-							// TODO this does not work yet
 							if (use_heuristics) {
 								boolean done = false;
-								while (updated_k_par > 0 && !done) {
+								while (!done) {
 									if (!mute)
 										System.out.println("New k_par:" + updated_k_par);
 									int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
 									int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
 									k_decrease += singletons_removed;
-									if (singletons_removed == 0)
+									if (singletons_removed == 0 && nodes_removed == 0)
 										done = true;
 									updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
 								}

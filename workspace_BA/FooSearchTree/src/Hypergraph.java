@@ -711,8 +711,9 @@ public class Hypergraph {
 			int curr_node = pair.getKey();
 			ArrayList<Tuple> curr_occurences = pair.getValue();
 			// Remove any isolated nodes
-			if (curr_occurences.size() == 0) {
+			if (curr_occurences == null) {
 				this.nodes = arrWithout(this.nodes, curr_node);
+				node_counter++;
 			}
 			// If this node is only contained in one edge
 			else if (curr_occurences.size() == 1) {
@@ -733,23 +734,57 @@ public class Hypergraph {
 
 	public int removeSingletons(boolean mute, long kernel_timeout) {
 		int singleton_counter = 0;
-		ArrayList<Tuple> edges_to_remove = new ArrayList<Tuple>();
+		ArrayList<Tuple> singletons_to_remove = new ArrayList<Tuple>();
+		// Look for singletons
 		for (Tuple edge : this.edges) {
 			if (edge.actualSize() == 1) {
-				edges_to_remove.add(edge);
-				singleton_counter++;
+				singletons_to_remove.add(edge);
 			}
 		}
-		for(Tuple edge : edges_to_remove) {
+		ArrayList<Integer> solution_nodes = new ArrayList<Integer>();
+		// Remove singletons
+		for(Tuple edge : singletons_to_remove) {
 			// Remove edge
 			this.edges.remove(edge);
+			// Find node from singleton edge
+			for(int node : edge.elements) {
+				if(node != -1) {
+					solution_nodes.add(node);
+				}
+			}
+		}
+		for(int solution_node : solution_nodes) {
+			// Remove solution nodes
+			this.nodes = arrWithout(this.nodes, solution_node);
+			singleton_counter++;
+		}
+		// Now there are still edges that are covered by solution nodes, remove them
+		ArrayList<Tuple> covered_edges = new ArrayList<Tuple>();
+		for(Tuple edge : this.edges) {
+			for(int sol_node : solution_nodes) {
+				if(edge.arrContains(sol_node)) {
+					covered_edges.add(edge);
+				}
+				
+			}
+		}
+		// Remove covered edges
+		for(Tuple covered_edge : covered_edges) {
+			this.edges.remove(covered_edge);
 		}
 		return singleton_counter;
 	}
 
 	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
 		HashMap<Integer, ArrayList<Tuple>> node_occurences = new HashMap<Integer, ArrayList<Tuple>>();
-		// Fill map
+		// Init map by looking through nodes
+		for(int node : this.nodes) {
+			if(node == -1) {
+				continue;
+			}
+			node_occurences.put(node, null);
+		}
+		// Fill map by looking through edges
 		for (Tuple edge : this.edges) {
 			for (int node : edge.elements) {
 				if (node == -1) {
@@ -772,7 +807,7 @@ public class Hypergraph {
 
 	/**
 	 * Returns a set of edges only containing the specified nodes. Edges containing
-	 * nodes, which have been deleted will shrink by doing this.
+	 * nodes which have been deleted will shrink by doing this.
 	 */
 	private ArrayList<Tuple> update_edges(int[] local_nodes, ArrayList<Tuple> local_edges) {
 		ArrayList<Tuple> updated_edges = new ArrayList<>();
@@ -786,6 +821,7 @@ public class Hypergraph {
 		// Check edges for deleted nodes
 		for (Tuple edge : local_edges) {
 			for (int edge_node : edge.elements) {
+				// Remove deleted nodes from edges
 				if (!node_set.contains(edge_node)) {
 					edge.removeElement(edge_node);
 				}
