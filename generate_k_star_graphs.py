@@ -3,11 +3,11 @@ import random
 
 # Creates random graphs which contain a vertex-cover of size k 
 
-probability = 0.2
+probability = 0.075
 variance_count = 10
 k_par = 14
 
-for nr_of_nodes in range(600,1400,200):
+for nr_of_nodes in range(200,400,200):
 	# create directory if it does not exist yet
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'k_star_graphs'
@@ -17,14 +17,13 @@ for nr_of_nodes in range(600,1400,200):
 	# Make multiple examples for variance
 	for i in range(variance_count):
 		# Calculate possible number of edges and reset actual number
-		actual_edges = 0
+		actual_nr_of_edges = 0
 		possible_edges = int(pow(nr_of_nodes,2)/2)
 		# print("Possible edges: " + str(possible_edges))
 
 		# Generate filename
 		filename = 'k_star_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.txt'
 		full_path = dest_dir + os.sep + filename
-		print("Creating " + filename)
 
 		# Choose, which k nodes should be the vertex-cover
 		cover_nodes = []
@@ -47,10 +46,10 @@ for nr_of_nodes in range(600,1400,200):
 					if(rand_number <= probability):
 						# Add edge
 						curr_file.write(str(cover_nodes[j]) + ' ' + str(k) + '\n')
-						actual_edges += 1
+						actual_nr_of_edges += 1
 
 		# PACE-headline is supposed to be the first line
-		headline = 'p td ' + str(nr_of_nodes) + ' ' + str(actual_edges) + ' \n'
+		headline = 'p td ' + str(nr_of_nodes) + ' ' + str(actual_nr_of_edges) + ' \n'
 		file_content = None
 		# Read current file content
 		with open(full_path, 'r') as curr_file:
@@ -59,5 +58,8 @@ for nr_of_nodes in range(600,1400,200):
 		file_content.insert(0,headline)
 		with open(full_path, 'w') as curr_file:
 			curr_file.writelines(file_content)
-		# print("Actual edges:   " + str(actual_edges))
-		# print("Ratio: " + str(round(actual_edges/possible_edges, 5)))
+		# print("Actual edges:   " + str(actual_nr_of_edges))
+		# print("Ratio: " + str(round(actual_nr_of_edges/possible_edges, 5)))
+
+		density = actual_nr_of_edges/nr_of_nodes
+		print(filename + " dens: " + str(density))

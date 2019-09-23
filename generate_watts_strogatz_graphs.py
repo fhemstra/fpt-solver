@@ -2,7 +2,7 @@ import os
 import networkx as nx
 
 n = 200
-k = 6
+k = 3
 p = 0.1
 variance_count = 10
 

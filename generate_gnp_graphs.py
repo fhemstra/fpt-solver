@@ -2,7 +2,7 @@ import os
 import networkx as nx
 
 n = 200
-p = 0.02
+p = 0.01
 variance_count = 10
 
 # create directory if it does not exist yet
