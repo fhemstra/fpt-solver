@@ -23,7 +23,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "k_star_k_10_n_200_prob_0.1_44.txt";
+	static String single_graph_name = "k_star_k_60_n_200_prob_0.02_6.txt";
 
 	// Set range of k
 	static int start_k = 1;
@@ -31,7 +31,7 @@ public class Main {
 	static int stop_k = 64;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 200;
+	static int max_graph_size = 600;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;

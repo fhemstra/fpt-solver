@@ -41,6 +41,8 @@ for nr_of_nodes in range(200,800,200):
 			# Create edges and write them to the file
 			for j in range(0,len(cover_nodes)):
 				for k in range(1,nr_of_nodes+1):
+					if k in cover_nodes:
+						continue
 					rand_number = random.random()
 					# Decide, if the edge (cover_nodes[j],k) should exist
 					if(rand_number <= probability):
