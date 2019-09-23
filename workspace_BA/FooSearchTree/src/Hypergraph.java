@@ -650,6 +650,10 @@ public class Hypergraph {
 	public boolean hsSearchTree(int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
 			throws TimeoutException {
 		// TODO return solution
+		// If heuristics used more than k_par nodes
+		if(k_par < 0) {
+			return false;
+		}
 		for (int i = 0; i < this.edges.size(); i++) {
 			// Check for timeout
 			if (System.currentTimeMillis() > hs_timeout) {

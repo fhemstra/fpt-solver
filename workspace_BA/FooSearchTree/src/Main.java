@@ -23,7 +23,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "bara_alb_n_200_m_1_9.txt";
+	static String single_graph_name = "k_star_k_10_n_200_prob_0.1_44.txt";
 
 	// Set range of k
 	static int start_k = 1;
@@ -392,7 +392,7 @@ public class Main {
 									hs_timeout);
 							if (!mute)
 								System.out.println("\n");
-							System.out.println("  result: " + hs_result);
+							if(hs_result) System.out.println("\n  TRUE");
 						} catch (TimeoutException e) {
 							long emergency_stop = System.currentTimeMillis();
 							double additional_time = (double) ((double) (emergency_stop - start_time) / 1000);
