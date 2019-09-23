@@ -66,14 +66,14 @@ public class Main {
 		// Construct path to graph dir
 		String graph_dir_path = "";
 		if (call_from_cmd) {
-			graph_dir_path = "../" + current_dataset;
+			graph_dir_path = ".." + File.separator + "input_graphs" + File.separator + current_dataset;
 		} else {
-			graph_dir_path = current_dataset;
+			graph_dir_path = File.separator + "input_graphs" + File.separator + current_dataset;
 		}
 		// Construct path to form dir
 		String form_dir_path = "";
 		if (call_from_cmd) {
-			form_dir_path = "../" + "instances";
+			form_dir_path = ".." + File.separator + "instances";
 		} else {
 			form_dir_path = "instances";
 		}
