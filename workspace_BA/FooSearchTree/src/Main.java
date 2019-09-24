@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 
 	// Set this to mute debug output
 	static boolean mute = true;
@@ -28,7 +28,7 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 5;
+	static int stop_k = 200;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 600;
@@ -51,10 +51,10 @@ public class Main {
 
 	// Select a dataset
 //	static String current_dataset = "pace";
-	static String current_dataset = "k_star_graphs";
+//	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
-//	static String current_dataset = "bara_alb_graphs";
+	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
 	// ++++++++++ Settings done +++++++++
