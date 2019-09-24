@@ -13,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 
 	// Set this to mute debug output
 	static boolean mute = true;
@@ -28,7 +28,7 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 64;
+	static int stop_k = 5;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 600;
@@ -47,7 +47,7 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 	
 	// Set nr of columns the CSV file should have
-	static int nr_of_columns = 18;
+	static int nr_of_columns = 19;
 
 	// Select a dataset
 //	static String current_dataset = "pace";
@@ -103,7 +103,8 @@ public class Main {
 		// Init timers
 		long start_time, stop_time, st_timeout, reduction_timeout, kernel_timeout, hs_timeout = 0;
 		// Result lists
-		ArrayList<Integer> graph_sizes = new ArrayList<Integer>();
+		ArrayList<String> graph_names = new ArrayList<String>();
+		ArrayList<Integer> n_const = new ArrayList<Integer>();
 		ArrayList<Double> reduction_times = new ArrayList<Double>();
 		ArrayList<Double> search_tree_times = new ArrayList<Double>();
 		ArrayList<Double> kernel_times = new ArrayList<Double>();
@@ -143,7 +144,8 @@ public class Main {
 							continue;
 						}
 					}
-					graph_sizes.add(curr_graph_size);
+					graph_names.add(graph_files[j].getName());
+					n_const.add(curr_graph_size);
 					// Constructing Formula
 					Formula curr_formula = new Formula(form_path, curr_graph_path);
 					System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
@@ -441,7 +443,27 @@ public class Main {
 		int number_of_results = Math.max(search_tree_results.size(), ke_results.size());
 		// Init write buffer
 		ArrayList<String> write_buffer = new ArrayList<String>();
-		String[] headline = new String[] {"nodes","pipe 1","pipe 2","reduction_time","kernel_time","hs_st_time","k","st_result","ke_result","equal","ke_nodes","ke_edges","c_par","density","reduced_nodes","reduced_edges","pipe_1_timeout","pipe_2_timeout"};
+		String[] headline = new String[] {
+				"file",
+				"n",
+				"c_par",
+				"density",
+				"k",
+				"Pipe 1 time",
+				"Pipe 1 result",
+				"Reduction time",
+				"Reduced nodes",
+				"Reduced edges",
+				"Kernel time",
+				"Kernel nodes",
+				"Kernel edges",
+				"HS-ST time",
+				"Pipe 2 time",
+				"Pipe 2 result",
+				"Pipe 1 == Pipe 2",
+				"Pipe 1 timeout",
+				"Pipe 2 timeout"
+				};
 		for(String s : headline) {
 			write_buffer.add(s);			
 		}
@@ -471,62 +493,50 @@ public class Main {
 
 			// Create String for csv file
 			int timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
-			double pipe_2_sum = 0;
-			int curr_ke_res = ke_results.get(i) ? 1 : 0;
+			double pipe_2_time = 0;
+			int pipe_2_res = ke_results.get(i) ? 1 : 0;
 			// pipe_2_sum should be -1 when the instance timed out or is solved
-			if (timeout_2 == 1.0 || curr_ke_res == 1.0) {
-				pipe_2_sum = -1;
+			if (timeout_2 == 1.0) {
+				pipe_2_time = -1;
+			} else if(pipe_2_res == 1.0) {
+				pipe_2_time = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 			} else {
-				pipe_2_sum = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
+				pipe_2_time = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 				all_graphs_timed_out = false;
 			}
 
+			// Collect results
+			double pipe_1_time = -1;
+			int pipe_1_res = -1;
+			int equal_res = -1;
+			int timeout_1 = -1;
 			// With ST
 			if (!skip_search_tree) {
-				int timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
-				int equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
-				int curr_st_res = search_tree_results.get(i) ? 1 : 0;
-				write_buffer.add(Integer.toString(graph_sizes.get(k_indep_index)));
-				write_buffer.add(Double.toString(search_tree_times.get(i)));
-				write_buffer.add(Double.toString(pipe_2_sum));
-				write_buffer.add(Double.toString(reduction_times.get(k_indep_index)));
-				write_buffer.add(Double.toString(kernel_times.get(i)));
-				write_buffer.add(Double.toString(hs_times.get(i)));
-				write_buffer.add(Integer.toString(curr_k_par));
-				write_buffer.add(Integer.toString(curr_st_res));
-				write_buffer.add(Integer.toString(curr_ke_res));
-				write_buffer.add(Integer.toString(equal_res));
-				write_buffer.add(Integer.toString(kernel_nodes.get(i)));
-				write_buffer.add(Integer.toString(kernel_edges.get(i)));
-				write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
-				write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
-				write_buffer.add(Integer.toString(reduced_nodes.get(k_indep_index)));
-				write_buffer.add(Integer.toString(reduced_edges.get(k_indep_index)));
-				write_buffer.add(Integer.toString(timeout_1));
-				write_buffer.add(Integer.toString(timeout_2));
+				pipe_1_time = search_tree_times.get(i);
+				pipe_1_res = search_tree_results.get(i) ? 1 : 0;
+				equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
+				timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
 			}
-
-			// Without ST
-			else {
-				write_buffer.add(Integer.toString(graph_sizes.get(k_indep_index)));
-				write_buffer.add("-1");
-				write_buffer.add(Double.toString(pipe_2_sum));
-				write_buffer.add(Double.toString(reduction_times.get(k_indep_index)));
-				write_buffer.add(Double.toString(kernel_times.get(i)));
-				write_buffer.add(Double.toString(hs_times.get(i)));
-				write_buffer.add(Integer.toString(curr_k_par));
-				write_buffer.add("-1");
-				write_buffer.add(Integer.toString(curr_ke_res));
-				write_buffer.add("-1");
-				write_buffer.add(Integer.toString(kernel_nodes.get(i)));
-				write_buffer.add(Integer.toString(kernel_edges.get(i)));
-				write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
-				write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
-				write_buffer.add(Integer.toString(reduced_nodes.get(k_indep_index)));
-				write_buffer.add(Integer.toString(reduced_edges.get(k_indep_index)));
-				write_buffer.add("-1");
-				write_buffer.add(Integer.toString(timeout_2));
-			}
+			// Assemble print data
+			write_buffer.add(graph_names.get(k_indep_index));
+			write_buffer.add(Integer.toString(n_const.get(k_indep_index)));
+			write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
+			write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
+			write_buffer.add(Integer.toString(curr_k_par));
+			write_buffer.add(Double.toString(pipe_1_time));
+			write_buffer.add(Integer.toString(pipe_1_res));
+			write_buffer.add(Double.toString(reduction_times.get(k_indep_index)));
+			write_buffer.add(Integer.toString(reduced_nodes.get(k_indep_index)));
+			write_buffer.add(Integer.toString(reduced_edges.get(k_indep_index)));
+			write_buffer.add(Double.toString(kernel_times.get(i)));
+			write_buffer.add(Integer.toString(kernel_nodes.get(i)));
+			write_buffer.add(Integer.toString(kernel_edges.get(i)));
+			write_buffer.add(Double.toString(hs_times.get(i)));
+			write_buffer.add(Double.toString(pipe_2_time));
+			write_buffer.add(Integer.toString(pipe_2_res));
+			write_buffer.add(Integer.toString(equal_res));
+			write_buffer.add(Integer.toString(timeout_1));
+			write_buffer.add(Integer.toString(timeout_2));
 
 			// Prepare next iteration of k and save to csv
 			if ((i + 1) % forms.size() == 0) {
