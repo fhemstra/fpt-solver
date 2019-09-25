@@ -114,7 +114,7 @@ public class Main {
 		ArrayList<Integer> reduced_edges = new ArrayList<Integer>();
 		ArrayList<Double> hs_times = new ArrayList<Double>();
 		ArrayList<Integer> c_list = new ArrayList<Integer>();
-		ArrayList<Double> dens_list = new ArrayList<Double>();
+		ArrayList<Integer> dens_list = new ArrayList<Integer>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> pipe_1_timeouts = new ArrayList<Boolean>();
@@ -524,7 +524,7 @@ public class Main {
 			write_buffer.add(graph_names.get(k_indep_index));
 			write_buffer.add(Integer.toString(n_const.get(k_indep_index)));
 			write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
-			write_buffer.add(Double.toString(dens_list.get(k_indep_index)));
+			write_buffer.add(Integer.toString(dens_list.get(k_indep_index)));
 			write_buffer.add(Integer.toString(curr_k_par));
 			write_buffer.add(Double.toString(pipe_1_time));
 			write_buffer.add(Integer.toString(pipe_1_res));

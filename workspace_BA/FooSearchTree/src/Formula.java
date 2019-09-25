@@ -18,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 public class Formula {
 	String formula_name;
 	String graph_name;
-	double graph_density;
+	int graph_density;
 	int[] universe;
 	HashMap<String, Relation> relation_map;
 	String[] bound_variables;
@@ -72,7 +72,7 @@ public class Formula {
 			}
 			relation_map = new HashMap<String, Relation>();
 			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
-			graph_density = (double)(edge_set.size()/2)/(double)universe.length;
+			graph_density = (int) Math.round((double)(edge_set.size()/2)/(double)universe.length);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			relation_map.put("E", edge_relation);
 			// Bound variables
