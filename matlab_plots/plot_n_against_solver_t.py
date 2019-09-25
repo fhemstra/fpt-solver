@@ -53,7 +53,7 @@ for graphs_of_same_n in graphs_per_n:
 	# Add set of times for fixed n to matrix
 	graph_times_per_n.append(graph_times)
 
-plt.boxplot(graph_times_per_n, showmeans=True, labels=n_values)
+plt.boxplot(graph_times_per_n, showmeans=True, labels=n_values, meanprops=dict(markerfacecolor='g', marker='D'))
 plt.xlabel('Knoten')
 plt.ylabel('Zeit')
 plt.title('Zeit zur Lösung von Instanzen verschiedener Größe')
