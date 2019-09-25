@@ -26,31 +26,43 @@ csv_data = rows[1:]
 # Find column indices
 solver_time_col = csv_header.index('Time to solve')
 dens_col = csv_header.index('density')
+n_col = csv_header.index('n')
 
-# Calc the time it took to solve each graph
-solver_times = [float(row[solver_time_col]) for row in csv_data]
+# Collect different values for n
+n_values = []
+for row in csv_data:
+	if not int(row[n_col]) in n_values:
+		n_values.append(int(row[n_col]))
 
-# Get results, eiter 1 or 0 for true and false respectively
-dens_list = [float(row[dens_col]) for row in csv_data]
+# One plot per n
+for curr_n in n_values:
+	# Calc the time it took to solve each graph
+	solver_times = [float(row[solver_time_col]) for row in csv_data if int(row[n_col]) == curr_n]
 
-# Correlate density values with their solver times
-dens_to_time = []
-for i in range(len(dens_list)):
-	dens_to_time.append([dens_list[i], solver_times[i]])
+	# Get results, eiter 1 or 0 for true and false respectively
+	dens_list = [float(row[dens_col]) for row in csv_data if int(row[n_col]) == curr_n]
 
-# Sort by firt element, which is density
-dens_to_time.sort(key=lambda elem: elem[0])
+	# Correlate density values with their solver times
+	dens_to_time = []
+	for i in range(len(dens_list)):
+		dens_to_time.append([dens_list[i], solver_times[i]])
 
-# Split arrays up again
-sorted_dens_list = []
-sorted_time_list = []
-for tuple in dens_to_time:
-	sorted_dens_list.append(tuple[0])
-	sorted_time_list.append(tuple[1])
+	# Sort by first element, which is density
+	dens_to_time.sort(key=lambda elem: elem[0])
 
-# Plot stuff
-plt.plot(sorted_dens_list, sorted_time_list)
+	# Split arrays up again
+	sorted_dens_list = []
+	sorted_time_list = []
+	for tuple in dens_to_time:
+		sorted_dens_list.append(tuple[0])
+		sorted_time_list.append(tuple[1])
+
+	# Plot stuff
+	plt.plot(sorted_dens_list, sorted_time_list)
+
 plt.xlabel('Dichte')
 plt.ylabel('Zeit zur Lösung')
 plt.title('Lösungszeit im Zusamenahng mit Dichte der Graphen')
 plt.show()
+
+# TODO Bei mehreren Werten für dens den Mittelwert nehmen, oder Boxplots machen
