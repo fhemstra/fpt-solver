@@ -44,10 +44,10 @@ for curr_n in n_values:
 
 graph_times_per_n = []
 # Calc matrix of graph times per n
-for curr_graph_set in graphs_per_n:
+for graphs_of_same_n in graphs_per_n:
 	graph_times = []
 	# Calc result time per graph
-	for graph in curr_graph_set:
+	for graph in graphs_of_same_n:
 		# Collect all entries of one graph
 		graph_rows = [row for row in csv_data if row[0] == graph[0]]
 
@@ -73,5 +73,5 @@ for curr_graph_set in graphs_per_n:
 plt.boxplot(graph_times_per_n, showmeans=True, labels=n_values)
 plt.xlabel('Knoten')
 plt.ylabel('Zeit')
-plt.title('Zeit zur Lösung von Instanzen verscheidener Größe')
+plt.title('Zeit zur Lösung von Instanzen verschiedener Größe')
 plt.show()

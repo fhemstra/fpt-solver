@@ -27,7 +27,7 @@ csv_data = rows[1:]
 solver_time_col = csv_header.index('Time to solve')
 pipe_2_res_col = csv_header.index('Pipe 2 result')
 
-# Calc the time it took to solve each graph
+# Get the time it took to solve each graph
 solver_times = [float(row[solver_time_col]) for row in csv_data]
 np_solver_times = np.array(solver_times)
 np_solver_times = np.cumsum(np_solver_times)
