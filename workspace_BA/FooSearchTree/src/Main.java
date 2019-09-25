@@ -19,7 +19,7 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 200000;
+	static long timeout_value = 300000;
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
@@ -28,7 +28,7 @@ public class Main {
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 200;
+	static int stop_k = 500;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = 600;
@@ -377,7 +377,7 @@ public class Main {
 						});
 
 						// HS-SearchTree
-						System.out.print("> HS-SearchTree ");
+						System.out.println("> HS-SearchTree ");
 						boolean hs_result = false;
 						// Set timer
 						start_time = System.currentTimeMillis();
@@ -394,7 +394,7 @@ public class Main {
 									hs_timeout);
 							if (!mute)
 								System.out.println("\n");
-							if(hs_result) System.out.println("\n  TRUE");
+							if(hs_result) System.out.println("  TRUE");
 						} catch (TimeoutException e) {
 							long emergency_stop = System.currentTimeMillis();
 							double additional_time = (double) ((double) (emergency_stop - start_time) / 1000);

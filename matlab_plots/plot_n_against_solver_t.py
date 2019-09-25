@@ -30,6 +30,7 @@ redu_col = csv_header.index('Reduction time')
 hs_col = csv_header.index('HS-ST time')
 kernel_col = csv_header.index('Kernel time')
 res_col = csv_header.index('Pipe 2 result')
+solver_col = csv_header.index('Time to solve')
 
 # Collect different values for n
 n_values = []
@@ -48,25 +49,7 @@ for graphs_of_same_n in graphs_per_n:
 	graph_times = []
 	# Calc result time per graph
 	for graph in graphs_of_same_n:
-		# Collect all entries of one graph
-		graph_rows = [row for row in csv_data if row[0] == graph[0]]
-
-		# Kernel
-		graph_kernel_times = [float(row[kernel_col]) for row in graph_rows]
-		np_graph_kernel_times = np.array(graph_kernel_times)
-		kernel_sum = np.sum(np_graph_kernel_times)
-
-		# Reduction
-		reduction_time = graph_rows[0][redu_col]
-
-		# HS ST
-		graph_hs_times = [float(row[hs_col]) for row in graph_rows]
-		np_graph_hs_times = np.array(graph_hs_times)
-		hs_sum = np.sum(np_graph_hs_times)
-
-		# Result
-		graph_sum = float(kernel_sum) + float(reduction_time) + float(hs_sum)
-		graph_times.append(graph_sum)
+		graph_times.append(float(graph[solver_col]))
 	# Add set of times for fixed n to matrix
 	graph_times_per_n.append(graph_times)
 
