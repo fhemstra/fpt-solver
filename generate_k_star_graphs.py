@@ -22,7 +22,7 @@ for nr_of_nodes in range(200,800,200):
 		# print("Possible edges: " + str(possible_edges))
 
 		# Generate filename
-		filename = 'k_star_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.txt'
+		filename = 'k_star_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.gr'
 		full_path = dest_dir + os.sep + filename
 
 		# Choose, which k nodes should be the vertex-cover

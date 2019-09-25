@@ -17,7 +17,7 @@ for i in range(variance_count):
 	edges = graph.edges()
 	density = len(edges)/len(nodes)
 
-	filename = "gnm_n_" + str(n) + "_m_" + str(m) + "_" + str(i) + ".txt"
+	filename = "gnm_n_" + str(n) + "_m_" + str(m) + "_" + str(i) + ".gr"
 	print(str(filename) + ", dens: " + str(density))
 	full_path = dest_dir + os.sep + filename
 	with open(full_path, 'w') as curr_file:
