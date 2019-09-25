@@ -1,7 +1,7 @@
 import os
 import networkx as nx
 
-n = 200
+n = 400
 m = 1 # for bara-alb graphs, dens = m
 variance_count = 10
 

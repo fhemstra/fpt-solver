@@ -23,7 +23,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "k_star_k_60_n_200_prob_0.02_6.txt";
+	static String single_graph_name = "bara_alb_n_200_m_1_0.txt";
 
 	// Set range of k
 	static int start_k = 1;
@@ -47,7 +47,7 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 	
 	// Set nr of columns the CSV file should have
-	static int nr_of_columns = 19;
+	static int nr_of_columns = 20;
 
 	// Select a dataset
 //	static String current_dataset = "pace";
@@ -460,6 +460,7 @@ public class Main {
 				"HS-ST time",
 				"Pipe 2 time",
 				"Pipe 2 result",
+				"Time to solve",
 				"Pipe 1 == Pipe 2",
 				"Pipe 1 timeout",
 				"Pipe 2 timeout"
@@ -517,6 +518,8 @@ public class Main {
 				equal_res = search_tree_results.get(i) == ke_results.get(i) ? 1 : 0;
 				timeout_1 = pipe_1_timeouts.get(i) ? 1 : 0;
 			}
+			// Convert time used
+			Double pipe_2_time_used = (double) pipe_2_time_used_per_instance.get(k_indep_index) / 1000;
 			// Assemble print data
 			write_buffer.add(graph_names.get(k_indep_index));
 			write_buffer.add(Integer.toString(n_const.get(k_indep_index)));
@@ -534,6 +537,7 @@ public class Main {
 			write_buffer.add(Double.toString(hs_times.get(i)));
 			write_buffer.add(Double.toString(pipe_2_time));
 			write_buffer.add(Integer.toString(pipe_2_res));
+			write_buffer.add(Double.toString(pipe_2_time_used));
 			write_buffer.add(Integer.toString(equal_res));
 			write_buffer.add(Integer.toString(timeout_1));
 			write_buffer.add(Integer.toString(timeout_2));

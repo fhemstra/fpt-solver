@@ -5,11 +5,12 @@ from matplotlib import pyplot as plt
 
 # Close previous plots
 plt.close("all")
-
 # Get file path
 dir_path = os.path.dirname(os.path.realpath(__file__))
 dir_list = os.listdir(dir_path)
-curr_csv_file = "1569392218839_bara_alb_graphs_k_1-200.csv"
+csv_list = [file for file in dir_list if ".csv" == file[-4:]]
+assert len(csv_list) > 0, "No CSV files in current directory."
+curr_csv_file = csv_list[0]
 
 # Read CSV file
 rows = []
@@ -23,21 +24,22 @@ csv_header = rows[0]
 csv_data = rows[1:]
 
 # Find column indices
-x_col = csv_header.index('Kernel time')
-y_col = csv_header.index('Pipe 2 result')
+solver_time_col = csv_header.index('Time to solve')
+pipe_2_res_col = csv_header.index('Pipe 2 result')
 
-kernel_times = [float(row[x_col]) for row in csv_data]
-np_kernel_times = np.array(kernel_times)
-np_kernel_times = np.cumsum(np_kernel_times)
+# Calc the time it took to solve each graph
+solver_times = [float(row[solver_time_col]) for row in csv_data]
+np_solver_times = np.array(solver_times)
+np_solver_times = np.cumsum(np_solver_times)
 
-pipe_2_results = [float(row[y_col]) for row in csv_data]
+# Get results, eiter 1 or 0 for true and false respectively
+pipe_2_results = [float(row[pipe_2_res_col]) for row in csv_data]
 np_pipe_2_results = np.array(pipe_2_results)
 np_pipe_2_results = np.cumsum(np_pipe_2_results)
 
-plt.plot(np_kernel_times, np_pipe_2_results)
+# Plot stuff
+plt.plot(np_solver_times, np_pipe_2_results)
 plt.xlabel('Zeit')
 plt.ylabel('Instanzen')
 plt.title('Zahl der gelösten Instanzen über Zeit')
 plt.show()
-
-# TODO: Nochmal Zeit-Wert überdenken (Redduktion nur einmal...)
