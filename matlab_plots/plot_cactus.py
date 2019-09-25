@@ -29,8 +29,8 @@ pipe_2_res_col = csv_header.index('Pipe 2 result')
 
 # Get the time it took to solve each graph
 solver_times = [float(row[solver_time_col]) for row in csv_data]
-np_solver_times = np.array(solver_times)
-np_solver_times = np.cumsum(np_solver_times)
+solver_times.sort()
+# np_solver_times = np.cumsum(np_solver_times) # this is wrong I think
 
 # Get results, eiter 1 or 0 for true and false respectively
 pipe_2_results = [float(row[pipe_2_res_col]) for row in csv_data]
@@ -39,7 +39,7 @@ np_pipe_2_results = np.array(pipe_2_results)
 np_pipe_2_results = np.cumsum(np_pipe_2_results)
 
 # Plot stuff
-plt.plot(np_solver_times, np_pipe_2_results)
+plt.plot(solver_times, np_pipe_2_results)
 plt.xlabel('Zeit')
 plt.ylabel('Instanzen')
 plt.title('Zahl der gelösten Instanzen über Zeit')
