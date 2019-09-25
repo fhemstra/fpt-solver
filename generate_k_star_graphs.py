@@ -3,11 +3,11 @@ import random
 
 # Creates random graphs which contain a vertex-cover of size k 
 
-probability = 0.02
+probability = 0.03
 variance_count = 10
-k_par = 60
 
-for nr_of_nodes in range(200,800,200):
+for nr_of_nodes in range(80,520,20):
+	k_par = 60
 	# create directory if it does not exist yet
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'input_graphs' + os.sep + 'k_star_graphs'
@@ -21,20 +21,24 @@ for nr_of_nodes in range(200,800,200):
 		possible_edges = int(pow(nr_of_nodes,2)/2)
 		# print("Possible edges: " + str(possible_edges))
 
+		# Prevent VCs to be bigger than graphs
+		adjusted_k_par = k_par
+		if k_par > nr_of_nodes:
+			adjusted_k_par = nr_of_nodes-10
+
 		# Generate filename
-		filename = 'k_star_k_' + str(k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.gr'
+		filename = 'k_star_k_' + str(adjusted_k_par) + '_n_' + str(nr_of_nodes) + '_prob_' + str(probability) + '_' + str(i) +  '.gr'
 		full_path = dest_dir + os.sep + filename
 
 		# Choose, which k nodes should be the vertex-cover
 		cover_nodes = []
 		# Prevent endless loops
-		if k_par < nr_of_nodes:
-			for j in range(1,k_par+1):
+		for j in range(1,adjusted_k_par+1):
+			node = random.randrange(1, nr_of_nodes)
+			# In case node is aleady contained in cover_nodes, roll until we find a new element
+			while node in cover_nodes:
 				node = random.randrange(1, nr_of_nodes)
-				# In case node is aleady contained in cover_nodes, roll until we find a new element
-				while node in cover_nodes:
-					node = random.randrange(1, nr_of_nodes)
-				cover_nodes.append(node)
+			cover_nodes.append(node)
 
 		# Write to file
 		with open(full_path, 'w') as curr_file:			
