@@ -25,22 +25,32 @@ csv_data = rows[1:]
 
 # Find column indices
 solver_time_col = csv_header.index('Time to solve')
-pipe_2_res_col = csv_header.index('Pipe 2 result')
+dens_col = csv_header.index('density')
 
 # Calc the time it took to solve each graph
 solver_times = [float(row[solver_time_col]) for row in csv_data]
-np_solver_times = np.array(solver_times)
-np_solver_times = np.cumsum(np_solver_times)
 
 # Get results, eiter 1 or 0 for true and false respectively
-pipe_2_results = [float(row[pipe_2_res_col]) for row in csv_data]
-np_pipe_2_results = np.array(pipe_2_results)
-# Add everything up to a prefixsum
-np_pipe_2_results = np.cumsum(np_pipe_2_results)
+dens_list = [float(row[dens_col]) for row in csv_data]
+
+# Correlate density values with their solver times
+dens_to_time = []
+for i in range(len(dens_list)):
+	dens_to_time.append([dens_list[i], solver_times[i]])
+
+# Sort by firt element, which is density
+dens_to_time.sort(key=lambda elem: elem[0])
+
+# Split arrays up again
+sorted_dens_list = []
+sorted_time_list = []
+for tuple in dens_to_time:
+	sorted_dens_list.append(tuple[0])
+	sorted_time_list.append(tuple[1])
 
 # Plot stuff
-plt.plot(np_solver_times, np_pipe_2_results)
-plt.xlabel('Zeit')
-plt.ylabel('Instanzen')
-plt.title('Zahl der gelösten Instanzen über Zeit')
+plt.plot(sorted_dens_list, sorted_time_list)
+plt.xlabel('Dichte')
+plt.ylabel('Zeit zur Lösung')
+plt.title('Lösungszeit im Zusamenahng mit Dichte der Graphen')
 plt.show()
