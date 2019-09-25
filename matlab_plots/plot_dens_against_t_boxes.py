@@ -24,27 +24,27 @@ csv_header = rows[0]
 csv_data = rows[1:]
 
 # Find column indices
-n_col = csv_header.index('n')
+dens_col = csv_header.index('density')
 k_col = csv_header.index('k')
 redu_col = csv_header.index('Reduction time')
 hs_col = csv_header.index('HS-ST time')
 kernel_col = csv_header.index('Kernel time')
 res_col = csv_header.index('Pipe 2 result')
 
-# Collect different values for n
-n_values = []
+# Collect different values for dens
+dens_values = []
 for row in csv_data:
-	if not int(row[n_col]) in n_values:
-		n_values.append(int(row[n_col]))
+	if not float(row[dens_col]) in dens_values:
+		dens_values.append(float(row[dens_col]))
 
-# Collect graphs per n
-graphs_per_n = []
-for curr_n in n_values:
-	graphs_per_n.append([row for row in csv_data if int(row[n_col]) == curr_n])
+# Collect graphs per dens
+graphs_per_dens = []
+for curr_dens in dens_values:
+	graphs_per_dens.append([row for row in csv_data if float(row[dens_col]) == curr_dens])
 
-graph_times_per_n = []
-# Calc matrix of graph times per n
-for curr_graph_set in graphs_per_n:
+graph_times_per_dens = []
+# Calc matrix of graph times per dens
+for curr_graph_set in graphs_per_dens:
 	graph_times = []
 	# Calc result time per graph
 	for graph in curr_graph_set:
@@ -67,11 +67,11 @@ for curr_graph_set in graphs_per_n:
 		# Result
 		graph_sum = float(kernel_sum) + float(reduction_time) + float(hs_sum)
 		graph_times.append(graph_sum)
-	# Add set of times for fixed n to matrix
-	graph_times_per_n.append(graph_times)
+	# Add set of times for fixed dens to matrix
+	graph_times_per_dens.append(graph_times)
 
-plt.boxplot(graph_times_per_n, showmeans=True, labels=n_values)
-plt.xlabel('Knoten')
+plt.boxplot(graph_times_per_dens, showmeans=True, labels=dens_values)
+plt.xlabel('Dichte')
 plt.ylabel('Zeit')
-plt.title('Zeit zur Lösung von Instanzen verscheidener Größe')
+plt.title('Zeit zur Lösung von Instanzen verscheidener Dichte')
 plt.show()
