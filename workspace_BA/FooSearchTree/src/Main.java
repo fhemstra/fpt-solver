@@ -52,8 +52,8 @@ public class Main {
 	// Select a dataset
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-//	static String current_dataset = "gnp_graphs";
-	static String current_dataset = "gnm_graphs";
+	static String current_dataset = "gnp_graphs";
+//	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
