@@ -19,11 +19,11 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 60000;
+	static long timeout_value = 300000;
 
 	// Set to only test one graph
-	static boolean only_single_graph = false;
-	static String single_graph_name = "gnp_n_360_p_0.005_1.gr";
+	static boolean only_single_graph = true;
+	static String single_graph_name = "vc-exact_001.gr";
 
 	// Set range of k
 	static int start_k = 1;
@@ -32,6 +32,9 @@ public class Main {
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
+	
+	// Set this to sort input graphs by their size ascending
+	static boolean sort_by_nodes = false;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -83,19 +86,33 @@ public class Main {
 		File form_folder = new File(form_dir_path);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
-		Arrays.sort(graph_files, new Comparator<File>() {
-			@Override
-			public int compare(File file_1, File file_2) {
-				int graph_1_size = graphSize(file_1.getAbsolutePath());
-				int graph_2_size = graphSize(file_2.getAbsolutePath());
-				if (graph_1_size == graph_2_size)
-					return 0;
-				else if (graph_1_size > graph_2_size)
-					return 1;
-				else
-					return -1;
-			}
-		});
+		// Sort files by their nodes
+		if(sort_by_nodes) {
+			Arrays.sort(graph_files, new Comparator<File>() {
+				@Override
+				public int compare(File file_1, File file_2) {
+					int graph_1_size = graphSize(file_1.getAbsolutePath());
+					int graph_2_size = graphSize(file_2.getAbsolutePath());
+					if (graph_1_size == graph_2_size)
+						return 0;
+					else if (graph_1_size > graph_2_size)
+						return 1;
+					else
+						return -1;
+				}
+			});			
+		}
+		// Sort by file name
+		else {
+			Arrays.sort(graph_files, new Comparator<File>() {
+				@Override
+				public int compare(File file_1, File file_2) {
+					String graph_1_name = file_1.getName();
+					String graph_2_name = file_2.getName();
+					return graph_1_name.compareTo(graph_2_name);
+				}
+			});	
+		}
 
 		// Init result lists and other containers
 		ArrayList<Formula> forms = new ArrayList<Formula>();
