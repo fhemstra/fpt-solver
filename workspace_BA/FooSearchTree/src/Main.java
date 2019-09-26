@@ -23,8 +23,12 @@ public class Main {
 	static long timeout_value = 300000;
 
 	// Set to only test one graph
-	static boolean only_single_graph = false;
-	static String single_graph_name = "bara_alb_n_20_m_1_0.gr";
+	static boolean only_single_graph = true;
+	static String single_graph_name = "vc-exact_00.gr";
+	
+	// Set to test only the first x graphs
+	static boolean only_first_x_graphs = true;
+	static int number_of_graphs_to_test = 5;
 
 	// Set range of k
 	static int start_k = 1;
@@ -32,7 +36,7 @@ public class Main {
 	static int stop_k = 6000;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 200;
+	static int max_graph_size = -1;
 	
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = false;
@@ -54,11 +58,11 @@ public class Main {
 	static int nr_of_columns = 20;
 
 	// Select a dataset
-//	static String current_dataset = "pace";
+	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
-	static String current_dataset = "bara_alb_graphs";
+//	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
 	// ++++++++++ Settings done +++++++++
@@ -161,10 +165,15 @@ public class Main {
 				int curr_graph_size = graphSize(curr_graph_path);
 				// Only take graphs, that are small enough
 				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
+					// Only test a single graph
 					if (only_single_graph) {
 						if (!curr_graph_path.contains(single_graph_name)) {
 							continue;
 						}
+					}
+					// Only test the first x graphs
+					if(only_first_x_graphs && j > number_of_graphs_to_test) {
+						continue;
 					}
 					graph_names.add(graph_files[j].getName());
 					n_const.add(curr_graph_size);
@@ -429,6 +438,7 @@ public class Main {
 						});
 
 						// HS-SearchTree
+						System.out.println("- Nodes, Edges left: " + curr_kernel.nodes.length + ", " + curr_kernel.edges.size());
 						System.out.print("> HS-SearchTree ");
 						boolean hs_result = false;
 						// Set timer
