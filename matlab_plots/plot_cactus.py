@@ -27,13 +27,17 @@ csv_data = rows[1:]
 solver_time_col = csv_header.index('Time to solve')
 pipe_2_res_col = csv_header.index('Pipe 2 result')
 
+# Get graphs which actually were solved and did not time out
+solved_graph_names = [row[0] for row in csv_data if int(row[pipe_2_res_col]) == 1]
+solved_graphs = [row for row in csv_data if row[0] in solved_graph_names]
+
 # Get the time it took to solve each graph
-solver_times = [float(row[solver_time_col]) for row in csv_data]
+solver_times = [float(row[solver_time_col]) for row in solved_graphs]
 solver_times.sort()
 # np_solver_times = np.cumsum(np_solver_times) # this is wrong I think
 
 # Get results, eiter 1 or 0 for true and false respectively
-pipe_2_results = [float(row[pipe_2_res_col]) for row in csv_data]
+pipe_2_results = [float(row[pipe_2_res_col]) for row in solved_graphs]
 np_pipe_2_results = np.array(pipe_2_results)
 # Add everything up to a prefixsum
 np_pipe_2_results = np.cumsum(np_pipe_2_results)

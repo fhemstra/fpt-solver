@@ -29,19 +29,23 @@ k_col = csv_header.index('k')
 redu_col = csv_header.index('Reduction time')
 hs_col = csv_header.index('HS-ST time')
 kernel_col = csv_header.index('Kernel time')
-res_col = csv_header.index('Pipe 2 result')
+pipe_2_res_col = csv_header.index('Pipe 2 result')
 solver_col = csv_header.index('Time to solve')
+
+# Get graphs which actually were solved and did not time out
+solved_graph_names = [row[0] for row in csv_data if int(row[pipe_2_res_col]) == 1]
+solved_graphs = [row for row in csv_data if row[0] in solved_graph_names]
 
 # Collect different values for n
 n_values = []
-for row in csv_data:
+for row in solved_graphs:
 	if not int(row[n_col]) in n_values:
 		n_values.append(int(row[n_col]))
 
 # Collect graphs per n
 graphs_per_n = []
 for curr_n in n_values:
-	graphs_per_n.append([row for row in csv_data if int(row[n_col]) == curr_n])
+	graphs_per_n.append([row for row in solved_graphs if int(row[n_col]) == curr_n])
 
 graph_times_per_n = []
 # Calc matrix of graph times per n
