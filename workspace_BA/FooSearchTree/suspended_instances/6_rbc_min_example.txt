@@ -2,6 +2,7 @@ rbc-min-example
 2
 R2 = {(1|2),(2|1)}
 B2 = {};
+
 x,y
 ~B(x,y) S(x) S(y)
 ~R(x,y) S(x)

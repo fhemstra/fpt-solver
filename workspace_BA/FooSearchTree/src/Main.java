@@ -23,7 +23,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "bara_alb_n_200_m_1_0.txt";
+	static String single_graph_name = "gnp_n_360_p_0.005_1.gr";
 
 	// Set range of k
 	static int start_k = 1;
@@ -31,7 +31,7 @@ public class Main {
 	static int stop_k = 500;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = 600;
+	static int max_graph_size = -1;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -50,9 +50,9 @@ public class Main {
 	static int nr_of_columns = 20;
 
 	// Select a dataset
-//	static String current_dataset = "pace";
+	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-	static String current_dataset = "gnp_graphs";
+//	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
@@ -154,13 +154,20 @@ public class Main {
 					c_list.add(curr_formula.c_par);
 					dens_list.add(curr_formula.graph_density);
 					// Reducing Formula to Hypergraph
-					System.out.println("> Reduction");
+					System.out.print("> Reduction");
 					start_time = System.currentTimeMillis();
 					reduction_timeout = start_time + timeout_value;
 					// Reduce
 					Hypergraph reduction_result = null;
 					try {
-						reduction_result = curr_formula.reduceToHS(mute, reduction_timeout);
+						if(curr_formula.guard_rel_id == null) {
+							System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
+							reduction_result = curr_formula.reduceToHsWoGuard(mute, reduction_timeout);							
+						} else {
+							int nr_of_guard_assignments = curr_formula.relation_map.get(curr_formula.guard_rel_id).elements.size();
+							System.out.println(" (with guard), " + nr_of_guard_assignments  + " assignments");
+							reduction_result = curr_formula.reduceToHsWithGuard(mute, reduction_timeout);
+						}
 					} catch (TimeoutException e) {
 						System.out.println("! Reduction timed out.");
 					}

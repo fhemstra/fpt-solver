@@ -18,6 +18,7 @@ import java.util.concurrent.TimeoutException;
 public class Formula {
 	String formula_name;
 	String graph_name;
+	String guard_rel_id;
 	int graph_density;
 	int[] universe;
 	HashMap<String, Relation> relation_map;
@@ -75,6 +76,13 @@ public class Formula {
 			graph_density = (int) Math.round((double)(edge_set.size()/2)/(double)universe.length);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			relation_map.put("E", edge_relation);
+			// Guard Relation
+			line = br.readLine();
+			if(!line.isEmpty()) {
+				guard_rel_id = line.substring(0, 1);
+			} else {
+				guard_rel_id = null;
+			}
 			// Bound variables
 			line = br.readLine();
 			bound_variables = line.split(",");
@@ -240,7 +248,7 @@ public class Formula {
 	 * @param reduction_timeout 
 	 * @throws TimeoutException 
 	 */
-	public Hypergraph reduceToHS(boolean mute, long reduction_timeout) throws TimeoutException {
+	public Hypergraph reduceToHsWoGuard(boolean mute, long reduction_timeout) throws TimeoutException {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
@@ -287,6 +295,46 @@ public class Formula {
 			curr_assignment = nextAssignment(curr_assignment);
 		}
 		if(!mute) System.out.println();
+		// Nodes of the Hypergraph are derived from the universe of the formula
+		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
+		// Copy name from this formula
+		hyp.hypergraph_name = graph_name;
+		return hyp;
+	}
+
+	public Hypergraph reduceToHsWithGuard(boolean mute, long reduction_timeout) throws TimeoutException {
+		// Edges of the hypergraph are found while checking clauses
+		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
+		// The solution S is always empty in this reduction
+		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
+		int cntr = 0;
+		Relation guard_relation = relation_map.get(guard_rel_id);
+		for (Tuple assignment : guard_relation.elements) {
+			int[] assignment_arr = assignment.elements;
+			// Check timeout
+			if (cntr % 10000 == 0) {
+				if (System.currentTimeMillis() > reduction_timeout) {
+					throw new TimeoutException();
+				}
+			}
+			// Check current assignment on all clauses
+			for (int j = 0; j < clauses.size(); j++) {
+				String[] curr_clause = clauses.get(j);
+				// If clause does not hold, add edge containing current assignment (only
+				// elements bound to S)
+				if (!checkClause(curr_clause, assignment_arr, empty_sol, true)) {
+					// Find elements that are bound to S in this clause
+					Tuple edge_to_add = findCandidates(curr_clause, assignment_arr);
+					if (!hyp_edges.contains(edge_to_add)) {
+						hyp_edges.add(edge_to_add);
+					}
+				} else {
+					// This should not occur, no clause should be fulfilled
+					System.out.println("This is weird.");
+				}
+			}
+			cntr++;
+		}
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		// Copy name from this formula
