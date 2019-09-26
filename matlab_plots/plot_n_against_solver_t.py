@@ -42,6 +42,9 @@ for row in solved_graphs:
 	if not int(row[n_col]) in n_values:
 		n_values.append(int(row[n_col]))
 
+# Sort by n
+n_values.sort()
+
 # Collect graphs per n
 graphs_per_n = []
 for curr_n in n_values:
@@ -51,7 +54,7 @@ graph_times_per_n = []
 # Calc matrix of graph times per n
 for graphs_of_same_n in graphs_per_n:
 	graph_times = []
-	# Calc result time per graph
+	# Add result time per graph
 	for graph in graphs_of_same_n:
 		graph_times.append(float(graph[solver_col]))
 	# Add set of times for fixed n to matrix

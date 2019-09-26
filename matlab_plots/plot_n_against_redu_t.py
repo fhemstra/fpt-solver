@@ -46,6 +46,9 @@ for row in data_set:
 	if not int(row[n_col]) in n_values:
 		n_values.append(int(row[n_col]))
 
+# Sort by n
+n_values.sort()
+
 # Collect graphs per n
 graphs_per_n = []
 for curr_n in n_values:
