@@ -662,7 +662,7 @@ public class Hypergraph {
 			// Check for empty (only -1) edges
 			Tuple curr_edge = this.edges.get(i);
 			if (curr_edge.onlyMinusOne()) {
-				System.out.println("! Empty edge.");
+				System.out.print("! Empty edge.");
 				return false;
 			}
 			boolean edge_is_covered = false;
