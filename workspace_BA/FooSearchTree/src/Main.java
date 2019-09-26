@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.TimeoutException;
 
@@ -22,16 +23,16 @@ public class Main {
 	static long timeout_value = 300000;
 
 	// Set to only test one graph
-	static boolean only_single_graph = true;
-	static String single_graph_name = "vc-exact_001.gr";
+	static boolean only_single_graph = false;
+	static String single_graph_name = "bara_alb_n_20_m_1_0.gr";
 
 	// Set range of k
 	static int start_k = 1;
 	static int k_increment = 1;
-	static int stop_k = 500;
+	static int stop_k = 6000;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
-	static int max_graph_size = -1;
+	static int max_graph_size = 200;
 	
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = false;
@@ -53,11 +54,11 @@ public class Main {
 	static int nr_of_columns = 20;
 
 	// Select a dataset
-	static String current_dataset = "pace";
+//	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
-//	static String current_dataset = "bara_alb_graphs";
+	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
 	// ++++++++++ Settings done +++++++++
@@ -142,6 +143,10 @@ public class Main {
 		// accumulate_time_over_k is set)
 		HashSet<String> solved_graphs = new HashSet<String>();
 		HashSet<String> timed_out_graphs = new HashSet<String>();
+		
+		// Chek lower bounds of graphs so we don't waste time with k = 1
+		int first_relevant_k = stop_k;
+		HashMap<String,Integer> lower_bounds_per_graph = new HashMap<String,Integer>();
 
 		// Prints
 		// System.out.println("> Constructing " + form_files.length + " formulas with "
@@ -222,10 +227,20 @@ public class Main {
 				pipe_1_time_used_per_instance.add((long) 0);
 			}
 		}
+		
+		// Calculate lower bounds for all graphs (no lower k should be considered)
+		for(Hypergraph redu_graph : reduced_graphs) {
+			ArrayList<Tuple> disj_edges = redu_graph.findMaxDisjEdges(redu_graph.edges);
+			int lower_bound_k = disj_edges.size();
+			lower_bounds_per_graph.put(redu_graph.hypergraph_name, lower_bound_k);
+		}
 
 		// Iterate over k
 		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
-			System.out.println("--- k = " + k_par + " ---");
+			// Only print if there is a graph for this 
+			if(lower_bounds_per_graph.containsValue(k_par)) {
+				System.out.println("--- k = " + k_par + " ---");
+			}
 
 			// Pipeline 1: Solve formulas with SearchTree
 			if (!skip_search_tree) {
@@ -274,8 +289,7 @@ public class Main {
 				}
 			}
 
-			// Pipeline 2: Reduce (already done, only once for all k) + Kernelize +
-			// HS-Search
+			// Pipeline 2: Kernelize + HS-Search
 			for (int j = 0; j < reduced_graphs.size(); j++) {
 				// Prevent adding multiple timeouts for single pipeline
 				boolean timeout_noted = false;
@@ -303,9 +317,23 @@ public class Main {
 					hs_times.add((double) 0);
 					ke_results.add(true); // true for already solved
 				}
+				
+				// k is below the lower bound of this graph
+				else if (k_par < lower_bounds_per_graph.get(reduced_graphs.get(j).hypergraph_name)) {
+					// Make empty entries and go to next graph
+					kernel_times.add((double) 0);
+					kernel_edges.add(-1);
+					kernel_nodes.add(-1);
+					hs_times.add((double) 0);
+					ke_results.add(false); // false for below lower bound
+				}
 
 				// Kernelization
 				else {
+					// There is a graph which needs to be checked for this k
+					if(k_par < first_relevant_k) {
+						first_relevant_k = k_par;
+					}
 					Hypergraph curr_reduced_graph = reduced_graphs.get(j);
 					System.out.println("> Kernelization, " + curr_reduced_graph.hypergraph_name + ", k = " + k_par
 							+ ", d = " + curr_reduced_graph.d_par);
@@ -496,11 +524,12 @@ public class Main {
 		for(String s : headline) {
 			write_buffer.add(s);			
 		}
-		int curr_k_par = start_k;
+		int curr_k_par = first_relevant_k;
 		boolean all_graphs_timed_out = true;
 
-		// Loop over all results
-		for (int i = 0; i < number_of_results; i++) {
+		// Loop over all results, but start at the first point of interest (i =)
+		int nr_of_irrelevant_entries = reduced_graphs.size() * (first_relevant_k - start_k);
+		for (int i = nr_of_irrelevant_entries; i < number_of_results; i++) {
 			// Formula and Reduction are the same for every k
 			int k_indep_index = i % forms.size();
 
@@ -524,7 +553,7 @@ public class Main {
 			int timeout_2 = pipe_2_timeouts.get(i) ? 1 : 0;
 			double pipe_2_time = 0;
 			int pipe_2_res = ke_results.get(i) ? 1 : 0;
-			// pipe_2_sum should be -1 when the instance timed out or is solved
+			// pipe_2_time should be -1 when the instance timed out or is solved
 			if (timeout_2 == 1.0) {
 				pipe_2_time = -1;
 			} else if(pipe_2_res == 1.0) {

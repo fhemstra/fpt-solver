@@ -578,7 +578,7 @@ public class Hypergraph {
 	 * Returns an inclusion-wise maximal subset of the given set of edges. Maximal
 	 * means there is no edge to add greedily.
 	 */
-	private ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
+	public ArrayList<Tuple> findMaxDisjEdges(ArrayList<Tuple> edges_to_search) {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
 		HashSet<Integer> marked_elements = new HashSet<Integer>();
 		for (Tuple e : edges_to_search) {
