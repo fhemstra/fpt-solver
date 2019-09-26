@@ -1,7 +1,6 @@
 import os
 import networkx as nx
 
-p = 0.007
 variance_count = 10
 
 # create directory if it does not exist yet
@@ -11,13 +10,14 @@ if not os.path.exists(dest_dir):
 	os.makedirs(dest_dir) 
 
 for n in range(80,520,20):
+	p = float(2/n)
 	for i in range(variance_count):
 		graph = nx.gnp_random_graph(n, p)
 		nodes = graph.nodes()
 		edges = graph.edges()
 		density = len(edges)/len(nodes)
 
-		filename = "gnp_n_" + str(n) + "_p_" + str(p) + "_" + str(i) + ".gr"
+		filename = "gnp_n_" + str(n) + "_p_" + str(p)[:5] + "_" + str(i) + ".gr"
 		print(str(filename) + ", dens: " + str(density))
 		full_path = dest_dir + os.sep + filename
 		with open(full_path, 'w') as curr_file:
