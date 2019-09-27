@@ -66,11 +66,14 @@ public class Tuple {
 
 	/**
 	 * HashCode override to make HashSet.contains() use overridden equals().
+	 * Elements are equal, if they are equal ignoring -1 entries.
 	 */
 	public int hashCode() {
 		String content = "";
 		for (int i : elements) {
-			content += Integer.toString(i);
+			if(i != -1) {
+				content += Integer.toString(i);				
+			}
 		}
 		return content.hashCode();
 	}

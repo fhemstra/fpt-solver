@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -259,10 +262,15 @@ public class Hypergraph {
 		}
 
 		// TODO handle this better
-		if (k_par < 1)
+		if (k_par < 0)
 			return null;
+		// Having no nodes means having only -1 entries
+		int[] init_nodes = new int[this.nodes.length];
+		for(int i = 0; i < init_nodes.length; i++) {
+			init_nodes[i] = -1;
+		}
 		// Init kernel as empty hypergraph
-		Hypergraph kernel = new Hypergraph(new int[this.nodes.length], new ArrayList<Tuple>());
+		Hypergraph kernel = new Hypergraph(init_nodes, new ArrayList<Tuple>());
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
@@ -740,11 +748,12 @@ public class Hypergraph {
 	}
 
 	public int removeSingletons(boolean mute, long kernel_timeout) {
-		int singleton_counter = 0;
+		int number_of_singletons_removed = 0;
 		HashSet<Tuple> singletons_to_remove = new HashSet<Tuple>();
 		// Look for singletons
 		for (Tuple edge : this.edges) {
 			if (edge.actualSize() == 1) {
+				// This can still contain equivalent edges like (1,-1), (-1,1)
 				singletons_to_remove.add(edge);
 			}
 		}
@@ -762,11 +771,16 @@ public class Hypergraph {
 		}
 		// Remove the node contained in a singleton edge from the node set
 		for(int solution_node : solution_nodes) {
+			int nodes_hash_before = this.nodes.hashCode();
 			// Remove solution nodes
 			this.nodes = arrWithout(this.nodes, solution_node);
-			singleton_counter++;
+			int nodes_hash_after = this.nodes.hashCode();
+			// Make sure the nodes set actually changed
+			if(nodes_hash_before != nodes_hash_after) {
+				number_of_singletons_removed++;
+			}
 		}
-		// Now there are still edges that are covered by solution nodes, remove them
+		// Now there are still edges that are covered by solution nodes, remove them as well
 		ArrayList<Tuple> covered_edges = new ArrayList<Tuple>();
 		for(Tuple edge : this.edges) {
 			for(int sol_node : solution_nodes) {
@@ -780,7 +794,7 @@ public class Hypergraph {
 		for(Tuple covered_edge : covered_edges) {
 			this.edges.remove(covered_edge);
 		}
-		return singleton_counter;
+		return number_of_singletons_removed;
 	}
 
 	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
@@ -853,7 +867,7 @@ public class Hypergraph {
 		ArrayList<Tuple> copy_edges = new ArrayList<Tuple>();
 		for(Tuple edge : this.edges) {
 			Tuple copy_of_edge = null;
-			// Try to copy, if hashIDs are equal an exception is thrown
+			// Copy edge (Tuple), if hashIDs are equal an exception is thrown
 			copy_of_edge = edge.copyThis();
 			copy_edges.add(copy_of_edge);
 		}
