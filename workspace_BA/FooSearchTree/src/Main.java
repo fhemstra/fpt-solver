@@ -27,7 +27,7 @@ public class Main {
 	static String single_graph_name = "bara_alb_n_500_m_1_9.gr";
 	
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = true;
+	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 10;
 
 	// Set range of k
@@ -39,7 +39,7 @@ public class Main {
 	static int max_graph_size = -1;
 	
 	// Set this to sort input graphs by their size ascending
-	static boolean sort_by_nodes = false;
+	static boolean sort_by_nodes = true;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -47,6 +47,9 @@ public class Main {
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics = true;
+	
+	// Set this to use heuristics after kernelization 
+	static boolean use_heuristics_after_kernel = false;
 
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
@@ -58,9 +61,9 @@ public class Main {
 	static int nr_of_columns = 20;
 
 	// Select a dataset
-	static String current_dataset = "pace";
+//	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-//	static String current_dataset = "gnp_graphs";
+	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
@@ -393,7 +396,26 @@ public class Main {
 						if(use_bevern_kernel) {
 							curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout);
 						} else {
-							curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);							
+							curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);
+						}
+						// Use heuristics again
+						System.out.print("> Heuristics, ");
+						if (use_heuristics_after_kernel) {
+							boolean done = false;
+							int k_decrease = 0;
+							while (!done) {
+								// Remove dangling nodes
+								int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
+								// Remove singletons
+								int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
+								k_decrease += singletons_removed;
+								if (singletons_removed == 0 && nodes_removed == 0)
+									done = true;
+							}
+							// Add k_decrease to list
+							int prev_k_dec = k_used_in_heuristics_per_graph.get(curr_kernel.hypergraph_name);
+							k_used_in_heuristics_per_graph.put(curr_kernel.hypergraph_name, prev_k_dec + k_decrease);
+							System.out.println("additional k used: " + k_decrease + " on top of " + prev_k_dec);
 						}
 					} catch (TimeoutException e) {
 						long timeout_stop = System.currentTimeMillis();

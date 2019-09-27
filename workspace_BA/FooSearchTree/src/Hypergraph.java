@@ -271,6 +271,7 @@ public class Hypergraph {
 		}
 		// Init kernel as empty hypergraph
 		Hypergraph kernel = new Hypergraph(init_nodes, new ArrayList<Tuple>());
+		kernel.hypergraph_name = this.hypergraph_name;
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
@@ -456,6 +457,7 @@ public class Hypergraph {
 
 		// Result
 		Hypergraph kernel = new Hypergraph(nodes_arr, edge_set);
+		kernel.hypergraph_name = this.hypergraph_name;
 		return kernel;
 	}
 
@@ -508,6 +510,7 @@ public class Hypergraph {
 		}
 		// Construct resulting graph
 		Hypergraph merged_graph = new Hypergraph(res_nodes, res_edges);
+		merged_graph.hypergraph_name = this.hypergraph_name;
 		return merged_graph;
 	}
 
