@@ -727,8 +727,11 @@ public class Hypergraph {
 					// Remove this node
 					this.nodes = arrWithout(this.nodes, curr_node);
 					node_counter++;
-					// Now this edge contains a deleted node -> update edges
-					this.edges = update_edges(this.nodes, this.edges);
+					// Now this edge contains a deleted node -> update this edge
+					this.edges.remove(curr_edge);
+					int[] shrinked_elements = arrWithout(curr_edge.elements, curr_node);
+					Tuple shrinked_edge = new Tuple(shrinked_elements);
+					this.edges.add(shrinked_edge);
 				}
 			}
 			it.remove(); // avoids a ConcurrentModificationException
@@ -738,14 +741,14 @@ public class Hypergraph {
 
 	public int removeSingletons(boolean mute, long kernel_timeout) {
 		int singleton_counter = 0;
-		ArrayList<Tuple> singletons_to_remove = new ArrayList<Tuple>();
+		HashSet<Tuple> singletons_to_remove = new HashSet<Tuple>();
 		// Look for singletons
 		for (Tuple edge : this.edges) {
 			if (edge.actualSize() == 1) {
 				singletons_to_remove.add(edge);
 			}
 		}
-		ArrayList<Integer> solution_nodes = new ArrayList<Integer>();
+		HashSet<Integer> solution_nodes = new HashSet<Integer>();
 		// Remove singletons
 		for(Tuple edge : singletons_to_remove) {
 			// Remove edge
@@ -757,6 +760,7 @@ public class Hypergraph {
 				}
 			}
 		}
+		// Remove the node contained in a singleton edge from the node set
 		for(int solution_node : solution_nodes) {
 			// Remove solution nodes
 			this.nodes = arrWithout(this.nodes, solution_node);
@@ -836,6 +840,30 @@ public class Hypergraph {
 			}
 		}
 		return updated_edges;
+	}
+	
+	public Hypergraph copyThis() {
+		// Copy nodes
+		int[] copy_nodes = new int[this.nodes.length];
+		for(int i = 0; i < this.nodes.length; i++) {
+			copy_nodes[i] = this.nodes[i];
+		}
+		
+		// Copy edges
+		ArrayList<Tuple> copy_edges = new ArrayList<Tuple>();
+		for(Tuple edge : this.edges) {
+			Tuple copy_of_edge = null;
+			// Try to copy, if hashIDs are equal an exception is thrown
+			copy_of_edge = edge.copyThis();
+			copy_edges.add(copy_of_edge);
+		}
+
+		// Contruct copy hyp
+		Hypergraph copy_hyp = new Hypergraph(copy_nodes, copy_edges);
+		
+		// Also copy name
+		copy_hyp.hypergraph_name = this.hypergraph_name;
+		return copy_hyp;
 	}
 
 }

@@ -166,14 +166,18 @@ public class Tuple {
 		return counter;
 	}
 	
-	public Tuple copyThis() throws Exception {
+	public Tuple copyThis() {
 		int[] elements_copy = new int[this.elements.length];
 		for(int i = 0; i < elements_copy.length; i++) {
 			elements_copy[i] = this.elements[i];
 		}
 		Tuple tuple_copy = new Tuple(elements_copy);
-		if(tuple_copy.hashCode() != this.hashCode()) {
-			throw new Exception();
+		try {
+			if(tuple_copy.hashCode() != this.hashCode()) {
+				throw new Exception();
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return tuple_copy;
 	}

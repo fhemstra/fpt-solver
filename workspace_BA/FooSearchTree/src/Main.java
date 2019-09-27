@@ -24,7 +24,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = true;
-	static String single_graph_name = "vc-exact_00.gr";
+	static String single_graph_name = "vc-exact_004.gr";
 	
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = true;
@@ -360,25 +360,30 @@ public class Main {
 					int updated_k_par = k_par;
 					int k_decrease = 0;
 					try {
-						if (use_bevern_kernel) {
-							curr_kernel = curr_reduced_graph.kernelizeBevern(k_par, mute, kernel_timeout);
-						} else {
-							curr_kernel = curr_reduced_graph.kernelizeUniform(k_par, mute, kernel_timeout);
-							// Remove dangling nodes and singletons
-							if (use_heuristics) {
-								boolean done = false;
-								while (!done) {
-									if (!mute)
-										System.out.println("New k_par:" + updated_k_par);
-									int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
-									int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
-									k_decrease += singletons_removed;
-									if (singletons_removed == 0 && nodes_removed == 0)
-										done = true;
-									updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
-								}
+						// Copy reduced graph to kernel
+						curr_kernel = curr_reduced_graph.copyThis();
+						
+						// Remove dangling nodes and singletons
+						if (use_heuristics) {
+							boolean done = false;
+							while (!done) {
+								if (!mute)
+									System.out.println("New k_par:" + updated_k_par);
+								int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
+								System.out.println("Dangling nodes done. nodes removed: " + nodes_removed);
+								int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
+								System.out.println("Singletons done. singletons removed: " + singletons_removed);
+								System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", " + curr_kernel.edges.size());
+								k_decrease += singletons_removed;
+								if (singletons_removed == 0 && nodes_removed == 0)
+									done = true;
+								updated_k_par = k_par - k_decrease; // TODO use updated_k_par for hs Search
 							}
 						}
+						
+						// Kernelize graph
+//						curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout);
+						curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);
 					} catch (TimeoutException e) {
 						long timeout_stop = System.currentTimeMillis();
 						double additional_time = (double) ((double) (timeout_stop - start_time) / 1000);
@@ -438,7 +443,7 @@ public class Main {
 						});
 
 						// HS-SearchTree
-						System.out.println("- Nodes, Edges left: " + curr_kernel.nodes.length + ", " + curr_kernel.edges.size());
+						System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", " + curr_kernel.edges.size());
 						System.out.print("> HS-SearchTree ");
 						boolean hs_result = false;
 						// Set timer
