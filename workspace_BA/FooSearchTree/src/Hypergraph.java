@@ -655,7 +655,7 @@ public class Hypergraph {
 	 * @param hs_timeout
 	 * @throws TimeoutException
 	 */
-	public boolean hsSearchTree(int k_par, ArrayList<Integer> sol, boolean mute, long hs_timeout)
+	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout)
 			throws TimeoutException {
 		// TODO return solution
 		// If heuristics used more than k_par nodes
@@ -674,7 +674,7 @@ public class Hypergraph {
 				return false;
 			}
 			boolean edge_is_covered = false;
-			for (int j = 0; j < this.d_par; j++) {
+			for (int j = 0; j < curr_edge.elements.length; j++) {
 				if (sol.contains(curr_edge.elements[j])) {
 					edge_is_covered = true;
 				}
@@ -682,8 +682,8 @@ public class Hypergraph {
 			if (!edge_is_covered) {
 				boolean flag = false;
 				if (sol.size() < k_par) {
-					// branch into d branches, adding every element of the edge
-					for (int j = 0; j < this.d_par; j++) {
+					// branch into (at most) d branches, adding every element of the edge
+					for (int j = 0; j < curr_edge.elements.length; j++) {
 						// Don't add -1
 						if (curr_edge.elements[j] == -1)
 							continue;

@@ -27,8 +27,8 @@ public class Main {
 	static String single_graph_name = "bara_alb_n_500_m_1_9.gr";
 	
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = false;
-	static int number_of_graphs_to_test = 1;
+	static boolean only_first_x_graphs = true;
+	static int number_of_graphs_to_test = 10;
 
 	// Set range of k
 	static int start_k = 0;
@@ -39,7 +39,7 @@ public class Main {
 	static int max_graph_size = -1;
 	
 	// Set this to sort input graphs by their size ascending
-	static boolean sort_by_nodes = true;
+	static boolean sort_by_nodes = false;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -58,11 +58,11 @@ public class Main {
 	static int nr_of_columns = 20;
 
 	// Select a dataset
-//	static String current_dataset = "pace";
+	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
-	static String current_dataset = "bara_alb_graphs";
+//	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
 	// ++++++++++ Settings done +++++++++
@@ -455,7 +455,7 @@ public class Main {
 
 						// HS-SearchTree
 						System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", " + curr_kernel.edges.size());
-						System.out.print("> HS-SearchTree, k = " + k_par);
+						System.out.print("> HS-SearchTree, k = " + k_par + " ");
 						boolean hs_result = false;
 						// Set timer
 						start_time = System.currentTimeMillis();
@@ -468,7 +468,7 @@ public class Main {
 
 						// Start HS-SearchTree
 						try {
-							hs_result = curr_kernel.hsSearchTree(k_par, new ArrayList<Integer>(), mute,
+							hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute,
 									hs_timeout);
 							if (!mute)
 								System.out.println("\n");
