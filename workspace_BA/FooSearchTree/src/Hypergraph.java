@@ -736,11 +736,12 @@ public class Hypergraph {
 					this.nodes = arrWithout(this.nodes, curr_node);
 					node_counter++;
 					// Now this edge contains a deleted node -> update this edge
-					this.edges.remove(curr_edge);
+					// Generate elements without the removed node
 					int[] shrinked_elements = arrWithout(curr_edge.elements, curr_node);
-					Tuple shrinked_edge = new Tuple(shrinked_elements);
-					this.edges.add(shrinked_edge);
+					// Update edge (this manipulates this.edges)
+					curr_edge.elements = shrinked_elements;
 				}
+				// Else, this is a singleton and will be removed by removeSingletons()
 			}
 			it.remove(); // avoids a ConcurrentModificationException
 		}
@@ -816,9 +817,11 @@ public class Hypergraph {
 				ArrayList<Tuple> curr_list = node_occurences.get(node);
 				if (curr_list == null) {
 					ArrayList<Tuple> list = new ArrayList<Tuple>();
+					// Init list if there is none
 					list.add(edge);
 					node_occurences.put(node, list);
 				} else {
+					// Expand list
 					curr_list.add(edge);
 					node_occurences.put(node, curr_list);
 				}
