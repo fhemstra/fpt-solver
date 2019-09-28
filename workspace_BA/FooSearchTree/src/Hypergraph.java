@@ -261,9 +261,10 @@ public class Hypergraph {
 			throw new TimeoutException();
 		}
 
-		// TODO handle this better
+		// This can happen if heuristics already solved this graph (no edges/nodes
+		// remain) but used more than current k
 		if (k_par < 0)
-			return null;
+			return this;
 		// Having no nodes means having only -1 entries
 		int[] init_nodes = new int[this.nodes.length];
 		for(int i = 0; i < init_nodes.length; i++) {
