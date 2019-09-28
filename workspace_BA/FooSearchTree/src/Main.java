@@ -47,9 +47,6 @@ public class Main {
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics_after_reduction = true;
-	
-	// Set this to use heuristics after kernelization 
-	static boolean use_heuristics_after_kernel = false;
 
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
@@ -58,7 +55,7 @@ public class Main {
 	static boolean accumulate_time_over_k = true;
 	
 	// Set nr of columns the CSV file should have
-	static int nr_of_columns = 23;
+	static int nr_of_columns = 24;
 
 	// Select a dataset
 //	static String current_dataset = "pace";
@@ -153,13 +150,16 @@ public class Main {
 		// accumulate_time_over_k is set)
 		HashSet<String> solved_graphs = new HashSet<String>();
 		HashSet<String> timed_out_graphs = new HashSet<String>();
+		HashMap<String,Integer> solution_k = new HashMap<String,Integer>();
 		
 		// Check lower bounds of graphs so we don't waste time with k = 1
 		int first_relevant_k = stop_k;
 		HashMap<String,Integer> lower_bounds_per_graph = new HashMap<String,Integer>();
 		
 		// Heuristics already add elements to the solution, therefore the remaining k must be lowered
-		HashMap<String,Integer> k_used_in_heuristics_per_graph = new HashMap<String,Integer>();
+		HashMap<String,Integer> k_used_in_heuristics_after_reduction_per_graph = new HashMap<String,Integer>();
+		// This changes with k
+		ArrayList<Integer> k_used_in_heuristics_after_kernel = new ArrayList<Integer>();
 
 		// Prints
 		// System.out.println("> Constructing " + form_files.length + " formulas with "
@@ -255,7 +255,7 @@ public class Main {
 								System.out.println("! Heuristics timed out.");
 							}
 							// Add k_decrease to list
-							k_used_in_heuristics_per_graph.put(reduced_graph.hypergraph_name, k_decrease);
+							k_used_in_heuristics_after_reduction_per_graph.put(reduced_graph.hypergraph_name, k_decrease);
 							System.out.println("k used: " + k_decrease);
 							
 							// Process results
@@ -411,7 +411,7 @@ public class Main {
 					}
 					Hypergraph curr_reduced_graph = reduced_graphs.get(j);
 					if(use_heuristics_after_reduction) {
-						int k_after_heuristics = k_par + k_used_in_heuristics_per_graph.get(curr_reduced_graph.hypergraph_name);
+						int k_after_heuristics = k_par + k_used_in_heuristics_after_reduction_per_graph.get(curr_reduced_graph.hypergraph_name);
 						System.out.println("> Kernelization, " + curr_reduced_graph.hypergraph_name + ", k = " + k_par
 								+ ", actual k = " + k_after_heuristics);
 					} else {
@@ -436,29 +436,6 @@ public class Main {
 							curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout);
 						} else {
 							curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);
-						}
-						// Use heuristics again
-						if (use_heuristics_after_kernel) {
-							System.out.print("> Heuristics, ");
-							boolean done = false;
-							int k_decrease = 0;
-							while (!done) {
-								// Remove dangling nodes
-								int nodes_removed = curr_kernel.removeDanglingNodes(mute, kernel_timeout);
-								// Remove singletons
-								int singletons_removed = curr_kernel.removeSingletons(mute, kernel_timeout);
-								k_decrease += singletons_removed;
-								if (singletons_removed == 0 && nodes_removed == 0)
-									done = true;
-							}
-							// Add k_decrease to list
-							int prev_k_dec = 0;
-							// If we already used heuristics after reduction
-							if(use_heuristics_after_reduction) {
-								prev_k_dec = k_used_in_heuristics_per_graph.get(curr_kernel.hypergraph_name);								
-							}
-							k_used_in_heuristics_per_graph.put(curr_kernel.hypergraph_name, prev_k_dec + k_decrease);
-							System.out.println("additional k used: " + k_decrease + " on top of " + prev_k_dec);
 						}
 					} catch (TimeoutException e) {
 						long timeout_stop = System.currentTimeMillis();
@@ -538,6 +515,13 @@ public class Main {
 							if (!mute)
 								System.out.println("\n");
 							if (hs_result) {
+								// Calc total k used by heuristics
+								int k_used_by_heur = 0;
+								if(use_heuristics_after_reduction) {
+									k_used_by_heur += k_used_in_heuristics_after_reduction_per_graph.get(curr_kernel.hypergraph_name);
+								}
+								int actual_k = k_par + k_used_by_heur;
+								solution_k.put(curr_kernel.hypergraph_name, actual_k);
 								System.out.println("  TRUE");
 							} else {
 								System.out.println();
@@ -610,6 +594,7 @@ public class Main {
 				"HS-ST time",
 				"Pipe 2 time",
 				"Pipe 2 result",
+				"Solution k",
 				"Time to solve",
 				"Pipe 1 == Pipe 2",
 				"Pipe 1 timeout",
@@ -671,8 +656,14 @@ public class Main {
 			}
 			// Convert time used
 			Double pipe_2_time_used = (double) pipe_2_time_used_per_instance.get(k_indep_index) / 1000;
+			String curr_graph_name = graph_names.get(k_indep_index);
+			// Get solution k 
+			int curr_solution_k = -1;
+			if(solution_k.get(curr_graph_name) != null) {
+				curr_solution_k = solution_k.get(curr_graph_name);
+			}
 			// Assemble print data
-			write_buffer.add(graph_names.get(k_indep_index));
+			write_buffer.add(curr_graph_name);
 			write_buffer.add(Integer.toString(n_const.get(k_indep_index)));
 			write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
 			write_buffer.add(Integer.toString(dens_list.get(k_indep_index)));
@@ -691,6 +682,7 @@ public class Main {
 			write_buffer.add(Double.toString(hs_times.get(i)));
 			write_buffer.add(Double.toString(pipe_2_time));
 			write_buffer.add(Integer.toString(pipe_2_res));
+			write_buffer.add(Integer.toString(curr_solution_k));
 			write_buffer.add(Double.toString(pipe_2_time_used));
 			write_buffer.add(Integer.toString(equal_res));
 			write_buffer.add(Integer.toString(timeout_1));
