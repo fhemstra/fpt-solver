@@ -274,6 +274,7 @@ public class Main {
 							// If heuristics timed out
 							else {
 								// Make -1 entries
+								heuristic_times.add((double) -1);
 								heuristic_edges.add(-1);
 								heuristic_nodes.add(-1);
 							}
