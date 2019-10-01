@@ -659,13 +659,23 @@ public class Hypergraph {
 	 * @param hs_timeout
 	 * @throws TimeoutException
 	 */
-	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout)
+	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout, boolean use_branch_and_bound)
 			throws TimeoutException {
 		// TODO return solution
 		// If heuristics used more than k_par nodes
 		if(k_par < 0) {
 			return false;
 		}
+		// Test bounding condition
+		if(use_branch_and_bound) {
+			// If there is a matching left which is bigger than what we can afford, return false
+			int max_match_size = calcMaxMatchSize(sol);
+			int k_left = k_par - sol.size();
+			if(k_left < max_match_size) {
+				return false;
+			}
+		}
+		// If there is still a solution to be found, test if all edges are covered. Branch if not.
 		for (int i = 0; i < this.edges.size(); i++) {
 			// Check for timeout
 			if (System.currentTimeMillis() > hs_timeout) {
@@ -696,7 +706,7 @@ public class Hypergraph {
 						// print
 						if (!mute)
 							System.out.print("  Sol size: " + sol.size() + "\r");
-						flag = flag || hsSearchTree(k_par, sol, mute, hs_timeout);
+						flag = flag || hsSearchTree(k_par, sol, mute, hs_timeout, use_branch_and_bound);
 						if (flag) {
 							return true;
 						} else {
@@ -711,6 +721,53 @@ public class Hypergraph {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Returns the size of a maximal matching on the not covered edges of this.
+	 * @param sol The nodes that are part of the current solution and shall be ignored.
+	 */
+	private int calcMaxMatchSize(HashSet<Integer> sol) {
+		HashSet<Integer> matching_nodes = new HashSet<Integer>();
+		// Size of the matching refers to the number of edges
+		int matching_size = 0;
+		for(Tuple edge : this.edges) {
+			// Empty edges can not be part of matchings and do not need to be considered
+			if(edge.actualSize() == 0) {
+				continue;
+			}
+			// Check if edge is covered
+			boolean is_covered = false;
+			for(int edge_node : edge.elements) {
+				if(sol.contains(edge_node)) {
+					is_covered = true;
+					break;
+				}
+				
+			}
+			// If the edge is covered, go next
+			if(is_covered) {
+				continue;
+			}
+			// If the edge is not covered, check if a node of the edge is contained in the matching
+			boolean is_matched = false;
+			for(int edge_node : edge.elements) {
+				if(matching_nodes.contains(edge_node)) {
+					is_matched =  true;
+					break;
+				}
+			}
+			// If the edge is already matched, it can not contribute to the matching
+			if(is_matched) {
+				continue;
+			}
+			// Else add all nodes to the matching
+			for(int edge_node : edge.elements) {
+				matching_nodes.add(edge_node);
+			}
+			matching_size++;
+		}
+		return matching_size;
 	}
 
 	public int removeDanglingNodes(boolean mute, long kernel_timeout) throws TimeoutException {

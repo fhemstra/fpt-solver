@@ -24,7 +24,7 @@ public class Main {
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "bara_alb_n_500_m_1_9.gr";
+	static String single_graph_name = "vc-exact_004.gr";
 	
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = false;
@@ -43,6 +43,9 @@ public class Main {
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
+	
+	// Set to abandon branches of HS ST that contain a big matching
+	static boolean use_branch_and_bound = true;
 
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
@@ -60,8 +63,8 @@ public class Main {
 	// Select a dataset
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-	static String current_dataset = "gnp_graphs";
-//	static String current_dataset = "gnm_graphs";
+//	static String current_dataset = "gnp_graphs";
+	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
@@ -170,6 +173,7 @@ public class Main {
 		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			for (int j = 0; j < graph_files.length; j++) {
+				Long curr_time_used = (long) 0;
 				String curr_graph_path = graph_files[j].getAbsolutePath();
 				int curr_graph_size = graphSize(curr_graph_path);
 				// Only take graphs, that are small enough
@@ -215,7 +219,7 @@ public class Main {
 					// Process results
 					double time_passed = (double) (stop_time - start_time) / (double) 1000;
 					reduction_times.add(time_passed);
-					pipe_2_time_used_per_instance.add(stop_time - start_time);
+					curr_time_used = stop_time - start_time;
 					printTime(time_passed);
 					
 					// Handle timeout
@@ -226,7 +230,7 @@ public class Main {
 						reduced_nodes.add(-1);
 					}
 					
-					// If reduction was successful
+					// If reduction was successful for the j-th graph
 					else {
 						// Save data about reduction
 						reduced_graphs.add(reduced_graph);
@@ -237,7 +241,7 @@ public class Main {
 						if (use_heuristics_after_reduction) {
 							System.out.print("> Heuristics, ");
 							start_time = System.currentTimeMillis();
-							heuristic_timeout = start_time + timeout_value - pipe_2_time_used_per_instance.get(j);
+							heuristic_timeout = start_time + timeout_value - curr_time_used;
 							boolean done = false;
 							int k_decrease = 0;
 							try {
@@ -262,8 +266,7 @@ public class Main {
 							stop_time = System.currentTimeMillis();
 							double heur_time_passed = (double) (stop_time - start_time) / (double) 1000;
 							heuristic_times.add(heur_time_passed);
-							pipe_2_time_used_per_instance.set(j,
-									pipe_2_time_used_per_instance.get(j) + (stop_time - start_time));
+							curr_time_used += stop_time - start_time;
 							printTime(heur_time_passed);
 							// If heuristics did not time out
 							if(done) {
@@ -299,6 +302,8 @@ public class Main {
 					System.out.println(
 							"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
 				}
+				// Add time used for reduction (+ Heuristics)
+				pipe_2_time_used_per_instance.add(curr_time_used);
 			}
 			// TODO only use the first formula
 			// break;
@@ -512,7 +517,7 @@ public class Main {
 						// Start HS-SearchTree
 						try {
 							hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute,
-									hs_timeout);
+									hs_timeout, use_branch_and_bound);
 							if (!mute)
 								System.out.println("\n");
 							if (hs_result) {
