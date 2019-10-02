@@ -25,7 +25,7 @@ public class Main {
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
-	
+
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 10;
@@ -37,13 +37,13 @@ public class Main {
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
-	
+
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = false;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
-	
+
 	// Set to abandon branches of HS ST that contain a big matching
 	static boolean use_branch_and_bound = true;
 
@@ -56,7 +56,7 @@ public class Main {
 
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
-	
+
 	// Set nr of columns the CSV file should have
 	static int nr_of_columns = 24;
 
@@ -84,15 +84,15 @@ public class Main {
 			graph_dir_path = "input_graphs" + File.separator + current_dataset;
 			form_dir_path = "instances";
 		}
-		
+
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
 		File form_folder = new File(form_dir_path);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
-		
+
 		// Sort files by their size (nr of nodes)
-		if(sort_by_nodes) {
+		if (sort_by_nodes) {
 			Arrays.sort(graph_files, new Comparator<File>() {
 				@Override
 				public int compare(File file_1, File file_2) {
@@ -105,9 +105,9 @@ public class Main {
 					else
 						return -1;
 				}
-			});			
+			});
 		}
-		
+
 		// Otherwise Sort by file name
 		else {
 			Arrays.sort(graph_files, new Comparator<File>() {
@@ -115,7 +115,7 @@ public class Main {
 				public int compare(File file_1, File file_2) {
 					return file_1.getName().compareTo(file_2.getName());
 				}
-			});	
+			});
 		}
 
 		// +++ result lists and other containers +++
@@ -157,13 +157,14 @@ public class Main {
 		HashSet<String> solved_graphs = new HashSet<String>();
 		HashSet<String> timed_out_graphs = new HashSet<String>();
 		// Save the smallest k that solved a graph
-		HashMap<String,Integer> solution_k = new HashMap<String,Integer>();
+		HashMap<String, Integer> solution_k = new HashMap<String, Integer>();
 		// Check lower bounds of graphs so we don't waste time with k = 1
 		int first_relevant_k = stop_k;
-		HashMap<String,Integer> lower_bounds_per_graph = new HashMap<String,Integer>();
-		// Heuristics add elements to the solution, therefore the remaining k must be lowered
-		HashMap<String,Integer> k_used_in_heuristics_after_reduction_per_graph = new HashMap<String,Integer>();
-		// +++++++++++++++++++++++++++++++		
+		HashMap<String, Integer> lower_bounds_per_graph = new HashMap<String, Integer>();
+		// Heuristics add elements to the solution, therefore the remaining k must be
+		// lowered
+		HashMap<String, Integer> k_used_in_heuristics_after_reduction_per_graph = new HashMap<String, Integer>();
+		// +++++++++++++++++++++++++++++++
 
 		// Prints
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
@@ -184,7 +185,7 @@ public class Main {
 						}
 					}
 					// Only test the first x graphs
-					if(only_first_x_graphs && j >= number_of_graphs_to_test) {
+					if (only_first_x_graphs && j >= number_of_graphs_to_test) {
 						continue;
 					}
 					graph_names.add(graph_files[j].getName());
@@ -203,12 +204,13 @@ public class Main {
 					// Reduce
 					Hypergraph reduced_graph = null;
 					try {
-						if(curr_formula.guard_rel_id == null) {
+						if (curr_formula.guard_rel_id == null) {
 							System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
-							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout);							
+							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout);
 						} else {
-							int nr_of_guard_assignments = curr_formula.relation_map.get(curr_formula.guard_rel_id).elements.size();
-							System.out.println(" (with guard), " + nr_of_guard_assignments  + " assignments");
+							int nr_of_guard_assignments = curr_formula.relation_map
+									.get(curr_formula.guard_rel_id).elements.size();
+							System.out.println(" (with guard), " + nr_of_guard_assignments + " assignments");
 							reduced_graph = curr_formula.reduceToHsWithGuard(mute, reduction_timeout);
 						}
 					} catch (TimeoutException e) {
@@ -220,7 +222,7 @@ public class Main {
 					reduction_times.add(time_passed);
 					curr_time_used = stop_time - start_time;
 					printTime(time_passed);
-					
+
 					// Handle timeout
 					if (reduced_graph == null) {
 						// Add null, handle this during evaluation
@@ -232,14 +234,14 @@ public class Main {
 						heuristic_edges.add(-1);
 						heuristic_nodes.add(-1);
 					}
-					
+
 					// If reduction was successful for the j-th graph
 					else {
 						// Save data about reduction
 						reduced_graphs.add(reduced_graph);
 						reduced_edges.add(reduced_graph.edges.size());
 						reduced_nodes.add(actualArraySize(reduced_graph.nodes));
-						
+
 						// Use heuristics to shrink the graph
 						if (use_heuristics_after_reduction) {
 							System.out.print("> Heuristics, ");
@@ -262,9 +264,10 @@ public class Main {
 								System.out.println("! Heuristics timed out.");
 							}
 							// Add k_decrease to list
-							k_used_in_heuristics_after_reduction_per_graph.put(reduced_graph.hypergraph_name, k_decrease);
+							k_used_in_heuristics_after_reduction_per_graph.put(reduced_graph.hypergraph_name,
+									k_decrease);
 							System.out.println("k used: " + k_decrease);
-							
+
 							// Process results
 							stop_time = System.currentTimeMillis();
 							double heur_time_passed = (double) (stop_time - start_time) / (double) 1000;
@@ -272,7 +275,7 @@ public class Main {
 							curr_time_used += stop_time - start_time;
 							printTime(heur_time_passed);
 							// If heuristics did not time out
-							if(done) {
+							if (done) {
 								// Save data about heuristics
 								heuristic_edges.add(reduced_graph.edges.size());
 								heuristic_nodes.add(actualArraySize(reduced_graph.nodes));
@@ -291,12 +294,12 @@ public class Main {
 							heuristic_edges.add(-1);
 							heuristic_nodes.add(-1);
 						}
-						
+
 						// Calculate and save lower bound for k of this graph
 						ArrayList<Tuple> disj_edges = reduced_graph.findMaxDisjEdges(reduced_graph.edges);
 						int lower_bound_k = disj_edges.size();
 						lower_bounds_per_graph.put(reduced_graph.hypergraph_name, lower_bound_k);
-						
+
 					}
 				}
 				// Graph is too big
@@ -312,7 +315,7 @@ public class Main {
 		} // Reduction over
 
 		System.out.println("-------");
-		
+
 		// Init time_used array for the first pipeline
 		if (!skip_search_tree) {
 			while (pipe_1_time_used_per_instance.size() < forms.size()) {
@@ -397,7 +400,7 @@ public class Main {
 					hs_times.add((double) 0);
 					ke_results.add(true); // true for already solved
 				}
-				
+
 				// k is below the lower bound of this graph
 				else if (k_par < lower_bounds_per_graph.get(reduced_graphs.get(j).hypergraph_name)) {
 					// Make empty entries and go to next graph
@@ -410,16 +413,17 @@ public class Main {
 
 				// Kernelization
 				else {
-					if(k_par < first_relevant_k) {
+					if (k_par < first_relevant_k) {
 						// Save the first k we used for later (result printing)
 						first_relevant_k = k_par;
 					} else {
-						// Only print if there is a graph for this 
+						// Only print if there is a graph for this
 						System.out.println("------");
 					}
 					Hypergraph curr_reduced_graph = reduced_graphs.get(j);
-					if(use_heuristics_after_reduction) {
-						int k_after_heuristics = k_par + k_used_in_heuristics_after_reduction_per_graph.get(curr_reduced_graph.hypergraph_name);
+					if (use_heuristics_after_reduction) {
+						int k_after_heuristics = k_par + k_used_in_heuristics_after_reduction_per_graph
+								.get(curr_reduced_graph.hypergraph_name);
 						System.out.println("> Kernelization, " + curr_reduced_graph.hypergraph_name + ", k = " + k_par
 								+ ", actual k = " + k_after_heuristics);
 					} else {
@@ -440,7 +444,7 @@ public class Main {
 						// Copy reduced graph to kernel
 						curr_kernel = curr_reduced_graph.copyThis();
 						// Kernelize graph
-						if(use_bevern_kernel) {
+						if (use_bevern_kernel) {
 							curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout);
 						} else {
 							curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);
@@ -504,7 +508,8 @@ public class Main {
 						});
 
 						// HS-SearchTree
-						System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", " + curr_kernel.edges.size());
+						System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", "
+								+ curr_kernel.edges.size());
 						System.out.print("> HS-SearchTree, k = " + k_par + " ");
 						boolean hs_result = false;
 						// Set timer
@@ -518,15 +523,16 @@ public class Main {
 
 						// Start HS-SearchTree
 						try {
-							hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute,
-									hs_timeout, use_branch_and_bound);
+							hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout,
+									use_branch_and_bound);
 							if (!mute)
 								System.out.println("\n");
 							if (hs_result) {
 								// Calc total k used by heuristics
 								int k_used_by_heur = 0;
-								if(use_heuristics_after_reduction) {
-									k_used_by_heur += k_used_in_heuristics_after_reduction_per_graph.get(curr_kernel.hypergraph_name);
+								if (use_heuristics_after_reduction) {
+									k_used_by_heur += k_used_in_heuristics_after_reduction_per_graph
+											.get(curr_kernel.hypergraph_name);
 								}
 								int actual_k = k_par + k_used_by_heur;
 								solution_k.put(curr_kernel.hypergraph_name, actual_k);
@@ -643,7 +649,7 @@ public class Main {
 			// pipe_2_time should be -1 when the instance timed out or is solved
 			if (timeout_2 == 1.0) {
 				pipe_2_time = -1;
-			} else if(pipe_2_res == 1.0) {
+			} else if (pipe_2_res == 1.0) {
 				pipe_2_time = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
 			} else {
 				pipe_2_time = reduction_times.get(k_indep_index) + kernel_times.get(i) + hs_times.get(i);
@@ -665,9 +671,9 @@ public class Main {
 			// Convert time used
 			Double pipe_2_time_used = (double) pipe_2_time_used_per_instance.get(k_indep_index) / 1000;
 			String curr_graph_name = graph_names.get(k_indep_index);
-			// Get solution k 
+			// Get solution k
 			int curr_solution_k = -1;
-			if(solution_k.get(curr_graph_name) != null) {
+			if (solution_k.get(curr_graph_name) != null) {
 				curr_solution_k = solution_k.get(curr_graph_name);
 			}
 			// Assemble print data
@@ -718,7 +724,8 @@ public class Main {
 	/**
 	 * Writes all lines from the given list to the specified csv-file.
 	 */
-	private static void writeLineToCsv(ArrayList<String> write_buffer, String file_name, boolean cmd, int number_of_columns) {
+	private static void writeLineToCsv(ArrayList<String> write_buffer, String file_name, boolean cmd,
+			int number_of_columns) {
 		String result_file_path = "";
 		if (cmd) {
 			result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
@@ -731,7 +738,7 @@ public class Main {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file, true)); // true for append mode
 			for (int i = 0; i < write_buffer.size(); i++) {
-				if(i != 0 && i % number_of_columns == 0) {
+				if (i != 0 && i % number_of_columns == 0) {
 					bw.write("\n");
 				}
 				bw.write(write_buffer.get(i) + ";");
