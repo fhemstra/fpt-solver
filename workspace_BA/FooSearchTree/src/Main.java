@@ -20,7 +20,7 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 300000;
+	static long timeout_value = 120000;
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
@@ -28,18 +28,18 @@ public class Main {
 	
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = false;
-	static int number_of_graphs_to_test = 1;
+	static int number_of_graphs_to_test = 10;
 
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
-	static int stop_k = 6000;
+	static int stop_k = 20000;
 
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
 	
 	// Set this to sort input graphs by their size ascending
-	static boolean sort_by_nodes = true;
+	static boolean sort_by_nodes = false;
 
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
@@ -61,10 +61,10 @@ public class Main {
 	static int nr_of_columns = 24;
 
 	// Select a dataset
-//	static String current_dataset = "pace";
+	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
-	static String current_dataset = "gnm_graphs";
+//	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 
@@ -228,6 +228,10 @@ public class Main {
 						reduced_graphs.add(null);
 						reduced_edges.add(-1);
 						reduced_nodes.add(-1);
+						// Make -1 entries for heuristics
+						heuristic_times.add((double) -1);
+						heuristic_edges.add(-1);
+						heuristic_nodes.add(-1);
 					}
 					
 					// If reduction was successful for the j-th graph
@@ -277,7 +281,6 @@ public class Main {
 							// If heuristics timed out
 							else {
 								// Make -1 entries
-								heuristic_times.add((double) -1);
 								heuristic_edges.add(-1);
 								heuristic_nodes.add(-1);
 							}
