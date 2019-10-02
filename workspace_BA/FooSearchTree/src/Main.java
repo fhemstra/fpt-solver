@@ -74,27 +74,24 @@ public class Main {
 		// Get time stamp for the name of the result file
 		long main_init_time = System.currentTimeMillis();
 
-		// Construct path to graph dir
+		// Construct paths to input directories
 		String graph_dir_path = "";
-		if (call_from_cmd) {
-			graph_dir_path = ".." + File.separator + "input_graphs" + File.separator + current_dataset;
-		} else {
-			graph_dir_path = "input_graphs" + File.separator + current_dataset;
-		}
-		// Construct path to form dir
 		String form_dir_path = "";
 		if (call_from_cmd) {
+			graph_dir_path = ".." + File.separator + "input_graphs" + File.separator + current_dataset;
 			form_dir_path = ".." + File.separator + "instances";
 		} else {
+			graph_dir_path = "input_graphs" + File.separator + current_dataset;
 			form_dir_path = "instances";
 		}
-
+		
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
 		File form_folder = new File(form_dir_path);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
-		// Sort files by their nodes
+		
+		// Sort files by their size (nr of nodes)
 		if(sort_by_nodes) {
 			Arrays.sort(graph_files, new Comparator<File>() {
 				@Override
@@ -110,63 +107,65 @@ public class Main {
 				}
 			});			
 		}
-		// Sort by file name
+		
+		// Otherwise Sort by file name
 		else {
 			Arrays.sort(graph_files, new Comparator<File>() {
 				@Override
 				public int compare(File file_1, File file_2) {
-					String graph_1_name = file_1.getName();
-					String graph_2_name = file_2.getName();
-					return graph_1_name.compareTo(graph_2_name);
+					return file_1.getName().compareTo(file_2.getName());
 				}
 			});	
 		}
 
-		// Init result lists and other containers
-		ArrayList<Formula> forms = new ArrayList<Formula>();
-		ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
+		// +++ result lists and other containers +++
 		// Init timers
 		long start_time, stop_time, st_timeout, reduction_timeout, kernel_timeout, hs_timeout, heuristic_timeout = 0;
-		// Result lists
-		ArrayList<String> graph_names = new ArrayList<String>();
-		ArrayList<Integer> n_const = new ArrayList<Integer>();
-		ArrayList<Double> reduction_times = new ArrayList<Double>();
-		ArrayList<Double> search_tree_times = new ArrayList<Double>();
-		ArrayList<Double> heuristic_times = new ArrayList<Double>();
-		ArrayList<Integer> heuristic_edges = new ArrayList<Integer>();
-		ArrayList<Integer> heuristic_nodes = new ArrayList<Integer>();
-		ArrayList<Double> kernel_times = new ArrayList<Double>();
-		ArrayList<Integer> kernel_edges = new ArrayList<Integer>();
-		ArrayList<Integer> kernel_nodes = new ArrayList<Integer>();
-		ArrayList<Integer> reduced_nodes = new ArrayList<Integer>();
-		ArrayList<Integer> reduced_edges = new ArrayList<Integer>();
-		ArrayList<Double> hs_times = new ArrayList<Double>();
+		// Formulas (like vertex-cover)
+		ArrayList<Formula> forms = new ArrayList<Formula>();
 		ArrayList<Integer> c_list = new ArrayList<Integer>();
 		ArrayList<Integer> dens_list = new ArrayList<Integer>();
+		// Successfully reduced hypergraphs
+		ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
+		// Result lists
+		ArrayList<String> graph_names = new ArrayList<String>();
+		ArrayList<Integer> graph_sizes = new ArrayList<Integer>();
+		// Reduction
+		ArrayList<Integer> reduced_nodes = new ArrayList<Integer>();
+		ArrayList<Integer> reduced_edges = new ArrayList<Integer>();
+		ArrayList<Double> reduction_times = new ArrayList<Double>();
+		// Heuristics
+		ArrayList<Integer> heuristic_nodes = new ArrayList<Integer>();
+		ArrayList<Integer> heuristic_edges = new ArrayList<Integer>();
+		ArrayList<Double> heuristic_times = new ArrayList<Double>();
+		// Pipe 1: SearchTree
+		ArrayList<Double> search_tree_times = new ArrayList<Double>();
 		ArrayList<Boolean> search_tree_results = new ArrayList<Boolean>();
-		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
 		ArrayList<Boolean> pipe_1_timeouts = new ArrayList<Boolean>();
-		ArrayList<Boolean> pipe_2_timeouts = new ArrayList<Boolean>();
 		ArrayList<Long> pipe_1_time_used_per_instance = new ArrayList<Long>();
+		// Pipe 2: Kernel
+		ArrayList<Integer> kernel_nodes = new ArrayList<Integer>();
+		ArrayList<Integer> kernel_edges = new ArrayList<Integer>();
+		ArrayList<Double> kernel_times = new ArrayList<Double>();
+		ArrayList<Boolean> ke_results = new ArrayList<Boolean>();
+		// Pipe 2: Hitting-Set Search Tree
+		ArrayList<Double> hs_times = new ArrayList<Double>();
+		ArrayList<Boolean> pipe_2_timeouts = new ArrayList<Boolean>();
 		ArrayList<Long> pipe_2_time_used_per_instance = new ArrayList<Long>();
 		// Keep track of graphs that have been solved already (only used when
 		// accumulate_time_over_k is set)
 		HashSet<String> solved_graphs = new HashSet<String>();
 		HashSet<String> timed_out_graphs = new HashSet<String>();
+		// Save the smallest k that solved a graph
 		HashMap<String,Integer> solution_k = new HashMap<String,Integer>();
-		
 		// Check lower bounds of graphs so we don't waste time with k = 1
 		int first_relevant_k = stop_k;
 		HashMap<String,Integer> lower_bounds_per_graph = new HashMap<String,Integer>();
-		
-		// Heuristics already add elements to the solution, therefore the remaining k must be lowered
+		// Heuristics add elements to the solution, therefore the remaining k must be lowered
 		HashMap<String,Integer> k_used_in_heuristics_after_reduction_per_graph = new HashMap<String,Integer>();
-		// This changes with k
-		ArrayList<Integer> k_used_in_heuristics_after_kernel = new ArrayList<Integer>();
+		// +++++++++++++++++++++++++++++++		
 
 		// Prints
-		// System.out.println("> Constructing " + form_files.length + " formulas with "
-		// + graph_files.length + " instances and reducing them to hypergraphs.");
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
 
 		// Construct Formulas and reduce graphs (only once for all k)
@@ -189,7 +188,7 @@ public class Main {
 						continue;
 					}
 					graph_names.add(graph_files[j].getName());
-					n_const.add(curr_graph_size);
+					graph_sizes.add(curr_graph_size);
 					// Constructing Formula
 					Formula curr_formula = new Formula(form_path, curr_graph_path);
 					System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
@@ -673,7 +672,7 @@ public class Main {
 			}
 			// Assemble print data
 			write_buffer.add(curr_graph_name);
-			write_buffer.add(Integer.toString(n_const.get(k_indep_index)));
+			write_buffer.add(Integer.toString(graph_sizes.get(k_indep_index)));
 			write_buffer.add(Integer.toString(c_list.get(k_indep_index)));
 			write_buffer.add(Integer.toString(dens_list.get(k_indep_index)));
 			write_buffer.add(Integer.toString(curr_k_par));
