@@ -15,59 +15,46 @@ public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
 	static boolean call_from_cmd = true;
-
 	// Set this to mute debug output
 	static boolean mute = true;
-
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
 	static long timeout_value = 180000;
-
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
-
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 10;
-
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
-	static int stop_k = 20000;
-
+	static int stop_k = 1000;
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
-
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = false;
-
+	// Set to skip both pipelines, only reducing graphs
+	static boolean skip_solution = true;
 	// Set this if the first pipeline should be skipped
 	static boolean skip_search_tree = true;
-
 	// Set to abandon branches of HS ST that contain a big matching
 	static boolean use_branch_and_bound = true;
-
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics_after_reduction = true;
-
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
-
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
-
 	// Set nr of columns the CSV file should have
 	static int nr_of_columns = 24;
-
 	// Select a dataset
-	static String current_dataset = "pace";
-//	static String current_dataset = "k_star_graphs";
+//	static String current_dataset = "pace";
+	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
-
 	// ++++++++++ Settings done +++++++++
 	
 	// +++++++ RESULT CONTAINERS +++++++
@@ -116,7 +103,6 @@ public class Main {
 	// lowered
 	static HashMap<String, Integer> k_used_in_heuristics_after_reduction_per_graph = new HashMap<String, Integer>();
 	// +++++++ RESULT CONTAINERS DONE +++++++
-
 
 	public static void main(String[] args) {
 		// Get time stamp for the name of the result file
@@ -170,75 +156,78 @@ public class Main {
 		// Construct Formulas and reduce graphs (+ heuristics) (only once for all k)
 		constructAndReduce(graph_files, form_files);
 		System.out.println("-------");
-
-		// Init time_used array for the first pipeline
-		if (!skip_search_tree) {
-			while (pipe_1_time_used_per_instance.size() < forms.size()) {
-				pipe_1_time_used_per_instance.add((long) 0);
-			}
-		}
-
-		// Iterate over k
-		for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
-			// Pipeline 1: Solve formulas with SearchTree
+		
+		// Skip both pipelines if skip_solution is set
+		if(!skip_solution) {			
+			// Init time_used array for the first pipeline
 			if (!skip_search_tree) {
-				startNormalSearchTree(k_par);
+				while (pipe_1_time_used_per_instance.size() < forms.size()) {
+					pipe_1_time_used_per_instance.add((long) 0);
+				}
 			}
-
-			// Pipeline 2: Kernelize + HS-Search
-			for (int j = 0; j < reduced_graphs.size(); j++) {
-				// Timeout happened during reduction or during previous kernelization with
-				// smaller k
-				if (reduced_graphs.get(j) == null || timed_out_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
-					kernel_times.add((double) 0);
-					kernel_edges.add(-1);
-					kernel_nodes.add(-1);
-					hs_times.add((double) 0);
-					ke_results.add(false); // false for timeout					
-					pipe_2_timeouts.add(true); // note timeout
+	
+			// Iterate over k
+			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
+				// Pipeline 1: Solve formulas with SearchTree
+				if (!skip_search_tree) {
+					startNormalSearchTree(k_par);
 				}
-				// If the graph has already been solved and we don't want to keep solving for bigger k
-				else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
-					// Make empty entries and go to next graph
-					kernel_times.add((double) 0);
-					kernel_edges.add(-1);
-					kernel_nodes.add(-1);
-					hs_times.add((double) 0);
-					ke_results.add(true); // true for already solved
-				}
-				// If k is below the lower bound of this graph
-				else if (k_par < lower_bounds_per_graph.get(reduced_graphs.get(j).hypergraph_name)) {
-					// Make empty entries and go to next graph
-					kernel_times.add((double) 0);
-					kernel_edges.add(-1);
-					kernel_nodes.add(-1);
-					hs_times.add((double) 0);
-					ke_results.add(false); // false for below lower bound
-				}
-				// Kernelization
-				else {
-					// Kernelize
-					Hypergraph curr_redu_graph = reduced_graphs.get(j);
-					Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph, j);
-					
-					// If kernelization was successful, go to HS Search
-					if(curr_kernel !=null) {
-						startHiSeSearchTree(k_par, j, curr_kernel);						
-					}
-					// Timeout during kernelization
-					else {
+	
+				// Pipeline 2: Kernelize + HS-Search
+				for (int j = 0; j < reduced_graphs.size(); j++) {
+					// Timeout happened during reduction or during previous kernelization with
+					// smaller k
+					if (reduced_graphs.get(j) == null || timed_out_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
+						kernel_times.add((double) 0);
+						kernel_edges.add(-1);
+						kernel_nodes.add(-1);
 						hs_times.add((double) 0);
+						ke_results.add(false); // false for timeout					
+						pipe_2_timeouts.add(true); // note timeout
 					}
-					
-				} // End of Kernelization
-				// If nothing timed out, note false
-				pipe_2_timeouts.add(false);
-				// When all graphs are done, leave 
-				if(solved_graphs.size() == reduced_graphs.size() && accumulate_time_over_k) {
-					break;
-				}
-			} // End of Pipeline 2
-		} // End of loop through k
+					// If the graph has already been solved and we don't want to keep solving for bigger k
+					else if (accumulate_time_over_k && solved_graphs.contains(reduced_graphs.get(j).hypergraph_name)) {
+						// Make empty entries and go to next graph
+						kernel_times.add((double) 0);
+						kernel_edges.add(-1);
+						kernel_nodes.add(-1);
+						hs_times.add((double) 0);
+						ke_results.add(true); // true for already solved
+					}
+					// If k is below the lower bound of this graph
+					else if (k_par < lower_bounds_per_graph.get(reduced_graphs.get(j).hypergraph_name)) {
+						// Make empty entries and go to next graph
+						kernel_times.add((double) 0);
+						kernel_edges.add(-1);
+						kernel_nodes.add(-1);
+						hs_times.add((double) 0);
+						ke_results.add(false); // false for below lower bound
+					}
+					// Kernelization
+					else {
+						// Kernelize
+						Hypergraph curr_redu_graph = reduced_graphs.get(j);
+						Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph, j);
+						
+						// If kernelization was successful, go to HS Search
+						if(curr_kernel !=null) {
+							startHiSeSearchTree(k_par, j, curr_kernel);						
+						}
+						// Timeout during kernelization
+						else {
+							hs_times.add((double) 0);
+						}
+						
+					} // End of Kernelization
+					// If nothing timed out, note false
+					pipe_2_timeouts.add(false);
+					// When all graphs are done, leave 
+					if(solved_graphs.size() == reduced_graphs.size() && accumulate_time_over_k) {
+						break;
+					}
+				} // End of Pipeline 2
+			} // End of loop through k
+		} // End of solutions
 
 		// Collect and save results
 		System.out.println("------");
