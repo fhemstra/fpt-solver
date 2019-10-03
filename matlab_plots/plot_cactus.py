@@ -19,6 +19,8 @@ with open(curr_csv_file) as file:
 	for row in file_reader:
 		rows.append(row)
 
+print("Reading done.")
+
 # Separate data
 csv_header = rows[0]
 csv_data = rows[1:]

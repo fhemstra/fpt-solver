@@ -20,7 +20,7 @@ public class Main {
 	static boolean mute = true;
 
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 120000;
+	static long timeout_value = 180000;
 
 	// Set to only test one graph
 	static boolean only_single_graph = false;
@@ -61,9 +61,9 @@ public class Main {
 	static int nr_of_columns = 24;
 
 	// Select a dataset
-//	static String current_dataset = "pace";
+	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-	static String current_dataset = "gnp_graphs";
+//	static String current_dataset = "gnp_graphs";
 //	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
