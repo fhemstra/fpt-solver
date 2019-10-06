@@ -23,7 +23,7 @@ public class Main {
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = true;
+	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 1;
 	// Set range of k
 	static int start_k = 0;
@@ -51,8 +51,8 @@ public class Main {
 	// Select a dataset
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-//	static String current_dataset = "gnp_graphs";
-	static String current_dataset = "gnm_graphs";
+	static String current_dataset = "gnp_graphs";
+//	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 	// ++++++++++ Settings done +++++++++
@@ -762,7 +762,7 @@ public class Main {
 	}
 
 	private static String formatTime(long time) {
-		return String.format("%.3f", (double)time/(double)1000);
+		return String.format("%.3f", (double)time/(double)1000).replace(',', '.');
 	}
 
 	/**
