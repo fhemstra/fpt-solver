@@ -667,7 +667,7 @@ public class Main {
 				bw.write("file: " + curr_graph_name + "\n");
 				// TODO Only use single formula and print it
 //				bw.write("formula: " + );
-				bw.write("nodes: " + graph_sizes.get(curr_graph_name) + "\n");
+				bw.write("total_nodes: " + graph_sizes.get(curr_graph_name) + "\n");
 				bw.write("c_par: " + c_list.get(curr_graph_name) + "\n");
 				bw.write("dens: " + dens_list.get(curr_graph_name) + "\n");
 				bw.write("lowest_k: " + actual_lower_bounds_per_graph.get(curr_graph_name) + "\n");

@@ -11,8 +11,8 @@ output_dir_list = os.listdir(output_dir)
 file_list = [os.path.join('output', file) for file in output_dir_list if ".res" == file[-4:]]
 assert len(file_list) > 0, "No RES files in output directory."
 
+# Find solved files
 solved_files = []
-# Read RES file
 for curr_file in file_list:
 	content = []
 	with open(curr_file) as file:
