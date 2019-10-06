@@ -1,71 +1,62 @@
 import os
 import numpy as np
-import csv
 from matplotlib import pyplot as plt
 
 # Close previous plots
 plt.close("all")
-
 # Get file path
-dir_path = os.path.dirname(os.path.realpath(__file__))
-dir_list = os.listdir(dir_path)
-csv_list = [file for file in dir_list if ".csv" == file[-4:]]
-curr_csv_file = csv_list[0]
+script_dir = os.path.dirname(os.path.realpath(__file__))
+output_dir = os.path.join(script_dir, 'output')
+output_dir_list = os.listdir(output_dir)
+file_list = [os.path.join('output', file) for file in output_dir_list if ".res" == file[-4:]]
+assert len(file_list) > 0, "No RES files in output directory."
 
-# Read CSV file
-rows = []
-with open(curr_csv_file) as file:
-	file_reader = csv.reader(file, delimiter=";")
-	for row in file_reader:
-		rows.append(row)
-
-# Separate data
-csv_header = rows[0]
-csv_data = rows[1:]
-
-# Find column indices
-n_col = csv_header.index('n')
-k_col = csv_header.index('k')
-redu_col = csv_header.index('Reduction time')
-hs_col = csv_header.index('HS-ST time')
-kernel_col = csv_header.index('Kernel time')
-res_col = csv_header.index('Pipe 2 result')
-
-# Find start k
-start_k = -1
-for row in csv_data:
-	if start_k == -1 or int(row[k_col]) < start_k:
-		start_k = int(row[k_col])
-
-# Only consider k = start_k, because reduction only happens once in the beginning
-data_set = [row for row in csv_data if int(row[k_col]) == start_k]
-
-# Collect different values for n
+# Collect [n,time] tuples and all possible values for n
+n_to_time_list = []
 n_values = []
-for row in data_set:
-	if not int(row[n_col]) in n_values:
-		n_values.append(int(row[n_col]))
+for curr_file in file_list:
+	content = []
+	with open(curr_file) as file:
+		content = file.readlines()
+	# Remove whitespace characters
+	content = [x.strip() for x in content]
+	# Get values
+	curr_n = 0
+	curr_time = 0
+	for entry in content:
+		if("total_nodes" in entry):
+			split_entry = entry.split(':')
+			curr_n = int(split_entry[1].strip())
+		if("redu_time" in entry):
+			split_entry = entry.split(':')
+			curr_time = float(split_entry[1].strip())
+	# Append tuple
+	n_to_time_list.append([curr_n,curr_time])
+	# Append n value
+	n_values.append(curr_n)
 
-# Sort by n
-n_values.sort()
+# Get unique n values
+n_set = set(n_values)
+# Convert back to list
+unique_sorted_n_list = list(n_set)
+# Sort the list
+unique_sorted_n_list.sort()
 
-# Collect graphs per n
-graphs_per_n = []
-for curr_n in n_values:
-	graphs_per_n.append([row for row in data_set if int(row[n_col]) == curr_n])
-
+# Collect a list of time values per n
 graph_times_per_n = []
-# Calc matrix of graph times per n
-for graphs_of_same_n in graphs_per_n:
-	graph_times = []
-	# Calc result time per graph
-	for graph in graphs_of_same_n:
-		reduction_time = float(graph[redu_col])
-		graph_times.append(reduction_time)
-	# Add set of times for fixed n to matrix
-	graph_times_per_n.append(graph_times)
+for curr_n in unique_sorted_n_list:
+	curr_n_graphs = []
+	for tuple in n_to_time_list:
+		# If n matches
+		if tuple[0] == curr_n:
+			# Append time
+			curr_n_graphs.append(tuple[1])
+	# Append list to matrix
+	graph_times_per_n.append(curr_n_graphs)
 
-plt.boxplot(graph_times_per_n, showmeans=True, labels=n_values)
+print("Reading done.")
+
+plt.boxplot(graph_times_per_n, showfliers=False, showmeans=True, labels=unique_sorted_n_list, meanprops=dict(markerfacecolor='g', marker='D'))
 plt.xlabel('Knoten')
 plt.ylabel('Zeit')
 plt.title('Zeit zur Reduktion von Instanzen verschiedener Größe')
