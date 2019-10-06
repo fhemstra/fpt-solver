@@ -20,7 +20,7 @@ public class Formula {
 	String graph_name;
 	String identifier;
 	String guard_rel_id;
-	int graph_density;
+	double graph_density;
 	int[] universe;
 	HashMap<String, Relation> relation_map;
 	String[] bound_variables;
@@ -76,7 +76,7 @@ public class Formula {
 			}
 			relation_map = new HashMap<String, Relation>();
 			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
-			graph_density = (int) Math.round((double)(edge_set.size()/2)/(double)universe.length);
+			graph_density = Math.round((double)(edge_set.size()/2)/(double)universe.length);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			relation_map.put("E", edge_relation);
 			// Guard Relation
@@ -444,6 +444,10 @@ public class Formula {
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
+					// Only branch if there is still space in sol
+					if(sol.size() == k_par) {
+						return false;
+					}
 					HashSet<Integer> f = new HashSet<Integer>();
 					// Find variables that are bound to S in this clause
 					Tuple candidates = findCandidates(clauses.get(j), curr_assignment);
@@ -471,6 +475,9 @@ public class Formula {
 							// if one branch is successful we win, else go back through recursion.
 							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i, st_timeout);
 							if (flag) {
+								if(!mute) {
+									System.out.println(sol);
+								}
 								return true;								
 							} else {
 								// Branch failed, remove y again to clean up sol for next branch.

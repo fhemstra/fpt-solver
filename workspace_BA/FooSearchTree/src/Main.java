@@ -18,13 +18,13 @@ public class Main {
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 1;
+	static long timeout_value = 300000;
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = false;
-	static int number_of_graphs_to_test = 2;
+	static boolean only_first_x_graphs = true;
+	static int number_of_graphs_to_test = 1;
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
@@ -32,7 +32,7 @@ public class Main {
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
 	// Set this to sort input graphs by their size ascending
-	static boolean sort_by_nodes = false;
+	static boolean sort_by_nodes = true;
 	// Set to skip both pipelines, only reducing graphs
 	static boolean skip_solution = false;
 	// Set this if the first pipeline should be skipped
@@ -62,7 +62,7 @@ public class Main {
 	// Formulas (like vertex-cover)
 	static ArrayList<Formula> forms = new ArrayList<Formula>(); 
 	static HashMap<String, Integer> c_list = new HashMap<String, Integer>();
-	static HashMap<String, Integer> dens_list = new HashMap<String, Integer>();
+	static HashMap<String, Double> dens_list = new HashMap<String, Double>();
 	// Successfully reduced hypergraphs
 	static ArrayList<Hypergraph> reduced_graphs = new ArrayList<Hypergraph>();
 	// Result lists
@@ -161,7 +161,7 @@ public class Main {
 		// Skip both pipelines if skip_solution is set
 		if(!skip_solution) {
 			// Pipeline 1: Solve formulas with SearchTree
-			System.out.println("+++++ Pipe 1 +++++");
+			if(!skip_search_tree) System.out.println("+++++ Pipe 1 +++++");
 			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 				if (!skip_search_tree) {
 					for (int j = 0; j < forms.size(); j++) {
@@ -202,7 +202,6 @@ public class Main {
 					else {
 						// Kernelize
 						Hypergraph curr_redu_graph = reduced_graphs.get(j);
-						String curr_name = curr_redu_graph.hypergraph_name;
 						Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph, j);
 						
 						// If kernelization was successful, go to HS Search
@@ -210,8 +209,6 @@ public class Main {
 							startHiSeSearchTree(k_par, j, curr_kernel);						
 						}						
 					} // End of Kernelization
-					// If nothing timed out, note false
-					pipe_2_timeouts.put(reduced_graphs.get(j).hypergraph_name, false);
 					// When all graphs are done, leave 
 					if(pipe_1_solved_forms.size() == reduced_graphs.size() && accumulate_time_over_k) {
 						break;
@@ -321,13 +318,13 @@ public class Main {
 									k_decrease);
 							System.out.println("k used: " + k_decrease);
 	
-							// Process results
-							long heur_stop_time = System.currentTimeMillis();
-							long heur_time_passed = heur_stop_time - heur_start_time;
-							heuristic_times.put(curr_name, heur_time_passed);
-							printTime(heur_time_passed);
 							// If heuristics did not time out
 							if (done) {
+								// Process results
+								long heur_stop_time = System.currentTimeMillis();
+								long heur_time_passed = heur_stop_time - heur_start_time;
+								heuristic_times.put(curr_name, heur_time_passed);
+								printTime(heur_time_passed);
 								// Save data about heuristics
 								heuristic_edges.put(curr_name, reduced_graph.edges.size());
 								heuristic_nodes.put(curr_name, actualArraySize(reduced_graph.nodes));
@@ -339,7 +336,13 @@ public class Main {
 						ArrayList<Tuple> disj_edges = reduced_graph.findMaxDisjEdges(reduced_graph.edges);
 						int lower_bound_k = disj_edges.size();
 						lower_bounds_per_graph.put(curr_name, lower_bound_k);
-						actual_lower_bounds_per_graph.put(curr_name, lower_bound_k + k_used_in_heuristics_per_graph.get(curr_name));
+						if (k_used_in_heuristics_per_graph.get(curr_name) != null) {
+							actual_lower_bounds_per_graph.put(curr_name,
+									lower_bound_k + k_used_in_heuristics_per_graph.get(curr_name));
+						} else {
+							actual_lower_bounds_per_graph.put(curr_name,
+									lower_bound_k);
+						}
 					}
 				}
 				// Graph is too big
@@ -427,7 +430,13 @@ public class Main {
 		Hypergraph curr_kernel = null;
 		long kernel_start_time = System.currentTimeMillis();
 		// Start + Redu + timeout
-		long kernel_timeout = kernel_start_time + timeout_value - reduction_times.get(curr_name) - heuristic_times.get(curr_name);
+		long kernel_timeout = kernel_start_time + timeout_value;
+		if(reduction_times.get(curr_name) != null) {
+			kernel_timeout -= reduction_times.get(curr_name);
+		}
+		if(heuristic_times.get(curr_name) != null) {
+			kernel_timeout -= heuristic_times.get(curr_name);			
+		}
 		// Add previously used time
 		if (accumulate_time_over_k) {
 			long prev_kernel_time = 0;
@@ -482,6 +491,7 @@ public class Main {
 		// Add time to already used kernel time
 		if(time_passed_previously == null) {
 			ArrayList<Long> empty = new ArrayList<Long>();
+			empty.add(kernel_time_passed);
 			kernel_times.put(curr_name, empty);
 		} else {
 			ArrayList<Long> previously_used = kernel_times.get(curr_name);
@@ -534,7 +544,13 @@ public class Main {
 		boolean hs_result = false;
 		// Set timer
 		long hs_start_time = System.currentTimeMillis();
-		long hs_timeout = hs_start_time + timeout_value - reduction_times.get(curr_name) - heuristic_times.get(curr_name);
+		long hs_timeout = hs_start_time + timeout_value;
+		if(reduction_times.get(curr_name) != null) {
+			hs_timeout -= reduction_times.get(curr_name);
+		}
+		if(heuristic_times.get(curr_name) != null) {
+			hs_timeout -= heuristic_times.get(curr_name);			
+		}
 		// Calc sum of previous times
 		if (accumulate_time_over_k) {
 			long prev_time = 0;
@@ -569,6 +585,23 @@ public class Main {
 			} else {
 				System.out.println();
 			}
+			// Add results
+			long hs_stop_time = System.currentTimeMillis();
+			ke_results.put(curr_name, hs_result);
+			long hs_time_passed = hs_stop_time - hs_start_time;
+			if (hs_times.get(curr_name) != null) {
+				// Update list
+				ArrayList<Long> prev_hs_times = hs_times.get(curr_name);
+				prev_hs_times.add(hs_time_passed);
+				hs_times.put(curr_name, prev_hs_times);
+			}
+			else {
+				// Make new list
+				ArrayList<Long> tmp_hs_times = new ArrayList<Long>();
+				tmp_hs_times.add(hs_time_passed);
+				hs_times.put(curr_name, tmp_hs_times);
+			}
+			printTime(hs_time_passed);
 		} catch (TimeoutException e) {
 			long emergency_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (emergency_stop - hs_start_time) / 1000);
@@ -577,23 +610,7 @@ public class Main {
 			pipe_2_timeouts.put(curr_name, true);
 			timed_out_graphs.add(curr_kernel.hypergraph_name);
 		}
-		long hs_stop_time = System.currentTimeMillis();
 
-		// Add results
-		ke_results.put(curr_name, hs_result);
-		long hs_time_passed = hs_stop_time - hs_start_time;
-		if (hs_times.get(curr_name) != null) {
-			// Update list
-			ArrayList<Long> prev_hs_times = hs_times.get(curr_name);
-			prev_hs_times.add(hs_time_passed);
-			hs_times.put(curr_name, prev_hs_times);
-		}
-		else {
-			ArrayList<Long> tmp_hs_times = new ArrayList<Long>();
-			tmp_hs_times.add(hs_time_passed);
-			hs_times.put(curr_name, tmp_hs_times);
-		}
-		printTime(hs_time_passed);
 		if (hs_result) {
 			// Note that the current graph has been solved
 			pipe_1_solved_forms.add(curr_kernel.hypergraph_name);
@@ -636,7 +653,13 @@ public class Main {
 					hs_sum += time;
 				}
 			}
-			long pipe_2_time = reduction_times.get(curr_graph_name) + heuristic_times.get(curr_graph_name) + kernel_sum + hs_sum;
+			long pipe_2_sum = kernel_sum + hs_sum;
+			if (reduction_times.get(curr_graph_name) != null) {
+				pipe_2_sum += reduction_times.get(curr_graph_name);
+			}
+			if(heuristic_times.get(curr_graph_name) != null) {
+				pipe_2_sum += heuristic_times.get(curr_graph_name);
+			}
 			// Open file
 			File out_file = new File(result_file_path);
 			try {
@@ -648,7 +671,9 @@ public class Main {
 				bw.write("c_par: " + c_list.get(curr_graph_name) + "\n");
 				bw.write("dens: " + dens_list.get(curr_graph_name) + "\n");
 				bw.write("lowest_k: " + actual_lower_bounds_per_graph.get(curr_graph_name) + "\n");
-				bw.write("solved_k: " + solution_k.get(curr_graph_name) + "\n");
+				if (solution_k.get(curr_graph_name) != null) {
+					bw.write("solved_k: " + solution_k.get(curr_graph_name) + "\n");
+				}
 				if(search_tree_times.get(curr_form_id) != null) {
 					bw.write("pipe_1_times:");
 					for(long time : search_tree_times.get(curr_form_id)) {
@@ -662,25 +687,25 @@ public class Main {
 				bw.write("redu_time: " + formatTime(reduction_times.get(curr_graph_name)) + "\n");
 				bw.write("redu_nodes: " + reduced_nodes.get(curr_graph_name) + "\n");
 				bw.write("redu_edges: " + reduced_edges.get(curr_graph_name) + "\n");
-				bw.write("heur_time: " + formatTime(heuristic_times.get(curr_graph_name)) + "\n");
-				bw.write("heur_nodes: " + heuristic_nodes.get(curr_graph_name) + "\n");
-				bw.write("heur_edges: " + heuristic_edges.get(curr_graph_name) + "\n");
-				bw.write("heur_k_used: " + k_used_in_heuristics_per_graph.get(curr_graph_name) + "\n");
-				if(kernel_times.get(curr_graph_name) != null) {
-					bw.write("kernel_times: ");
-					for(long time : kernel_times.get(curr_graph_name)) {
-						bw.write(formatTime(time) + ";");
-					}
-					bw.write("\n");					
+				if (heuristic_times.get(curr_graph_name) != null) {
+					bw.write("heur_time: " + formatTime(heuristic_times.get(curr_graph_name)) + "\n");
+					bw.write("heur_nodes: " + heuristic_nodes.get(curr_graph_name) + "\n");
+					bw.write("heur_edges: " + heuristic_edges.get(curr_graph_name) + "\n");
+					bw.write("heur_k_used: " + k_used_in_heuristics_per_graph.get(curr_graph_name) + "\n");
 				}
-				if (kernel_nodes.get(curr_graph_name) != null) {
+				if(kernel_times.get(curr_graph_name) != null) {
+					if (!kernel_times.get(curr_graph_name).isEmpty()) {
+						bw.write("kernel_times: ");
+						for (long time : kernel_times.get(curr_graph_name)) {
+							bw.write(formatTime(time) + ";");
+						}
+						bw.write("\n");
+					}					
 					bw.write("kernel_nodes: ");
 					for (int nodes : kernel_nodes.get(curr_graph_name)) {
 						bw.write(nodes + ";");
 					}
 					bw.write("\n");
-				}
-				if (kernel_edges.get(curr_graph_name) != null) {
 					bw.write("kernel_edges: ");
 					for (int edges : kernel_edges.get(curr_graph_name)) {
 						bw.write(edges + ";");
@@ -694,12 +719,16 @@ public class Main {
 					}
 					bw.write("\n");
 				}
-				bw.write("pipe_2_sum: " + formatTime(pipe_2_time) + "\n");
+				bw.write("pipe_2_sum: " + formatTime(pipe_2_sum) + "\n");
 				bw.write("pipe_2_res: " + ke_results.get(curr_graph_name) + "\n");
 				if (pipe_1_timeouts.get(curr_graph_name) != null) {
 					bw.write("pipe_1_timeout: " + pipe_1_timeouts.get(curr_graph_name) + "\n");
 				}
-				bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_graph_name) + "\n");
+				if(pipe_2_timeouts.get(curr_graph_name) == null) {
+					bw.write("pipe_2_timeout: false\n");
+				} else {
+					bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_graph_name) + "\n");					
+				}
 				bw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
