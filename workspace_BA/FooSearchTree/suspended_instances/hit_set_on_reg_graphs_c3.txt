@@ -1,0 +1,6 @@
+hitting-set-grad-2-c3
+10
+E3 = {(1|2|3),(3|4|5)};
+E
+x,y,z
+~E(x,y,z) S(x) S(y) S(z)

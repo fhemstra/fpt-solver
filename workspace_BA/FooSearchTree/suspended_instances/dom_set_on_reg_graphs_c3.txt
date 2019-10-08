@@ -1,0 +1,6 @@
+dom-set-on-reg-graphs-c3
+7
+E3 = {(1|2|3),(3|4|5)};
+
+x,y1,y2
+~E(x,y1) ~E(x,y2) =(x,y) S(x) S(y1) S(y2)
