@@ -1,0 +1,15 @@
+file: vc-exact_153.gr
+total_nodes: 29076
+c_par: 2
+dens: 2.0
+lowest_k: 12049
+redu_time: 86.512
+redu_nodes: 29076
+redu_edges: 45570
+heur_time: 0.000
+heur_nodes: 29076
+heur_edges: 45570
+heur_k_used: 0
+pipe_2_sum: 86.512
+pipe_2_res: false
+pipe_2_timeout: false

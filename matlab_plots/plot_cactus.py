@@ -27,6 +27,28 @@ for curr_file in file_list:
 			solved_files.append(curr_file)
 			break
 
+solution_k_list = []
+# Collect time values for solved files
+for curr_file in solved_files:
+	content = []
+	with open(curr_file) as file:
+		content = file.readlines()
+	# Remove whitespace characters
+	content = [x.strip() for x in content]
+
+	# Get the solution k
+	for entry in content:
+		if("solved_k" in entry):
+			split_entry = entry.split(':')
+			k = int(split_entry[1].strip())
+			solution_k_list.append(k)
+			break
+
+# Print solved files
+print("Solved files:")
+for i in range(len(solved_files)):
+	print(solved_files[i] + ', k = ' + str(solution_k_list[i]))
+
 solver_times = []
 # Collect time values for solved files
 for curr_file in solved_files:

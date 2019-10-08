@@ -17,8 +17,8 @@ public class Main {
 	static boolean call_from_cmd = true;
 	// Set this to mute debug output
 	static boolean mute = true;
-	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 1 min: 60000
-	static long timeout_value = 300000;
+	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
+	static long timeout_value = 60000;
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
@@ -28,7 +28,7 @@ public class Main {
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
-	static int stop_k = 1000;
+	static int stop_k = 10000;
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
 	// Set this to sort input graphs by their size ascending
@@ -46,15 +46,13 @@ public class Main {
 	static boolean use_bevern_kernel = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
-	// Set nr of columns the CSV file should have
-	static int nr_of_columns = 24;
 	// Select a dataset
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-	static String current_dataset = "gnp_graphs";
-//	static String current_dataset = "gnm_graphs";
+//	static String current_dataset = "gnp_graphs";
+	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
-//	static String current_dataset = "watts_strog_graphs";
+//	static String current_dataset = "reference_set";
 	// ++++++++++ Settings done +++++++++
 	
 	// +++++++ RESULT CONTAINERS +++++++

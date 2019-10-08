@@ -9,7 +9,7 @@ dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.se
 if not os.path.exists(dest_dir):
 	os.makedirs(dest_dir) 
 for n in range(20,520,20):
-	m = n
+	m = 1.5*n
 	for i in range(variance_count):
 		graph = nx.gnm_random_graph(n, m)
 		nodes = graph.nodes()

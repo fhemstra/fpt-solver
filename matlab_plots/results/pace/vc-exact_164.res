@@ -1,0 +1,15 @@
+file: vc-exact_164.gr
+total_nodes: 29296
+c_par: 2
+dens: 2.0
+lowest_k: 12163
+redu_time: 89.044
+redu_nodes: 29296
+redu_edges: 46040
+heur_time: 0.468
+heur_nodes: 29276
+heur_edges: 45550
+heur_k_used: 10
+pipe_2_sum: 89.512
+pipe_2_res: false
+pipe_2_timeout: false
