@@ -1,7 +1,7 @@
 import os
 import networkx as nx
 
-m = 1 # for bara-alb graphs, dens = m
+m = 2 # for bara-alb graphs, dens = m
 variance_count = 10
 
 # create directory if it does not exist yet
@@ -10,7 +10,7 @@ dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.se
 if not os.path.exists(dest_dir):
 	os.makedirs(dest_dir) 
 
-for n in range(20, 520, 20):
+for n in range(20, 220, 20):
 	for i in range(variance_count):
 		graph = nx.barabasi_albert_graph(n, m)
 		nodes = graph.nodes()

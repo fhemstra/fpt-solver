@@ -50,8 +50,8 @@ public class Main {
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
 //	static String current_dataset = "gnp_graphs";
-	static String current_dataset = "gnm_graphs";
-//	static String current_dataset = "bara_alb_graphs";
+//	static String current_dataset = "gnm_graphs";
+	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "reference_set";
 	// ++++++++++ Settings done +++++++++
 	
@@ -104,9 +104,6 @@ public class Main {
 	// +++++++ RESULT CONTAINERS DONE +++++++
 
 	public static void main(String[] args) {
-		// Get time stamp for the name of the result file
-		long main_init_time = System.currentTimeMillis();
-
 		// Construct paths to input directories
 		String graph_dir_path = "";
 		String form_dir_path = "";
@@ -217,7 +214,7 @@ public class Main {
 
 		// Collect and save results
 		System.out.println("------");
-		collectResults(main_init_time);
+		collectResults();
 		System.out.println("Done.");
 	}
 
@@ -615,7 +612,7 @@ public class Main {
 		}
 	}
 
-	private static void collectResults(long main_init_time) {
+	private static void collectResults() {
 		if (!mute)
 			System.out.println("\n------------------------------------");
 		// Loop over all reduced graphs
