@@ -367,6 +367,7 @@ public class Formula {
 	 * Returns a Tuple of elements from the given assignment which are bound to S in the given clause, meaning they are candidates to branch over during solving or reducing this formula.
 	 */
 	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
+		HashSet<Integer> confirmed_candidates = new HashSet<Integer>();
 		// All edges have length c_par, but can contain null
 		int[] candidates = new int[c_par];
 		for (int i = 0; i < candidates.length; i++) {
@@ -374,8 +375,10 @@ public class Formula {
 		}
 		int i = 0;
 		for (String s : curr_clause) {
-			if (s.charAt(0) == 'S') {
+			// All candidates shall be unique
+			if (s.charAt(0) == 'S' && !confirmed_candidates.contains(assign(s, assignment)[0])) {
 				candidates[i] = assign(s, assignment)[0];
+				confirmed_candidates.add(candidates[i]);
 				i++;
 			}
 		}
