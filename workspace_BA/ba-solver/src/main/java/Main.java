@@ -19,11 +19,13 @@ public class Main {
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
 	static long timeout_value = 30000;
+	// Set to activate timeouts
+	static boolean timeout_active = true;
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = false;
+	static boolean only_first_x_graphs = true;
 	static int number_of_graphs_to_test = 4;
 	// Set range of k
 	static int start_k = 0;
@@ -109,11 +111,13 @@ public class Main {
 		String graph_dir_path = "";
 		String form_dir_path = "";
 		if (call_from_cmd) {
-			graph_dir_path = ".." + File.separator + "input_graphs" + File.separator + current_dataset;
-			form_dir_path = ".." + File.separator + "instances";
+			String prefix = ".." + File.separator + ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
+			form_dir_path = prefix  + "instances";
 		} else {
-			graph_dir_path = "input_graphs" + File.separator + current_dataset;
-			form_dir_path = "instances";
+			String prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
+			form_dir_path = prefix  + "instances";
 		}
 
 		// Collect and sort files
@@ -126,11 +130,10 @@ public class Main {
 			System.out.println("No graphs found.");
 			return;
 		}
-		
+
 		// Sort files by their size (nr of nodes)
 		if (sort_by_nodes) {
 			Arrays.sort(graph_files, new Comparator<File>() {
-				@Override
 				public int compare(File file_1, File file_2) {
 					int graph_1_size = graphSize(file_1.getAbsolutePath());
 					int graph_2_size = graphSize(file_2.getAbsolutePath());
@@ -146,7 +149,6 @@ public class Main {
 		// Otherwise sort by file name
 		else {
 			Arrays.sort(graph_files, new Comparator<File>() {
-				@Override
 				public int compare(File file_1, File file_2) {
 					return file_1.getName().compareTo(file_2.getName());
 				}
@@ -268,12 +270,12 @@ public class Main {
 					try {
 						if (curr_formula.guard_rel_id == null) {
 							System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
-							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout);
+							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout, timeout_active);
 						} else {
 							int nr_of_guard_assignments = curr_formula.relation_map
 									.get(curr_formula.guard_rel_id).elements.size();
 							System.out.println(" (with guard), " + nr_of_guard_assignments + " assignments");
-							reduced_graph = curr_formula.reduceToHsWithGuard(mute, reduction_timeout);
+							reduced_graph = curr_formula.reduceToHsWithGuard(mute, reduction_timeout, timeout_active);
 						}
 					} catch (TimeoutException e) {
 						// Supplement graph identifier
@@ -305,7 +307,7 @@ public class Main {
 								while (!done) {
 									// Remove dangling nodes
 									int nodes_removed = 0;
-									nodes_removed = reduced_graph.removeDanglingNodes(mute, heuristic_timeout);
+									nodes_removed = reduced_graph.removeDanglingNodes(mute, heuristic_timeout, timeout_active);
 									// Remove singletons
 									int singletons_removed = reduced_graph.removeSingletons(mute, heuristic_timeout);
 									k_decrease += singletons_removed;
@@ -383,7 +385,7 @@ public class Main {
 		// SearchTree
 		try {
 			st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0,
-					st_timeout);
+					st_timeout, timeout_active);
 			pipe_1_timeouts.put(curr_name, false);
 		} catch (TimeoutException e) {
 			System.out.println("! ST timed out.");
@@ -456,9 +458,9 @@ public class Main {
 			curr_kernel = curr_redu_graph.copyThis();
 			// Kernelize graph
 			if (use_bevern_kernel) {
-				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout);
+				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
 			} else {
-				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout);
+				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
 			}
 		} catch (TimeoutException e) {
 			long timeout_stop = System.currentTimeMillis();
@@ -527,7 +529,6 @@ public class Main {
 		}
 		// Sort edges of current_kernel to make the SearchTree faster
 		curr_kernel.edges.sort(new Comparator<Tuple>() {
-			@Override
 			public int compare(Tuple edge_1, Tuple edge_2) {
 				if (edge_1.actualSize() > edge_2.actualSize()) {
 					return 1;
@@ -572,7 +573,7 @@ public class Main {
 		// Start HS-SearchTree
 		try {
 			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout,
-					use_branch_and_bound);
+					use_branch_and_bound, timeout_active);
 			if (!mute)
 				System.out.println("\n");
 			if (hs_result) {
