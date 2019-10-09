@@ -1,8 +1,0 @@
-test-thingie
-v0,v1,v2,v3,v4,v5,v6,v7
-R2 = {(v1|v2),(v2|v3)};B2 = {(v4|v5),(v3|v6)}
-2
-x,y,z
-B(x,y) S(x) S(y) 
-R(x,y) S(x) 
-R(x,y) S(y) 
