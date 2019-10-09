@@ -36,7 +36,7 @@ public class Formula {
 	public Formula(String path) {
 		parseInternalFormula(path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
-		identifier = formula_name + "," +  graph_name;
+		identifier = graph_name + "," + formula_name;
 	}
 
 	// TODO make PACE-format file.
@@ -47,7 +47,7 @@ public class Formula {
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
-		identifier = formula_name + "," + graph_name;
+		identifier = graph_name + "," + formula_name;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Formula {
 			// Name of the formula
 			line = br.readLine();
 			formula_name = line;
-			graph_name = new File(graph_path).getName();
+			graph_name = new File(graph_path).getName().split("\\.")[0];
 			// Universe from .gr file -> skip a line
 			line = br.readLine();
 			universe = getPaceUniverse(graph_path);
@@ -261,8 +261,6 @@ public class Formula {
 		for(int i = 0; i < c_par; i++) {
 			curr_assignment[i] = universe[0];
 		}
-		// print string
-		String curr_assignment_str = "";
 		double progress = 0;
 		for (long i = 0; i < nr_of_assignments; i++) {
 			// Check timeout
@@ -273,6 +271,8 @@ public class Formula {
 			}
 			// prints
 			if(!mute && i % 500000 == 0) {
+				// print string
+				String curr_assignment_str = "";
 				curr_assignment_str = "";
 				for(int j = 0; j < c_par; j++) {
 					curr_assignment_str += curr_assignment[j] + " ";
@@ -301,7 +301,8 @@ public class Formula {
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		// Copy name from this formula
-		hyp.hypergraph_name = graph_name;
+		hyp.hypergraph_name = this.graph_name;
+		hyp.formula_name = this.formula_name;
 		return hyp;
 	}
 
@@ -341,7 +342,8 @@ public class Formula {
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		// Copy name from this formula
-		hyp.hypergraph_name = graph_name;
+		hyp.hypergraph_name = this.graph_name;
+		hyp.formula_name = this.formula_name;
 		return hyp;
 	}
 

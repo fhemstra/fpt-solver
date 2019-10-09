@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
 
 public class Hypergraph {
 	public String hypergraph_name;
+	public String formula_name;
 	boolean show_minus_one_entries = true;
 	boolean printGraphs = false;
 	int d_par;
@@ -155,6 +156,8 @@ public class Hypergraph {
 			return null;
 		// "Clone" hyp
 		Hypergraph kernel = new Hypergraph(local_hyp.nodes, local_hyp.edges);
+		kernel.hypergraph_name = this.hypergraph_name;
+		kernel.formula_name = this.formula_name;
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeNonUniform()");
@@ -273,6 +276,7 @@ public class Hypergraph {
 		// Init kernel as empty hypergraph
 		Hypergraph kernel = new Hypergraph(init_nodes, new ArrayList<Tuple>());
 		kernel.hypergraph_name = this.hypergraph_name;
+		kernel.formula_name = this.formula_name;
 		int sf_counter = 0;
 		if (!mute)
 			System.out.println(">> kernelizeUniform()");
@@ -459,6 +463,7 @@ public class Hypergraph {
 		// Result
 		Hypergraph kernel = new Hypergraph(nodes_arr, edge_set);
 		kernel.hypergraph_name = this.hypergraph_name;
+		kernel.formula_name = this.formula_name;
 		return kernel;
 	}
 
@@ -512,6 +517,7 @@ public class Hypergraph {
 		// Construct resulting graph
 		Hypergraph merged_graph = new Hypergraph(res_nodes, res_edges);
 		merged_graph.hypergraph_name = this.hypergraph_name;
+		merged_graph.formula_name = this.formula_name;
 		return merged_graph;
 	}
 
@@ -594,6 +600,10 @@ public class Hypergraph {
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
 		HashSet<Integer> marked_elements = new HashSet<Integer>();
 		for (Tuple e : edges_to_search) {
+			// Skip empty edges
+			if(e.onlyMinusOne()) {
+				continue;
+			}
 			// Check if e contains any marked nodes
 			boolean flag = true;
 			for (int node : e.elements) {
@@ -607,7 +617,9 @@ public class Hypergraph {
 				res.add(e);
 				// Mark all nodes in e
 				for (int node : e.elements) {
-					marked_elements.add(node);
+					if(node != -1) {
+						marked_elements.add(node);						
+					}
 				}
 			}
 		}
@@ -920,6 +932,10 @@ public class Hypergraph {
 		return updated_edges;
 	}
 	
+	/**
+	 * Returns a copy of this Hypergraph.
+	 * @return
+	 */
 	public Hypergraph copyThis() {
 		// Copy nodes
 		int[] copy_nodes = new int[this.nodes.length];
@@ -941,7 +957,15 @@ public class Hypergraph {
 		
 		// Also copy name
 		copy_hyp.hypergraph_name = this.hypergraph_name;
+		copy_hyp.formula_name = this.formula_name;
 		return copy_hyp;
+	}
+
+	/**
+	 * Returns an identifier including the formula this graph belongs to.
+	 */
+	public String getIdentifier() {
+		return this.hypergraph_name + "," + this.formula_name;
 	}
 
 }

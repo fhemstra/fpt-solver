@@ -1,4 +1,4 @@
-hitting-set-grad-2-c3
+hitting-set-on-reg-graphs-d3-c3
 10
 E3 = {(1|2|3),(3|4|5)};
 E

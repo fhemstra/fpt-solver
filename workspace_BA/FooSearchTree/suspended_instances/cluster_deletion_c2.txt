@@ -1,6 +1,0 @@
-cluster-deletion-c3
-7
-E3 = {(1|2|3),(3|4|5)};
-
-x,y,z
-~E(x,y) ~E(x,z) E(x,z) S(x) S(y) S(z)
