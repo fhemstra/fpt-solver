@@ -28,7 +28,7 @@ for curr_file in file_list:
 			break
 
 solution_k_list = []
-# Collect time values for solved files
+# Collect k values for solved files
 for curr_file in solved_files:
 	content = []
 	with open(curr_file) as file:
@@ -43,11 +43,6 @@ for curr_file in solved_files:
 			k = int(split_entry[1].strip())
 			solution_k_list.append(k)
 			break
-
-# Print solved files
-print("Solved files:")
-for i in range(len(solved_files)):
-	print(solved_files[i] + ', k = ' + str(solution_k_list[i]))
 
 solver_times = []
 # Collect time values for solved files
@@ -65,6 +60,12 @@ for curr_file in solved_files:
 			time = float(split_entry[1].strip())
 			solver_times.append(time)
 			break
+
+# Print solved files
+print("Solved files:")
+for i in range(len(solved_files)):
+	print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
+
 # Sort list of times
 solver_times.sort()
 print("Reading done.")

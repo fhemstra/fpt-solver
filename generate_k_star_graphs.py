@@ -3,11 +3,11 @@ import random
 
 # Creates random graphs which contain a vertex-cover of size k 
 
-probability = 0.03
-variance_count = 10
+probability = 0.06
+variance_count = 2
 
-for nr_of_nodes in range(80,520,20):
-	k_par = 60
+for nr_of_nodes in range(100,2200,200):
+	k_par = 150
 	# create directory if it does not exist yet
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'FooSearchTree' + os.sep + 'input_graphs' + os.sep + 'k_star_graphs'
