@@ -1,0 +1,11 @@
+file: vc-exact_012.gr
+total_nodes: 53444
+c_par: 2
+dens: 1.0
+lowest_k: null
+redu_time: 66.879
+redu_nodes: null
+redu_edges: null
+pipe_2_sum: 66.879
+pipe_2_res: null
+pipe_2_timeout: true

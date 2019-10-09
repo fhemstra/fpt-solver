@@ -306,13 +306,13 @@ public class Main {
 									if (singletons_removed == 0 && nodes_removed == 0)
 										done = true;
 								}
+								System.out.println("k used: " + k_decrease);
 							} catch (TimeoutException e) {
 								System.out.println("! Heuristics timed out.");
 							}
 							// Add k_decrease to list
 							k_used_in_heuristics_per_graph.put(reduced_graph.hypergraph_name,
 									k_decrease);
-							System.out.println("k used: " + k_decrease);
 	
 							// If heuristics did not time out
 							if (done) {
