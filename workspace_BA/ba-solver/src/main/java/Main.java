@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -626,7 +626,7 @@ public class Main {
 			// Construct file path
 			String result_file_path = "";
 			if (call_from_cmd) {
-				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + "output"
+				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + "output"
 						+ File.separator + curr_id.substring(0, curr_id.length()-3) + ".res";
 			} else {
 				result_file_path = ".." + File.separator + ".." + File.separator+ "matlab_plots" + File.separator + "output"
