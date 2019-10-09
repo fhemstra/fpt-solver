@@ -1,3 +1,4 @@
+package pack;
 
 /**
  * A Tuple of elements with custom overridden equals() which works element-wise
