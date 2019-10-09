@@ -64,8 +64,7 @@ public class Formula {
 			graph_name = new File(graph_path).getName().split("\\.")[0];
 			// Universe from .gr file -> skip a line
 			line = br.readLine();
-			universe = getPaceUniverse(graph_path);
-			
+			universe = getExternalUniverse(graph_path);			
 			// Skip relations, only E is important
 			line = br.readLine();
 			while(true) {
@@ -75,7 +74,8 @@ public class Formula {
 				line = br.readLine();
 			}
 			relation_map = new HashMap<String, Relation>();
-			HashSet<Tuple> edge_set = parsePaceGraph(graph_path);
+			// Parse external file
+			HashSet<Tuple> edge_set = parseExternalGraph(graph_path);
 			graph_density = Math.round((double)(edge_set.size()/2)/(double)universe.length);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			relation_map.put("E", edge_relation);
@@ -112,7 +112,7 @@ public class Formula {
 	/**
 	 * Returns the universe of the specified PACE-graph.
 	 */
-	private int[] getPaceUniverse(String graph_path) {
+	private int[] getExternalUniverse(String graph_path) {
 		int arr_length = -1;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
@@ -139,7 +139,7 @@ public class Formula {
 	/**
 	 * Returns the set of edges of the specified PACE-graph. For every entry (x,y) this adds the edges (x,y) and (y,x) because the graph is supposed to be undirected.
 	 */
-	private HashSet<Tuple> parsePaceGraph(String graph_path) {
+	private HashSet<Tuple> parseExternalGraph(String graph_path) {
 		HashSet<Tuple> edge_set = new HashSet<Tuple>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
