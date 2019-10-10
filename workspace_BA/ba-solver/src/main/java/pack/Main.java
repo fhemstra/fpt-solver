@@ -16,7 +16,7 @@ import org.apache.commons.cli.*;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -110,34 +110,34 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Process input args 
-		Options options = new Options();
-
-        Option input = new Option("i", "input", true, "input file path");
-        input.setRequired(true);
-        options.addOption(input);
-
-        Option output = new Option("o", "output", true, "output file");
-        output.setRequired(true);
-        options.addOption(output);
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("utility-name", options);
-
-            System.exit(1);
-        }
-
-        String inputFilePath = cmd.getOptionValue("input");
-        String outputFilePath = cmd.getOptionValue("output");
-
-        System.out.println(inputFilePath);
-        System.out.println(outputFilePath);
+//		Options options = new Options();
+//
+//        Option input = new Option("i", "input", true, "input file path");
+//        input.setRequired(true);
+//        options.addOption(input);
+//
+//        Option output = new Option("o", "output", true, "output file");
+//        output.setRequired(true);
+//        options.addOption(output);
+//
+//        CommandLineParser parser = new DefaultParser();
+//        HelpFormatter formatter = new HelpFormatter();
+//        CommandLine cmd = null;
+//
+//        try {
+//            cmd = parser.parse(options, args);
+//        } catch (ParseException e) {
+//            System.out.println(e.getMessage());
+//            formatter.printHelp("utility-name", options);
+//
+//            System.exit(1);
+//        }
+//
+//        String inputFilePath = cmd.getOptionValue("input");
+//        String outputFilePath = cmd.getOptionValue("output");
+//
+//        System.out.println(inputFilePath);
+//        System.out.println(outputFilePath);
 		
 		// Construct paths to input directories
 		String graph_dir_path = "";
