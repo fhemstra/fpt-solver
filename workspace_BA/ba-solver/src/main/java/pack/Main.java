@@ -18,7 +18,7 @@ public class Main {
 	// Set this if the software is called from cmd instead of eclipse
 	static boolean call_from_cmd = false;
 	// Set this to mute debug output
-	static boolean mute = true;
+	static boolean mute = false;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
 	static long timeout_value = 30000;
 	// Set to activate timeouts
@@ -28,7 +28,7 @@ public class Main {
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = true;
-	static int number_of_graphs_to_test = 4;
+	static int number_of_graphs_to_test = 2;
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
@@ -53,8 +53,8 @@ public class Main {
 	// Select a dataset
 //	static String current_dataset = "pace";
 //	static String current_dataset = "k_star_graphs";
-//	static String current_dataset = "gnp_graphs";
-	static String current_dataset = "gnm_graphs";
+	static String current_dataset = "d_reg_graphs";
+//	static String current_dataset = "gnm_graphs";
 //	static String current_dataset = "bara_alb_graphs";
 //	static String current_dataset = "watts_strog_graphs";
 //	static String current_dataset = "reference_set_c2";

@@ -718,7 +718,7 @@ public class Hypergraph {
 						sol.add(curr_edge.elements[j]);
 						// print
 						if (!mute)
-							System.out.print("  Sol size: " + sol.size() + "\r");
+							System.out.print("  sol: " + sol + "\r");
 						flag = flag || hsSearchTree(k_par, sol, mute, hs_timeout, use_branch_and_bound, timeout_active);
 						if (flag) {
 							return true;
