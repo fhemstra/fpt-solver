@@ -529,10 +529,10 @@ public class Formula {
 	 */
 	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol, boolean ignore_S) {
 		// Evaluate literals one at a time
-		for (String l : clause) {
-			int negation_offset = (l.charAt(0) == '~') ? 1 : 0;
-			String id = (negation_offset == 1) ? l.substring(1, 2) : l.substring(0, 1);
-			int[] assi_elements = assign(l, assignment);
+		for (String literal : clause) {
+			int negation_offset = (literal.charAt(0) == '~') ? 1 : 0;
+			String id = (negation_offset == 1) ? literal.substring(1, 2) : literal.substring(0, 1);
+			int[] assi_elements = assign(literal, assignment);
 			// Handle S(x)
 			if (id.equals("S")) {
 				// Ignore S during reduction, because it stays empty
@@ -547,10 +547,17 @@ public class Formula {
 			} else if(id.equals("=")) {
 				// Check if the elements are equal
 				int reference = assi_elements[0];
+				boolean elems_are_equal = true;
 				for(int other_element : assi_elements) {
-					if(reference != other_element) return false;
+					if(reference != other_element) {
+						elems_are_equal = false;
+					}
 				}
-				return true;
+				// Return true is the elements are equal
+				if(elems_are_equal) {
+					return true;					
+				}
+				// Else: Do not return, because this is a dijunction and can still become true for a different literal
 			} else {
 				Relation r = relation_map.get(id);
 				if (r != null) {
