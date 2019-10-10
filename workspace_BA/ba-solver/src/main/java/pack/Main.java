@@ -25,7 +25,7 @@ public class Main {
 	static boolean timeout_active = false;
 	// Set to only test one graph
 	static boolean only_single_graph = false;
-	static String single_graph_name = "vc-exact_004.gr";
+	static String single_graph_name = "gnm_n_10_m_10_1.gr";
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 1;
@@ -53,8 +53,8 @@ public class Main {
 	// Select a dataset
 //	static String graph_dataset = "pace";
 //	static String graph_dataset = "k_star_graphs";
-	static String graph_dataset = "d_reg_graphs";
-//	static String graph_dataset = "gnm_graphs";
+//	static String graph_dataset = "d_reg_graphs";
+	static String graph_dataset = "gnm_graphs";
 //	static String graph_dataset = "bara_alb_graphs";
 //	static String graph_dataset = "watts_strog_graphs";
 //	static String graph_dataset = "reference_set_d2";
@@ -135,20 +135,52 @@ public class Main {
 		File[] form_files = form_folder.listFiles();
 		
 		if(!call_from_cmd) {
-			System.out.println("Binaries were built for use in the eclipse console.");
+			System.out.println("These binaries were built for use in the eclipse console. Recompile with updated settings.");
 		}
 		if(graph_files == null) {
-			System.out.println("No graphs found.");
+			System.out.println("No graph files found.");
 			return;
 		}
 		if(form_files == null) {
-			System.out.println("No formulas found.");
+			System.out.println("No formula files found.");
 			return;
+		}
+		
+		// Filter files based on settings
+		ArrayList<File> filtered_graph_files_list = new ArrayList<File>();
+		for(int j = 0; j < graph_files.length; j++) {
+			// Only test a single graph
+			if (only_single_graph) {
+				// Get filename from path
+				String curr_graph_path = graph_files[j].getAbsolutePath();
+				String[] path_split = curr_graph_path.split("\\\\");
+				String file_name = path_split[path_split.length-1];
+				// Check if this is the specified file
+				if (file_name.equals(single_graph_name)) {
+					filtered_graph_files_list.add(graph_files[j]);
+				}
+			}
+			// Only test the first x graphs
+			if (only_first_x_graphs && j >= number_of_graphs_to_test) {
+				filtered_graph_files_list.add(graph_files[j]);
+			}			
+		}
+		
+		// Leave, if there are no graph files
+		if(filtered_graph_files_list.isEmpty()) {
+			System.out.println("No graph files found.");
+			return;
+		}
+		
+		// Convert to Array
+		File[] filtered_graph_files = new File[filtered_graph_files_list.size()];
+		for(int i = 0; i < filtered_graph_files_list.size(); i++) {
+			filtered_graph_files[i] = filtered_graph_files_list.get(i);
 		}
 
 		// Sort files by their size (nr of nodes)
 		if (sort_by_nodes) {
-			Arrays.sort(graph_files, new Comparator<File>() {
+			Arrays.sort(filtered_graph_files, new Comparator<File>() {
 				public int compare(File file_1, File file_2) {
 					int graph_1_size = graphSize(file_1.getAbsolutePath());
 					int graph_2_size = graphSize(file_2.getAbsolutePath());
@@ -163,7 +195,7 @@ public class Main {
 		}
 		// Otherwise sort by file name
 		else {
-			Arrays.sort(graph_files, new Comparator<File>() {
+			Arrays.sort(filtered_graph_files, new Comparator<File>() {
 				public int compare(File file_1, File file_2) {
 					return file_1.getName().compareTo(file_2.getName());
 				}
@@ -173,7 +205,7 @@ public class Main {
 		// Prints
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
 		// Construct Formulas and reduce graphs (+ heuristics) (only once for all k)
-		constructAndReduce(graph_files, form_files);
+		constructAndReduce(filtered_graph_files, form_files);
 		System.out.println("-------");
 
 		// Pipeline 1: Solve formulas with SearchTree
@@ -196,7 +228,7 @@ public class Main {
 		// Skip pipe 2 if skip_pipe_2 is set
 		if (!skip_pipe_2) {
 			// Pipeline 2: Kernelize + HS-Search
-			System.out.println("\n+++++ PIPE 2 ++++++");
+			System.out.println("+++++ PIPE 2 ++++++");
 			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 				boolean all_graphs_solved = false;
 				for (int j = 0; j < reduced_graphs.size(); j++) {
@@ -246,6 +278,9 @@ public class Main {
 		System.out.println("Done.");
 	}
 
+	/**
+	 * Handles inputs given through CLI.
+	 */
 	private static void handleInputArgs(String[] args) {
 		Options options = new Options();
 		
@@ -256,6 +291,14 @@ public class Main {
 		Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
 		form_set_opt.setRequired(false);
 		options.addOption(form_set_opt);
+		
+		Option timeout_opt = new Option("t", "timeout", true, "timeout per graph-formula combination in seconds");
+		timeout_opt.setRequired(false);
+		options.addOption(timeout_opt);
+		
+		Option single_graph_opt = new Option("s", "single-graph", true, "specify the name of a single graph to test");
+		single_graph_opt .setRequired(false);
+		options.addOption(single_graph_opt );
 		
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
@@ -271,10 +314,19 @@ public class Main {
 			System.exit(1);
 		}
 		
-		// Process input
+		// Process inputs
 		graph_dataset = cmd.getOptionValue("graph-set");
 		if(cmd.getOptionValue("formula-set") != null) {
 			formula_set = cmd.getOptionValue("formula-set");				
+		}
+		if(cmd.getOptionValue("timeout") != null) {
+			timeout_active = true;
+			// Timeout is given in seconds but processed in milliseconds (* 1000)
+			timeout_value = Long.parseLong(cmd.getOptionValue("timeout")) * 1000;
+		}
+		if(cmd.getOptionValue("single-graph") != null) {
+			only_single_graph = true;
+			single_graph_name = cmd.getOptionValue("single-graph");
 		}
 	}
 
@@ -288,16 +340,6 @@ public class Main {
 				String curr_graph_name = curr_graph_file_name.split("\\.")[0];
 				// Only take graphs, that are small enough
 				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
-					// Only test a single graph
-					if (only_single_graph) {
-						if (!curr_graph_path.contains(single_graph_name)) {
-							continue;
-						}
-					}
-					// Only test the first x graphs
-					if (only_first_x_graphs && j >= number_of_graphs_to_test) {
-						continue;
-					}
 					Long redu_time_long = (long) 0;
 					graph_names.add(curr_graph_name);
 					graph_sizes.put(curr_graph_name, curr_graph_size);
