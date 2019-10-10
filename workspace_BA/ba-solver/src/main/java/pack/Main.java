@@ -38,14 +38,14 @@ public class Main {
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = true;
 	// Set to skip both pipelines, only reducing graphs
-	static boolean skip_pipe_2 = false;
+	static boolean skip_pipe_2 = true;
 	// Set this if the first pipeline should be skipped
 	static boolean skip_pipe_1 = true;
 	// Set to abandon branches of HS ST that contain a big matching
-	static boolean use_branch_and_bound = true;
+	static boolean use_branch_and_bound = false;
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
-	static boolean use_heuristics_after_reduction = true;
+	static boolean use_heuristics_after_reduction = false;
 	// Set to decide which kernel to use
 	static boolean use_bevern_kernel = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
@@ -310,6 +310,22 @@ public class Main {
 		x_graphs_opt.setRequired(false);
 		options.addOption(x_graphs_opt);
 		
+		Option skip_pipe_1_opt = new Option("st", "search-tree", false, "use the naive searchtree algorithm");
+		skip_pipe_1_opt.setRequired(false);
+		options.addOption(skip_pipe_1_opt );
+		
+		Option skip_pipe_2_opt = new Option("ke", "kernelization", false, "use the more sophisticated reduction and kernelization algorithm");
+		skip_pipe_2_opt.setRequired(false);
+		options.addOption(skip_pipe_2_opt);
+		
+		Option heuristics_opt = new Option("heu", "heuristics", false, "use ke together with heuristics to speed up the calculation");
+		heuristics_opt.setRequired(false);
+		options.addOption(heuristics_opt);
+		
+		Option upper_k_opt = new Option("k", "k-upper-bound", true, "the upper bound for the solution size k");
+		upper_k_opt .setRequired(false);
+		options.addOption(upper_k_opt);
+		
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -344,6 +360,20 @@ public class Main {
 		if(cmd.getOptionValue("x-graphs") != null) {
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = Integer.parseInt(cmd.getOptionValue("x-graphs"));
+		}
+		if(cmd.hasOption("st")) {
+			skip_pipe_1 = false;
+		}
+		if(cmd.hasOption("ke")) {
+			skip_pipe_2 = false;
+		}
+		if(cmd.hasOption("heu")) {
+			skip_pipe_2 = false;
+			use_heuristics_after_reduction = true;
+			use_branch_and_bound = true;
+		}
+		if(cmd.getOptionValue("k") != null) {
+			stop_k = Integer.parseInt(cmd.getOptionValue("k"));
 		}
 	}
 
