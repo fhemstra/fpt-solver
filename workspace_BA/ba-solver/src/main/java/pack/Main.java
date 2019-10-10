@@ -46,7 +46,7 @@ public class Main {
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics_after_reduction = false;
-	// Set to decide which kernel to use
+	// Set to use the bevern kernel before using the sf kernel
 	static boolean use_bevern_kernel = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
@@ -114,6 +114,11 @@ public class Main {
 		// Process input args 
 		if(call_from_cmd) {
 			handleInputArgs(args);
+		} else {
+			System.out.println("These binaries were built for use in the eclipse console. Recompile with updated settings.");
+			// Collect new default values for debugging
+			skip_pipe_2 = false;
+			use_bevern_kernel = true;
 		}
 		
 		// Construct paths to input directories
@@ -134,9 +139,6 @@ public class Main {
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		
-		if(!call_from_cmd) {
-			System.out.println("These binaries were built for use in the eclipse console. Recompile with updated settings.");
-		}
 		if(graph_files == null) {
 			System.out.println("No graph files found.");
 			return;
@@ -326,6 +328,10 @@ public class Main {
 		upper_k_opt .setRequired(false);
 		options.addOption(upper_k_opt);
 		
+		Option bevern_opt = new Option("b", "bevern-kernel", false, "use the bevern kernel before going into the normal kernel");
+		bevern_opt.setRequired(false);
+		options.addOption(bevern_opt);
+		
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -374,6 +380,10 @@ public class Main {
 		}
 		if(cmd.getOptionValue("k") != null) {
 			stop_k = Integer.parseInt(cmd.getOptionValue("k"));
+		}
+		if(cmd.hasOption("bevern-kernel")) {
+			skip_pipe_2 = false;
+			use_bevern_kernel = true;
 		}
 	}
 
@@ -595,9 +605,8 @@ public class Main {
 			// Kernelize graph
 			if (use_bevern_kernel) {
 				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
-			} else {
-				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
 			}
+			curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
 		} catch (TimeoutException e) {
 			long timeout_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (timeout_stop - kernel_start_time) / 1000);
