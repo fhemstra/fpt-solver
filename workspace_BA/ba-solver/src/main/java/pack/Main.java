@@ -18,17 +18,17 @@ public class Main {
 	// Set this if the software is called from cmd instead of eclipse
 	static boolean call_from_cmd = false;
 	// Set this to mute debug output
-	static boolean mute = false;
+	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
 	static long timeout_value = 30000;
 	// Set to activate timeouts
-	static boolean timeout_active = true;
+	static boolean timeout_active = false;
 	// Set to only test one graph
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
 	static boolean only_first_x_graphs = true;
-	static int number_of_graphs_to_test = 2;
+	static int number_of_graphs_to_test = 1;
 	// Set range of k
 	static int start_k = 0;
 	static int k_increment = 1;
@@ -40,7 +40,7 @@ public class Main {
 	// Set to skip both pipelines, only reducing graphs
 	static boolean skip_solution = false;
 	// Set this if the first pipeline should be skipped
-	static boolean skip_search_tree = true;
+	static boolean skip_search_tree = false;
 	// Set to abandon branches of HS ST that contain a big matching
 	static boolean use_branch_and_bound = true;
 	// Set this to use heuristics on the result of kernelization to improve HS ST

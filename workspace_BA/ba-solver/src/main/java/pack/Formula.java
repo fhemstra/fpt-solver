@@ -23,6 +23,9 @@ public class Formula {
 	String guard_rel_id;
 	double graph_density;
 	int[] universe;
+	int uni_min;
+	int uni_max;
+	
 	HashMap<String, Relation> relation_map;
 	String[] bound_variables;
 	int c_par;
@@ -114,22 +117,36 @@ public class Formula {
 	 * Returns the universe of the specified PACE-graph.
 	 */
 	private int[] getExternalUniverse(String graph_path) {
-		int arr_length = -1;
+		uni_min = -1;
+		uni_max = -1;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(graph_path)));
-			// First line is the descriptor
-			String first_line = br.readLine();
-			String[] first_split_line = first_line.split(" ");
-			arr_length = Integer.parseInt(first_split_line[2]);
+			// Skip header
+			String line = br.readLine();
+			line = "";
+			// Find min and max element
+			while((line=br.readLine()) != null) {
+				String[] line_split = line.split(" ");
+				for(String elem : line_split) {
+					int elem_int = Integer.parseInt(elem);
+					if(uni_min == -1 || uni_min > elem_int) {
+						uni_min = elem_int;
+					}
+					if(uni_max == -1 || uni_max < elem_int) {
+						uni_max = elem_int;
+					}
+				}
+			}
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (arr_length > -1) {
-			int[] universe = new int[arr_length];
-			// PACE nodes go from 1 to arr_lenght
-			for (int i = 0; i < arr_length; i++) {
-				universe[i] = i+1;
+		int universe_size = uni_max - uni_min + 1; 
+		if (universe_size > 0) {
+			int[] universe = new int[universe_size];
+			// PACE nodes go from min to max
+			for (int i = 0; i < universe_size; i++) {
+				universe[i] = uni_min + i;
 			}
 			return universe;
 		} else {
@@ -352,12 +369,15 @@ public class Formula {
 	 * Returns the assignment which comes after the given one. In the |U|-group this would just be the next number. 
 	 */
 	private int[] nextAssignment(int[] curr_assignment) {
-		int mode = universe.length;
+		int mode = uni_max - uni_min;
 		for(int i = c_par-1; i >= 0; i--) {
+			// Increment the rightmost digit if possible
 			if(curr_assignment[i] < mode) {
 				curr_assignment[i]++;
 				return curr_assignment;
-			} else {
+			}
+			// Else reset digit and go to next digit
+			else {
 				curr_assignment[i] = universe[0];
 			}
 		}
