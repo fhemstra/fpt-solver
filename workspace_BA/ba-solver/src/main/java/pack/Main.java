@@ -146,38 +146,44 @@ public class Main {
 			return;
 		}
 		
-		// Filter files based on settings
-		ArrayList<File> filtered_graph_files_list = new ArrayList<File>();
-		for(int j = 0; j < graph_files.length; j++) {
-			// Only test a single graph
-			if (only_single_graph) {
-				// Get filename from path
-				String curr_graph_path = graph_files[j].getAbsolutePath();
-				String[] path_split = curr_graph_path.split("\\\\");
-				String file_name = path_split[path_split.length-1];
-				// Check if this is the specified file
-				if (file_name.equals(single_graph_name)) {
+		// Apply filters if any are set
+		File[] filtered_graph_files;
+		if (only_single_graph || only_first_x_graphs) {
+			// Filter files based on settings
+			ArrayList<File> filtered_graph_files_list = new ArrayList<File>();
+			for (int j = 0; j < graph_files.length; j++) {
+				// Only test a single graph
+				if (only_single_graph) {
+					// Get filename from path
+					String curr_graph_path = graph_files[j].getAbsolutePath();
+					String[] path_split = curr_graph_path.split("\\\\");
+					String file_name = path_split[path_split.length - 1];
+					// Check if this is the specified file
+					if (file_name.equals(single_graph_name)) {
+						filtered_graph_files_list.add(graph_files[j]);
+					}
+				}
+				// Only test the first x graphs
+				if (only_first_x_graphs && j < number_of_graphs_to_test) {
 					filtered_graph_files_list.add(graph_files[j]);
 				}
 			}
-			// Only test the first x graphs
-			if (only_first_x_graphs && j >= number_of_graphs_to_test) {
-				filtered_graph_files_list.add(graph_files[j]);
-			}			
+			// Leave, if there are no graph files
+			if (filtered_graph_files_list.isEmpty()) {
+				System.out.println("No graph files found.");
+				return;
+			}
+			// Convert to Array
+			filtered_graph_files = new File[filtered_graph_files_list.size()];
+			for (int i = 0; i < filtered_graph_files_list.size(); i++) {
+				filtered_graph_files[i] = filtered_graph_files_list.get(i);
+			}
+		}
+		// Else don't filter anything
+		else {
+			filtered_graph_files = graph_files;
 		}
 		
-		// Leave, if there are no graph files
-		if(filtered_graph_files_list.isEmpty()) {
-			System.out.println("No graph files found.");
-			return;
-		}
-		
-		// Convert to Array
-		File[] filtered_graph_files = new File[filtered_graph_files_list.size()];
-		for(int i = 0; i < filtered_graph_files_list.size(); i++) {
-			filtered_graph_files[i] = filtered_graph_files_list.get(i);
-		}
-
 		// Sort files by their size (nr of nodes)
 		if (sort_by_nodes) {
 			Arrays.sort(filtered_graph_files, new Comparator<File>() {
@@ -297,8 +303,12 @@ public class Main {
 		options.addOption(timeout_opt);
 		
 		Option single_graph_opt = new Option("s", "single-graph", true, "specify the name of a single graph to test");
-		single_graph_opt .setRequired(false);
+		single_graph_opt.setRequired(false);
 		options.addOption(single_graph_opt );
+		
+		Option x_graphs_opt = new Option("x", "x-graphs", true, "only test the first x graphs");
+		x_graphs_opt.setRequired(false);
+		options.addOption(x_graphs_opt);
 		
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
@@ -321,12 +331,19 @@ public class Main {
 		}
 		if(cmd.getOptionValue("timeout") != null) {
 			timeout_active = true;
+			// Handle decimal numbers
+			Double input_value = Double.parseDouble(cmd.getOptionValue("timeout"));
 			// Timeout is given in seconds but processed in milliseconds (* 1000)
-			timeout_value = Long.parseLong(cmd.getOptionValue("timeout")) * 1000;
+			input_value *= 1000;
+			timeout_value = input_value.longValue();
 		}
 		if(cmd.getOptionValue("single-graph") != null) {
 			only_single_graph = true;
 			single_graph_name = cmd.getOptionValue("single-graph");
+		}
+		if(cmd.getOptionValue("x-graphs") != null) {
+			only_first_x_graphs = true;
+			number_of_graphs_to_test = Integer.parseInt(cmd.getOptionValue("x-graphs"));
 		}
 	}
 
