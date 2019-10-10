@@ -27,7 +27,7 @@ public class Main {
 	static boolean only_single_graph = false;
 	static String single_graph_name = "vc-exact_004.gr";
 	// Set to test only the first x graphs
-	static boolean only_first_x_graphs = true;
+	static boolean only_first_x_graphs = false;
 	static int number_of_graphs_to_test = 1;
 	// Set range of k
 	static int start_k = 0;
@@ -38,9 +38,9 @@ public class Main {
 	// Set this to sort input graphs by their size ascending
 	static boolean sort_by_nodes = true;
 	// Set to skip both pipelines, only reducing graphs
-	static boolean skip_solution = false;
+	static boolean skip_pipe_2 = false;
 	// Set this if the first pipeline should be skipped
-	static boolean skip_search_tree = false;
+	static boolean skip_pipe_1 = true;
 	// Set to abandon branches of HS ST that contain a big matching
 	static boolean use_branch_and_bound = true;
 	// Set this to use heuristics on the result of kernelization to improve HS ST
@@ -109,41 +109,43 @@ public class Main {
 	// +++++++ RESULT CONTAINERS DONE +++++++
 
 	public static void main(String[] args) {
-		// Process input args 
-//		Options options = new Options();
-//
-//        Option input = new Option("i", "input", true, "input file path");
-//        input.setRequired(true);
-//        options.addOption(input);
-//
-//        Option output = new Option("o", "output", true, "output file");
-//        output.setRequired(true);
-//        options.addOption(output);
-//
-//        CommandLineParser parser = new DefaultParser();
-//        HelpFormatter formatter = new HelpFormatter();
-//        CommandLine cmd = null;
-//
-//        try {
-//            cmd = parser.parse(options, args);
-//        } catch (ParseException e) {
-//            System.out.println(e.getMessage());
-//            formatter.printHelp("utility-name", options);
-//
-//            System.exit(1);
-//        }
-//
-//        String inputFilePath = cmd.getOptionValue("input");
-//        String outputFilePath = cmd.getOptionValue("output");
-//
-//        System.out.println(inputFilePath);
-//        System.out.println(outputFilePath);
+		if(call_from_cmd) {
+			// Process input args 
+			Options options = new Options();
+			
+			Option input = new Option("i", "input", true, "input file path");
+			input.setRequired(true);
+			options.addOption(input);
+			
+			Option output = new Option("o", "output", true, "output file");
+			output.setRequired(true);
+			options.addOption(output);
+			
+			CommandLineParser parser = new DefaultParser();
+			HelpFormatter formatter = new HelpFormatter();
+			CommandLine cmd = null;
+			
+			try {
+				cmd = parser.parse(options, args);
+			} catch (ParseException e) {
+				System.out.println(e.getMessage());
+				formatter.printHelp("utility-name", options);
+				
+				System.exit(1);
+			}
+			
+			String inputFilePath = cmd.getOptionValue("input");
+			String outputFilePath = cmd.getOptionValue("output");
+			
+			System.out.println(inputFilePath);
+			System.out.println(outputFilePath);
+		}
 		
 		// Construct paths to input directories
 		String graph_dir_path = "";
 		String form_dir_path = "";
 		if (call_from_cmd) {
-			String prefix = ".." + File.separator + ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+			String prefix = ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
 			form_dir_path = prefix  + "instances";
 		} else {
@@ -151,6 +153,7 @@ public class Main {
 			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
 			form_dir_path = prefix  + "instances";
 		}
+		System.out.println(graph_dir_path);
 
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
@@ -192,26 +195,26 @@ public class Main {
 		// Construct Formulas and reduce graphs (+ heuristics) (only once for all k)
 		constructAndReduce(graph_files, form_files);
 		System.out.println("-------");
-		
-		// Skip both pipelines if skip_solution is set
-		if(!skip_solution) {
-			// Pipeline 1: Solve formulas with SearchTree
-			if(!skip_search_tree) {
-				System.out.println("+++++ Pipe 1 +++++");
-				for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
-					for (int j = 0; j < forms.size(); j++) {
-						Formula curr_form = forms.get(j);
-						// Skip solved forms
-						if(!pipe_1_solved_forms.contains(curr_form.identifier)) {
-							boolean st_res = startNormalSearchTree(k_par, curr_form);
-							if(st_res) {
-								pipe_1_solved_forms.add(curr_form.identifier);
-							}
+
+		// Pipeline 1: Solve formulas with SearchTree
+		if (!skip_pipe_1) {
+			System.out.println("+++++ Pipe 1 +++++");
+			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
+				for (int j = 0; j < forms.size(); j++) {
+					Formula curr_form = forms.get(j);
+					// Skip solved forms
+					if (!pipe_1_solved_forms.contains(curr_form.identifier)) {
+						boolean st_res = startNormalSearchTree(k_par, curr_form);
+						if (st_res) {
+							pipe_1_solved_forms.add(curr_form.identifier);
 						}
 					}
 				}
 			}
-			
+		}
+
+		// Skip pipe 2 if skip_pipe_2 is set
+		if (!skip_pipe_2) {
 			// Pipeline 2: Kernelize + HS-Search
 			System.out.println("\n+++++ PIPE 2 ++++++");
 			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
@@ -658,7 +661,7 @@ public class Main {
 			// Construct file path
 			String result_file_path = "";
 			if (call_from_cmd) {
-				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + "output"
+				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + "output"
 						+ File.separator + curr_id.substring(0, curr_id.length()-3) + ".res";
 			} else {
 				result_file_path = ".." + File.separator + ".." + File.separator+ "matlab_plots" + File.separator + "output"
