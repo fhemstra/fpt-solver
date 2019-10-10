@@ -113,35 +113,7 @@ public class Main {
 	public static void main(String[] args) {
 		// Process input args 
 		if(call_from_cmd) {
-			Options options = new Options();
-			
-			Option dataset_opt = new Option("g", "graph-set", true, "name of the directory containing graphs");
-			dataset_opt.setRequired(true);
-			options.addOption(dataset_opt);
-			
-			Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
-			form_set_opt.setRequired(false);
-			options.addOption(form_set_opt);
-			
-			// Init parser
-			CommandLineParser parser = new DefaultParser();
-			HelpFormatter formatter = new HelpFormatter();
-			CommandLine cmd = null;
-			// Parse input
-			try {
-				cmd = parser.parse(options, args);
-			} catch (ParseException e) {
-				System.out.println(e.getMessage());
-				formatter.printHelp("utility-name", options);
-				// Leave if there was an error
-				System.exit(1);
-			}
-			
-			// Process input
-			graph_dataset = cmd.getOptionValue("graph-set");
-			if(cmd.getOptionValue("formula-set") != null) {
-				formula_set = cmd.getOptionValue("formula-set");				
-			}
+			handleInputArgs(args);
 		}
 		
 		// Construct paths to input directories
@@ -272,6 +244,38 @@ public class Main {
 		System.out.println("------");
 		collectResults();
 		System.out.println("Done.");
+	}
+
+	private static void handleInputArgs(String[] args) {
+		Options options = new Options();
+		
+		Option dataset_opt = new Option("g", "graph-set", true, "name of the directory containing graphs");
+		dataset_opt.setRequired(true);
+		options.addOption(dataset_opt);
+		
+		Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
+		form_set_opt.setRequired(false);
+		options.addOption(form_set_opt);
+		
+		// Init parser
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd = null;
+		// Parse input
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			formatter.printHelp("utility-name", options);
+			// Leave if there was an error
+			System.exit(1);
+		}
+		
+		// Process input
+		graph_dataset = cmd.getOptionValue("graph-set");
+		if(cmd.getOptionValue("formula-set") != null) {
+			formula_set = cmd.getOptionValue("formula-set");				
+		}
 	}
 
 	private static void constructAndReduce(File[] graph_files, File[] form_files) {
