@@ -25,7 +25,6 @@ public class Formula {
 	int[] universe;
 	int uni_min;
 	int uni_max;
-	
 	HashMap<String, Relation> relation_map;
 	String[] bound_variables;
 	int c_par;
@@ -366,19 +365,18 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the assignment which comes after the given one. In the |U|-group this would just be the next number. 
+	 * Returns the assignment which comes after the given one. 
 	 */
 	private int[] nextAssignment(int[] curr_assignment) {
-		int mode = uni_max - uni_min;
 		for(int i = c_par-1; i >= 0; i--) {
 			// Increment the rightmost digit if possible
-			if(curr_assignment[i] < mode) {
+			if(curr_assignment[i] < uni_max) {
 				curr_assignment[i]++;
 				return curr_assignment;
 			}
 			// Else reset digit and go to next digit
 			else {
-				curr_assignment[i] = universe[0];
+				curr_assignment[i] = uni_min;
 			}
 		}
 		return null;
@@ -415,8 +413,6 @@ public class Formula {
 		// assignment = [1,2] (x=1,y=2)
 		// Extract variables
 		int negation_offset = (atom.charAt(0) == '~') ? 1 : 0;
-		String id = atom.substring(negation_offset, negation_offset + 1);
-		// id = "R"
 		String content = atom.substring(negation_offset + 1);
 		// content = "(y,x)"
 		content = content.replaceAll("[()]", "");
@@ -424,9 +420,13 @@ public class Formula {
 		String[] variables = content.split(",");
 		// variables = ["y","x"]
 		int[] assi_elements = new int[variables.length];
-		// assi_elements = [0,0]
+		// Init empty
+		for(int i = 0; i < assi_elements.length; i++) {
+			assi_elements[i] = -1;
+		}
+		// assi_elements = [-1,-1]
 		for (int i = 0; i < variables.length; i++) {
-			for (int j = 0; j < universe.length; j++) {
+			for (int j = 0; j < bound_variables.length; j++) {
 				// bound_vars = ["x","y","z"]
 				// y: i = 0, j = 1
 				if (variables[i].equals(bound_variables[j])) {

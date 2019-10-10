@@ -51,13 +51,15 @@ public class Main {
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
 	// Select a dataset
-//	static String current_dataset = "pace";
-//	static String current_dataset = "k_star_graphs";
-	static String current_dataset = "d_reg_graphs";
-//	static String current_dataset = "gnm_graphs";
-//	static String current_dataset = "bara_alb_graphs";
-//	static String current_dataset = "watts_strog_graphs";
-//	static String current_dataset = "reference_set_d2";
+//	static String graph_dataset = "pace";
+//	static String graph_dataset = "k_star_graphs";
+	static String graph_dataset = "d_reg_graphs";
+//	static String graph_dataset = "gnm_graphs";
+//	static String graph_dataset = "bara_alb_graphs";
+//	static String graph_dataset = "watts_strog_graphs";
+//	static String graph_dataset = "reference_set_d2";
+	// Select formula set
+	static String formula_set = "instances";
 	// ++++++++++ Settings done +++++++++
 	
 	// +++++++ RESULT CONTAINERS +++++++
@@ -109,50 +111,48 @@ public class Main {
 	// +++++++ RESULT CONTAINERS DONE +++++++
 
 	public static void main(String[] args) {
+		// Process input args 
 		if(call_from_cmd) {
-			// Process input args 
 			Options options = new Options();
 			
-			Option input = new Option("i", "input", true, "input file path");
-			input.setRequired(true);
-			options.addOption(input);
+			Option dataset_opt = new Option("d", "dataset", true, "name of the graph dataset directory");
+			dataset_opt.setRequired(true);
+			options.addOption(dataset_opt);
 			
-			Option output = new Option("o", "output", true, "output file");
-			output.setRequired(true);
-			options.addOption(output);
+			Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
+			form_set_opt.setRequired(true);
+			options.addOption(form_set_opt);
 			
+			// Init parser
 			CommandLineParser parser = new DefaultParser();
 			HelpFormatter formatter = new HelpFormatter();
 			CommandLine cmd = null;
-			
+			// Parse input
 			try {
 				cmd = parser.parse(options, args);
 			} catch (ParseException e) {
 				System.out.println(e.getMessage());
 				formatter.printHelp("utility-name", options);
-				
+				// Leave if there was an error
 				System.exit(1);
 			}
 			
-			String inputFilePath = cmd.getOptionValue("input");
-			String outputFilePath = cmd.getOptionValue("output");
-			
-			System.out.println(inputFilePath);
-			System.out.println(outputFilePath);
+			// Process input
+			graph_dataset = cmd.getOptionValue("dataset");
+			formula_set = cmd.getOptionValue("formula-set");
 		}
 		
 		// Construct paths to input directories
 		String graph_dir_path = "";
 		String form_dir_path = "";
+		String prefix = "";
 		if (call_from_cmd) {
-			String prefix = ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
-			form_dir_path = prefix  + "instances";
+			prefix = ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 		} else {
-			String prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-			graph_dir_path = prefix + "input_graphs" + File.separator + current_dataset;
-			form_dir_path = prefix  + "instances";
+			prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 		}
+		graph_dir_path = prefix + "input_graphs" + File.separator + graph_dataset;
+		form_dir_path = prefix  + formula_set;
 		System.out.println(graph_dir_path);
 
 		// Collect and sort files
