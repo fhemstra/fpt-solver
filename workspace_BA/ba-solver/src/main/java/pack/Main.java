@@ -20,7 +20,7 @@ public class Main {
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
-	static long timeout_value = 30000;
+	static long timeout_value = 60000;
 	// Set to activate timeouts
 	static boolean timeout_active = false;
 	// Set to only test one graph
