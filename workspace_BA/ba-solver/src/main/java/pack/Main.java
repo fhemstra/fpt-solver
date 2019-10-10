@@ -16,7 +16,7 @@ import org.apache.commons.cli.*;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -115,12 +115,12 @@ public class Main {
 		if(call_from_cmd) {
 			Options options = new Options();
 			
-			Option dataset_opt = new Option("d", "dataset", true, "name of the graph dataset directory");
+			Option dataset_opt = new Option("g", "graph-set", true, "name of the directory containing graphs");
 			dataset_opt.setRequired(true);
 			options.addOption(dataset_opt);
 			
 			Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
-			form_set_opt.setRequired(true);
+			form_set_opt.setRequired(false);
 			options.addOption(form_set_opt);
 			
 			// Init parser
@@ -138,8 +138,10 @@ public class Main {
 			}
 			
 			// Process input
-			graph_dataset = cmd.getOptionValue("dataset");
-			formula_set = cmd.getOptionValue("formula-set");
+			graph_dataset = cmd.getOptionValue("graph-set");
+			if(cmd.getOptionValue("formula-set") != null) {
+				formula_set = cmd.getOptionValue("formula-set");				
+			}
 		}
 		
 		// Construct paths to input directories
@@ -153,7 +155,6 @@ public class Main {
 		}
 		graph_dir_path = prefix + "input_graphs" + File.separator + graph_dataset;
 		form_dir_path = prefix  + formula_set;
-		System.out.println(graph_dir_path);
 
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
@@ -161,8 +162,15 @@ public class Main {
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		
+		if(!call_from_cmd) {
+			System.out.println("Binaries were built for use in the eclipse console.");
+		}
 		if(graph_files == null) {
 			System.out.println("No graphs found.");
+			return;
+		}
+		if(form_files == null) {
+			System.out.println("No formulas found.");
 			return;
 		}
 
