@@ -291,47 +291,50 @@ public class Main {
 	 */
 	private static void handleInputArgs(String[] args) {
 		Options options = new Options();
-		
+
 		Option dataset_opt = new Option("g", "graph-set", true, "name of the directory containing graphs");
 		dataset_opt.setRequired(true);
 		options.addOption(dataset_opt);
-		
+
 		Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
 		form_set_opt.setRequired(false);
 		options.addOption(form_set_opt);
-		
+
 		Option timeout_opt = new Option("t", "timeout", true, "timeout per graph-formula combination in seconds");
 		timeout_opt.setRequired(false);
 		options.addOption(timeout_opt);
-		
+
 		Option single_graph_opt = new Option("s", "single-graph", true, "specify the name of a single graph to test");
 		single_graph_opt.setRequired(false);
-		options.addOption(single_graph_opt );
-		
+		options.addOption(single_graph_opt);
+
 		Option x_graphs_opt = new Option("x", "x-graphs", true, "only test the first x graphs");
 		x_graphs_opt.setRequired(false);
 		options.addOption(x_graphs_opt);
-		
+
 		Option skip_pipe_1_opt = new Option("st", "search-tree", false, "use the naive searchtree algorithm");
 		skip_pipe_1_opt.setRequired(false);
-		options.addOption(skip_pipe_1_opt );
-		
-		Option skip_pipe_2_opt = new Option("ke", "kernelization", false, "use the more sophisticated reduction and kernelization algorithm");
+		options.addOption(skip_pipe_1_opt);
+
+		Option skip_pipe_2_opt = new Option("ke", "kernelization", false,
+				"use the more sophisticated reduction and kernelization algorithm");
 		skip_pipe_2_opt.setRequired(false);
 		options.addOption(skip_pipe_2_opt);
-		
-		Option heuristics_opt = new Option("heu", "heuristics", false, "use ke together with heuristics to speed up the calculation");
+
+		Option heuristics_opt = new Option("heu", "heuristics", false,
+				"use ke together with heuristics to speed up the calculation");
 		heuristics_opt.setRequired(false);
 		options.addOption(heuristics_opt);
-		
+
 		Option upper_k_opt = new Option("k", "k-upper-bound", true, "the upper bound for the solution size k");
-		upper_k_opt .setRequired(false);
+		upper_k_opt.setRequired(false);
 		options.addOption(upper_k_opt);
-		
-		Option bevern_opt = new Option("b", "bevern-kernel", false, "use the bevern kernel before going into the normal kernel");
+
+		Option bevern_opt = new Option("b", "bevern-kernel", false,
+				"use the bevern kernel before going into the normal kernel");
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
-		
+
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -345,13 +348,13 @@ public class Main {
 			// Leave if there was an error
 			System.exit(1);
 		}
-		
+
 		// Process inputs
 		graph_dataset = cmd.getOptionValue("graph-set");
-		if(cmd.getOptionValue("formula-set") != null) {
-			formula_set = cmd.getOptionValue("formula-set");				
+		if (cmd.getOptionValue("formula-set") != null) {
+			formula_set = cmd.getOptionValue("formula-set");
 		}
-		if(cmd.getOptionValue("timeout") != null) {
+		if (cmd.getOptionValue("timeout") != null) {
 			timeout_active = true;
 			// Handle decimal numbers
 			Double input_value = Double.parseDouble(cmd.getOptionValue("timeout"));
@@ -359,29 +362,29 @@ public class Main {
 			input_value *= 1000;
 			timeout_value = input_value.longValue();
 		}
-		if(cmd.getOptionValue("single-graph") != null) {
+		if (cmd.getOptionValue("single-graph") != null) {
 			only_single_graph = true;
 			single_graph_name = cmd.getOptionValue("single-graph");
 		}
-		if(cmd.getOptionValue("x-graphs") != null) {
+		if (cmd.getOptionValue("x-graphs") != null) {
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = Integer.parseInt(cmd.getOptionValue("x-graphs"));
 		}
-		if(cmd.hasOption("st")) {
+		if (cmd.hasOption("st")) {
 			skip_pipe_1 = false;
 		}
-		if(cmd.hasOption("ke")) {
+		if (cmd.hasOption("ke")) {
 			skip_pipe_2 = false;
 		}
-		if(cmd.hasOption("heu")) {
+		if (cmd.hasOption("heu")) {
 			skip_pipe_2 = false;
 			use_heuristics_after_reduction = true;
 			use_branch_and_bound = true;
 		}
-		if(cmd.getOptionValue("k") != null) {
+		if (cmd.getOptionValue("k") != null) {
 			stop_k = Integer.parseInt(cmd.getOptionValue("k"));
 		}
-		if(cmd.hasOption("bevern-kernel")) {
+		if (cmd.hasOption("bevern-kernel")) {
 			skip_pipe_2 = false;
 			use_bevern_kernel = true;
 		}
