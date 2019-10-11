@@ -1,14 +1,19 @@
 import os
 import numpy as np
+import sys
 from matplotlib import pyplot as plt
 
 # Close previous plots
 plt.close("all")
+# Get CLI arguments ([0] is script name)
+assert len(sys.argv) > 1, 'You need to pass the directory of result files.'
+directory_name = sys.argv[1]
+
 # Get file path
 script_dir = os.path.dirname(os.path.realpath(__file__))
-output_dir = os.path.join(script_dir, 'output')
+output_dir = os.path.join(script_dir, directory_name)
 output_dir_list = os.listdir(output_dir)
-file_list = [os.path.join('output', file) for file in output_dir_list if ".res" == file[-4:]]
+file_list = [os.path.join(directory_name, file) for file in output_dir_list if ".res" == file[-4:]]
 assert len(file_list) > 0, "No RES files in output directory."
 
 # Find solved files
@@ -77,7 +82,7 @@ prefix_sum = np.cumsum(ones)
 
 # Plot stuff
 plt.plot(solver_times, prefix_sum)
-plt.xlabel('Zeit')
+plt.xlabel('Zeit in Sekunden')
 plt.ylabel('Instanzen')
 plt.title('Zahl der gelösten Instanzen über Zeit')
 plt.show()

@@ -2,10 +2,7 @@ package pack;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,7 +36,6 @@ public class Hypergraph {
 			String first_line = br.readLine();
 			String[] first_split_line = first_line.split(" ");
 			int num_nodes = Integer.parseInt(first_split_line[2]);
-			int num_edges = Integer.parseInt(first_split_line[3]);
 			nodes = new int[num_nodes];
 			// nodes are labeled from 1 to num_nodes
 			for (int i = 0; i < num_nodes; i++) {
@@ -668,9 +664,6 @@ public class Hypergraph {
 	/**
 	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
 	 * or not. Initially the solution sol is supposed to be empty.
-	 * 
-	 * @param hs_timeout
-	 * @throws TimeoutException
 	 */
 	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout, boolean use_branch_and_bound, boolean timeout_active)
 			throws TimeoutException {

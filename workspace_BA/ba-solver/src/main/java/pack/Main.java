@@ -545,6 +545,9 @@ public class Main {
 		} catch (TimeoutException e) {
 			System.out.println("! ST timed out.");
 			pipe_1_timeouts.put(curr_name, true);
+		} catch (StackOverflowError e){
+			System.out.println("! ST overflowed.");
+			pipe_1_timeouts.put(curr_name, true);
 		}
 		long st_stop_time = System.currentTimeMillis();
 		if (!mute)
@@ -693,7 +696,6 @@ public class Main {
 				}
 			}
 		});
-
 		// HS-SearchTree
 		System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", "
 				+ curr_kernel.edges.size());
@@ -723,7 +725,7 @@ public class Main {
 			}
 			hs_timeout -= prev_time;
 		}
-
+		
 		// Start HS-SearchTree
 		try {
 			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout,
@@ -764,8 +766,15 @@ public class Main {
 		} catch (TimeoutException e) {
 			long emergency_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (emergency_stop - hs_start_time) / 1000);
-			System.out.println("! HS-SearchTree timed out after additional "
-					+ String.format("%.3f", additional_time) + " sec.");
+			System.out.println(
+					"! HS-SearchTree timed out after additional " + String.format("%.3f", additional_time) + " sec.");
+			pipe_2_timeouts.put(curr_name, true);
+			timed_out_graphs.add(curr_kernel.getIdentifier());
+		} catch (StackOverflowError e) {
+			long emergency_stop = System.currentTimeMillis();
+			double additional_time = (double) ((double) (emergency_stop - hs_start_time) / 1000);
+			System.out.println(
+					"! HS-SearchTree overflowed out after additional " + String.format("%.3f", additional_time) + " sec.");
 			pipe_2_timeouts.put(curr_name, true);
 			timed_out_graphs.add(curr_kernel.getIdentifier());
 		}

@@ -1,0 +1,14 @@
+file: bara_alb_n_80_m_2_2,vertex-cover-c2
+total_nodes: 80
+c_par: 2
+dens: 1.0
+lowest_k: 26
+redu_time: 0.008
+redu_nodes: 80
+redu_edges: 156
+kernel_times: 0.005;
+kernel_nodes: 80;
+kernel_edges: 123;
+pipe_2_sum: 0.013
+pipe_2_res: false
+pipe_2_timeout: true

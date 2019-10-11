@@ -1,0 +1,15 @@
+file: gnm_n_50_m_75_0,vertex-cover-c2
+total_nodes: 50
+c_par: 2
+dens: 1.0
+lowest_k: 21
+redu_time: 0.004
+redu_nodes: 50
+redu_edges: 75
+kernel_times: 0.001;0.001;0.000;
+kernel_nodes: 49;49;49;
+kernel_edges: 75;75;75;
+hs_st_times: 8.334;18.188;
+pipe_2_sum: 26.528
+pipe_2_res: false
+pipe_2_timeout: true

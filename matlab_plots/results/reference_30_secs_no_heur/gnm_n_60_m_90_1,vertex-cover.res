@@ -1,0 +1,15 @@
+file: gnm_n_60_m_90_1,vertex-cover-c2
+total_nodes: 60
+c_par: 2
+dens: 1.0
+lowest_k: 22
+redu_time: 0.005
+redu_nodes: 60
+redu_edges: 90
+kernel_times: 0.001;0.001;
+kernel_nodes: 58;58;
+kernel_edges: 90;90;
+hs_st_times: 15.564;
+pipe_2_sum: 15.571
+pipe_2_res: false
+pipe_2_timeout: true

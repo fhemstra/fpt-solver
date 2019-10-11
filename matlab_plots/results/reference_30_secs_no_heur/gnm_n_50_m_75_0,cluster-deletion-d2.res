@@ -1,0 +1,15 @@
+file: gnm_n_50_m_75_0,cluster-deletion-d2-c3
+total_nodes: 50
+c_par: 3
+dens: 1.0
+lowest_k: 12
+redu_time: 0.440
+redu_nodes: 50
+redu_edges: 199
+kernel_times: 0.004;0.003;0.003;
+kernel_nodes: 49;49;49;
+kernel_edges: 199;199;199;
+hs_st_times: 2.051;6.736;
+pipe_2_sum: 9.237
+pipe_2_res: false
+pipe_2_timeout: true
