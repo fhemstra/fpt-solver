@@ -63,7 +63,7 @@ public class Main {
 //	static String graph_dataset = "watts_strog_graphs";
 //	static String graph_dataset = "reference_set_d2";
 	// Select formula set
-	static String formula_set = "instances";
+	static String formula_set = "vc";
 	// ++++++++++ Settings done +++++++++
 	
 	// +++++++ RESULT CONTAINERS +++++++
