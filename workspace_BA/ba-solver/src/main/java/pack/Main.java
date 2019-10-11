@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,6 +50,8 @@ public class Main {
 	static boolean use_heuristics_after_reduction = false;
 	// Set to use the bevern kernel before using the SF kernel
 	static boolean use_bevern_kernel_additionally = false;
+	// Set to use guarded logic if possible
+	static boolean use_guard = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
 	// Select a dataset
@@ -111,7 +115,10 @@ public class Main {
 	// +++++++ RESULT CONTAINERS DONE +++++++
 
 	public static void main(String[] args) {
+		// Get init time as long
 		long main_init_time = System.currentTimeMillis();
+		// Get timestamp as date
+		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		// Process input args 
 		if(call_from_cmd) {
 			handleInputArgs(args);
@@ -286,7 +293,7 @@ public class Main {
 
 		// Collect and save results
 		System.out.println("------");
-		collectResults();
+		collectResults(timestamp);
 		long main_terminate_time = System.currentTimeMillis();
 		long total_time_passed = main_terminate_time - main_init_time;
 		System.out.println("Done after " + formatTimeInSeconds(total_time_passed) + " seconds.");
@@ -340,6 +347,10 @@ public class Main {
 				"use the bevern kernel before going into the normal kernel");
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
+		
+		Option guard_opt = new Option("gu", "guards", false, "use guarded logic to speed up reduction if possible");
+		guard_opt.setRequired(false);
+		options.addOption(guard_opt);
 
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
@@ -394,6 +405,9 @@ public class Main {
 			skip_pipe_2 = false;
 			use_bevern_kernel_additionally = true;
 		}
+		if (cmd.hasOption("guard")) {
+			use_guard = false;
+		}
 	}
 
 	private static void constructAndReduce(File[] graph_files, File[] form_files) {
@@ -423,7 +437,7 @@ public class Main {
 					// Reduce
 					Hypergraph reduced_graph = null;
 					try {
-						if (curr_formula.guard_rel_id == null) {
+						if (curr_formula.guard_rel_id == null || use_guard) {
 							System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
 							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout, timeout_active);
 						} else {
@@ -780,7 +794,7 @@ public class Main {
 		}
 	}
 
-	private static void collectResults() {
+	private static void collectResults(String timestamp) {
 		if (!mute)
 			System.out.println("\n------------------------------------");
 		// Loop over all reduced graphs
@@ -789,11 +803,12 @@ public class Main {
 			// Construct file path
 			String result_file_path = "";
 			if (call_from_cmd) {
-				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator + "output"
-						+ File.separator + curr_id.substring(0, curr_id.length()-3) + ".res";
+				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator
+						+ "matlab_plots" + File.separator + "output_" + timestamp + File.separator
+						+ curr_id.substring(0, curr_id.length() - 3) + ".res";
 			} else {
-				result_file_path = ".." + File.separator + ".." + File.separator+ "matlab_plots" + File.separator + "output"
-						+ File.separator + curr_id.substring(0, curr_id.length()-3) + ".res";
+				result_file_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
+						+ "output_" + timestamp + File.separator + curr_id.substring(0, curr_id.length() - 3) + ".res";
 			}
 			// Calculate pipe_1_sum
 			long pipe_1_sum = 0;
