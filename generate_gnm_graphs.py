@@ -9,7 +9,7 @@ dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'ba-solver' + os.sep + 
 if not os.path.exists(dest_dir):
 	os.makedirs(dest_dir) 
 for n in range(10,100,10):
-	m = 1*n
+	m = 1.5*n
 	for i in range(variance_count):
 		graph = nx.gnm_random_graph(n, m)
 		nodes = graph.nodes()
