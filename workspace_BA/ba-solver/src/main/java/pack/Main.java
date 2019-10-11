@@ -335,9 +335,14 @@ public class Main {
 		options.addOption(skip_pipe_2_opt);
 
 		Option heuristics_opt = new Option("heu", "heuristics", false,
-				"use ke together with heuristics to speed up the calculation");
+				"use heuristics to speed up the calculation");
 		heuristics_opt.setRequired(false);
 		options.addOption(heuristics_opt);
+		
+		Option bround_opt = new Option("bo", "bound", false,
+				"use matchings to branch and bound and speed up solution after kernelization");
+		bround_opt.setRequired(false);
+		options.addOption(bround_opt);
 
 		Option upper_k_opt = new Option("k", "k-upper-bound", true, "the upper bound for the solution size k");
 		upper_k_opt.setRequired(false);
@@ -394,8 +399,9 @@ public class Main {
 			skip_pipe_2 = false;
 		}
 		if (cmd.hasOption("heu")) {
-			skip_pipe_2 = false;
 			use_heuristics_after_reduction = true;
+		}
+		if (cmd.hasOption("bound")) {
 			use_branch_and_bound = true;
 		}
 		if (cmd.getOptionValue("k") != null) {
