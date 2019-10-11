@@ -16,7 +16,7 @@ import org.apache.commons.cli.*;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -46,8 +46,8 @@ public class Main {
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics_after_reduction = false;
-	// Set to use the bevern kernel before using the sf kernel
-	static boolean use_bevern_kernel = false;
+	// Set to use the bevern kernel before using the SF kernel
+	static boolean use_bevern_kernel_additionally = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
 	// Select a dataset
@@ -119,7 +119,10 @@ public class Main {
 			System.out.println("These binaries were built for use in the eclipse console. Recompile with updated settings.");
 			// Collect new default values for debugging
 			skip_pipe_2 = false;
-			use_bevern_kernel = true;
+			use_heuristics_after_reduction = true;
+			timeout_active = false;
+			only_first_x_graphs = true;
+			number_of_graphs_to_test = 3;
 		}
 		
 		// Construct paths to input directories
@@ -389,7 +392,7 @@ public class Main {
 		}
 		if (cmd.hasOption("bevern-kernel")) {
 			skip_pipe_2 = false;
-			use_bevern_kernel = true;
+			use_bevern_kernel_additionally = true;
 		}
 	}
 
@@ -609,7 +612,7 @@ public class Main {
 			// Copy reduced graph to kernel
 			curr_kernel = curr_redu_graph.copyThis();
 			// Kernelize graph
-			if (use_bevern_kernel) {
+			if (use_bevern_kernel_additionally) {
 				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
 			}
 			curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
