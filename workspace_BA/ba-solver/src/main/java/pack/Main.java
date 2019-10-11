@@ -135,7 +135,7 @@ public class Main {
 			prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 		}
 		graph_dir_path = prefix + "input_graphs" + File.separator + graph_dataset;
-		form_dir_path = prefix  + "instances" + formula_set;
+		form_dir_path = prefix  + "instances" + File.separator + formula_set;
 
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
