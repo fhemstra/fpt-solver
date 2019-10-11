@@ -1,0 +1,14 @@
+file: gnm_n_400_m_600,vertex-cover-c2
+total_nodes: 400
+c_par: 2
+dens: 1.0
+lowest_k: 159
+redu_time: 0.032
+redu_nodes: 400
+redu_edges: 600
+kernel_times: 0.028;
+kernel_nodes: 389;
+kernel_edges: 600;
+pipe_2_sum: 0.060
+pipe_2_res: false
+pipe_2_timeout: true

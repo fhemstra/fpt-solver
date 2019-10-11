@@ -1,0 +1,14 @@
+file: gnm_n_180_m_270,cluster-deletion-d2-c3
+total_nodes: 180
+c_par: 3
+dens: 1.0
+lowest_k: 44
+redu_time: 7.290
+redu_nodes: 180
+redu_edges: 771
+kernel_times: 0.062;
+kernel_nodes: 171;
+kernel_edges: 771;
+pipe_2_sum: 7.352
+pipe_2_res: false
+pipe_2_timeout: true

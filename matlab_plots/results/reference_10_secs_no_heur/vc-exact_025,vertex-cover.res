@@ -1,0 +1,14 @@
+file: vc-exact_025,vertex-cover-c2
+total_nodes: 23194
+c_par: 2
+dens: 1.0
+lowest_k: 4899
+redu_time: 8.401
+redu_nodes: 23194
+redu_edges: 18295
+kernel_times: 10.700;
+kernel_nodes: 23194;
+kernel_edges: 18295;
+pipe_2_sum: 19.101
+pipe_2_res: false
+pipe_2_timeout: true

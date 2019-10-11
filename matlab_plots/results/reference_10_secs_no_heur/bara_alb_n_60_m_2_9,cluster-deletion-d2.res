@@ -1,0 +1,15 @@
+file: bara_alb_n_60_m_2_9,cluster-deletion-d2-c3
+total_nodes: 60
+c_par: 3
+dens: 1.0
+lowest_k: 10
+redu_time: 0.320
+redu_nodes: 60
+redu_edges: 608
+kernel_times: 0.061;0.041;0.037;0.038;
+kernel_nodes: 60;59;59;59;
+kernel_edges: 342;392;423;434;
+hs_st_times: 0.097;0.647;2.519;
+pipe_2_sum: 3.760
+pipe_2_res: false
+pipe_2_timeout: true

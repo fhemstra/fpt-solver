@@ -1,0 +1,15 @@
+file: watts_strog_n_40_k_4_p_0,vertex-cover-c2
+total_nodes: 40
+c_par: 2
+dens: 1.0
+lowest_k: 18
+redu_time: 0.003
+redu_nodes: 40
+redu_edges: 80
+kernel_times: 0.001;0.000;0.000;0.001;
+kernel_nodes: 40;40;40;40;
+kernel_edges: 80;80;80;80;
+hs_st_times: 0.757;1.613;3.597;
+pipe_2_sum: 5.972
+pipe_2_res: false
+pipe_2_timeout: true

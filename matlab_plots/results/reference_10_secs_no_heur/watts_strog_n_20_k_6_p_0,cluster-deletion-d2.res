@@ -1,0 +1,16 @@
+file: watts_strog_n_20_k_6_p_0,cluster-deletion-d2-c3
+total_nodes: 20
+c_par: 3
+dens: 1.0
+lowest_k: 6
+solved_k: 11
+redu_time: 0.029
+redu_nodes: 20
+redu_edges: 216
+kernel_times: 0.012;0.008;0.007;0.006;0.007;0.005;
+kernel_nodes: 20;20;20;20;20;20;
+kernel_edges: 127;149;185;193;193;203;
+hs_st_times: 0.000;0.001;0.022;0.105;0.296;0.005;
+pipe_2_sum: 0.503
+pipe_2_res: true
+pipe_2_timeout: false

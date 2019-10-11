@@ -1,0 +1,14 @@
+file: gnm_n_7900_m_7900_3,vertex-cover-c2
+total_nodes: 7900
+c_par: 2
+dens: 1.0
+lowest_k: 2654
+redu_time: 1.979
+redu_nodes: 7900
+redu_edges: 7900
+kernel_times: 2.792;
+kernel_nodes: 6852;
+kernel_edges: 7900;
+pipe_2_sum: 4.771
+pipe_2_res: false
+pipe_2_timeout: true

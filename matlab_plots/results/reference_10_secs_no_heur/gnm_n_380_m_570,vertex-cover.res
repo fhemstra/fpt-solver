@@ -1,0 +1,14 @@
+file: gnm_n_380_m_570,vertex-cover-c2
+total_nodes: 380
+c_par: 2
+dens: 1.0
+lowest_k: 144
+redu_time: 0.024
+redu_nodes: 380
+redu_edges: 570
+kernel_times: 0.024;
+kernel_nodes: 366;
+kernel_edges: 570;
+pipe_2_sum: 0.048
+pipe_2_res: false
+pipe_2_timeout: true

@@ -1,0 +1,14 @@
+file: d_reg_d_2_n_80_1,dom-set-on-reg-graphs-d2-c3
+total_nodes: 80
+c_par: 3
+dens: 1.0
+lowest_k: 23
+redu_time: 0.872
+redu_nodes: 80
+redu_edges: 78
+kernel_times: 0.001;
+kernel_nodes: 80;
+kernel_edges: 78;
+pipe_2_sum: 0.873
+pipe_2_res: false
+pipe_2_timeout: true

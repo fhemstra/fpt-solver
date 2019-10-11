@@ -1,0 +1,14 @@
+file: gnm_n_8100_m_8100_1,vertex-cover-c2
+total_nodes: 8100
+c_par: 2
+dens: 1.0
+lowest_k: 2706
+redu_time: 2.066
+redu_nodes: 8100
+redu_edges: 8100
+kernel_times: 3.832;
+kernel_nodes: 7024;
+kernel_edges: 8100;
+pipe_2_sum: 5.898
+pipe_2_res: false
+pipe_2_timeout: true
