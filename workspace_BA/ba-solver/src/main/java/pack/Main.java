@@ -310,7 +310,7 @@ public class Main {
 		options.addOption(dataset_opt);
 
 		Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
-		form_set_opt.setRequired(false);
+		form_set_opt.setRequired(true);
 		options.addOption(form_set_opt);
 
 		Option timeout_opt = new Option("t", "timeout", true, "timeout per graph-formula combination in seconds");
@@ -348,7 +348,7 @@ public class Main {
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
 		
-		Option guard_opt = new Option("gu", "guards", false, "use guarded logic to speed up reduction if possible");
+		Option guard_opt = new Option("gu", "guard", false, "use guarded logic to speed up reduction if possible");
 		guard_opt.setRequired(false);
 		options.addOption(guard_opt);
 
