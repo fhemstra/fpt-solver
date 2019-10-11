@@ -406,7 +406,7 @@ public class Main {
 			use_bevern_kernel_additionally = true;
 		}
 		if (cmd.hasOption("guard")) {
-			use_guard = false;
+			use_guard = true;
 		}
 	}
 
@@ -437,7 +437,7 @@ public class Main {
 					// Reduce
 					Hypergraph reduced_graph = null;
 					try {
-						if (curr_formula.guard_rel_id == null || use_guard) {
+						if (curr_formula.guard_rel_id == null || !use_guard) {
 							System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
 							reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout, timeout_active);
 						} else {
