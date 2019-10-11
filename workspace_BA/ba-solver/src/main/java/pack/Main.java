@@ -38,7 +38,7 @@ public class Main {
 	// Set this to discard big graphs, set to -1 to discard nothing
 	static int max_graph_size = -1;
 	// Set this to sort input graphs by their size ascending
-	static boolean sort_by_nodes = true;
+	static boolean sort_by_nodes = false;
 	// Set to skip both pipelines, only reducing graphs
 	static boolean skip_pipe_2 = true;
 	// Set this if the first pipeline should be skipped
@@ -608,13 +608,21 @@ public class Main {
 			// Only print if there is a graph for this
 			System.out.println("------");
 		}
+		// Construct print about kernels
+		String attachment = "";
+		if(use_sf_kernel) {
+			attachment += " sf";
+		}
+		if(use_bevern_kernel) {
+			attachment += " bev"; 
+		}
 		if (use_heuristics_after_reduction) {
 			int k_after_heuristics = k_par + k_used_in_heuristics_per_graph
 					.get(curr_name);
 			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par
-					+ ", actual k = " + k_after_heuristics);
+					+ ", actual k = " + k_after_heuristics + "," + attachment);
 		} else {
-			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par);
+			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par + "," + attachment);
 		}
 
 		// Set timer
