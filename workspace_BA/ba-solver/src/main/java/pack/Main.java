@@ -800,16 +800,20 @@ public class Main {
 		// Loop over all reduced graphs
 		for(Hypergraph curr_graph : reduced_graphs) {
 			String curr_id = curr_graph.getIdentifier();
-			// Construct file path
-			String result_file_path = "";
+			// Construct dir path
+			String result_dir_path = "";
 			if (call_from_cmd) {
-				result_file_path = ".." + File.separator + ".." + File.separator + ".." + File.separator
-						+ "matlab_plots" + File.separator + "output_" + timestamp + File.separator
-						+ curr_id.substring(0, curr_id.length() - 3) + ".res";
+				result_dir_path = ".." + File.separator + ".." + File.separator + ".." + File.separator
+						+ "matlab_plots" + File.separator + "output_" + timestamp;
 			} else {
-				result_file_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
-						+ "output_" + timestamp + File.separator + curr_id.substring(0, curr_id.length() - 3) + ".res";
+				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
+						+ "output_" + timestamp;
 			}
+			// Create the directory
+			new File(result_dir_path).mkdirs();
+			// Contruct file path 
+			String result_file_path = result_dir_path + File.separator + curr_id.substring(0, curr_id.length() - 3)
+					+ ".res";
 			// Calculate pipe_1_sum
 			long pipe_1_sum = 0;
 			if (search_tree_times.get(curr_id) != null) {
