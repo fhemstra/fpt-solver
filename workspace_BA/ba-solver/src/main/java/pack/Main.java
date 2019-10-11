@@ -111,6 +111,7 @@ public class Main {
 	// +++++++ RESULT CONTAINERS DONE +++++++
 
 	public static void main(String[] args) {
+		long main_init_time = System.currentTimeMillis();
 		// Process input args 
 		if(call_from_cmd) {
 			handleInputArgs(args);
@@ -283,7 +284,9 @@ public class Main {
 		// Collect and save results
 		System.out.println("------");
 		collectResults();
-		System.out.println("Done.");
+		long main_terminate_time = System.currentTimeMillis();
+		long total_time_passed = main_terminate_time - main_init_time;
+		System.out.println("Done after " + formatTimeInSeconds(total_time_passed) + " seconds.");
 	}
 
 	/**
@@ -824,18 +827,18 @@ public class Main {
 				if(search_tree_times.get(curr_id) != null) {
 					bw.write("pipe_1_times:");
 					for(long time : search_tree_times.get(curr_id)) {
-						bw.write(formatTime(time) + ";");
+						bw.write(formatTimeInSeconds(time) + ";");
 					}
 					bw.write("\n");					
-					bw.write("pipe_1_sum: " + formatTime(pipe_1_sum) + "\n");
+					bw.write("pipe_1_sum: " + formatTimeInSeconds(pipe_1_sum) + "\n");
 					bw.write("pipe_1_res: " + search_tree_results.get(curr_id) + "\n");
 					bw.write("pipe_1_timeout: " + pipe_1_timeouts.get(curr_id) + "\n");
 				}
-				bw.write("redu_time: " + formatTime(reduction_times.get(curr_id)) + "\n");
+				bw.write("redu_time: " + formatTimeInSeconds(reduction_times.get(curr_id)) + "\n");
 				bw.write("redu_nodes: " + reduced_nodes.get(curr_id) + "\n");
 				bw.write("redu_edges: " + reduced_edges.get(curr_id) + "\n");
 				if (heuristic_times.get(curr_id) != null) {
-					bw.write("heur_time: " + formatTime(heuristic_times.get(curr_id)) + "\n");
+					bw.write("heur_time: " + formatTimeInSeconds(heuristic_times.get(curr_id)) + "\n");
 					bw.write("heur_nodes: " + heuristic_nodes.get(curr_id) + "\n");
 					bw.write("heur_edges: " + heuristic_edges.get(curr_id) + "\n");
 					bw.write("heur_k_used: " + k_used_in_heuristics_per_graph.get(curr_id) + "\n");
@@ -844,7 +847,7 @@ public class Main {
 					if (!kernel_times.get(curr_id).isEmpty()) {
 						bw.write("kernel_times: ");
 						for (long time : kernel_times.get(curr_id)) {
-							bw.write(formatTime(time) + ";");
+							bw.write(formatTimeInSeconds(time) + ";");
 						}
 						bw.write("\n");
 					}					
@@ -862,11 +865,11 @@ public class Main {
 				if (hs_times.get(curr_id) != null) {
 					bw.write("hs_st_times: ");
 					for (long time : hs_times.get(curr_id)) {
-						bw.write(formatTime(time) + ";");
+						bw.write(formatTimeInSeconds(time) + ";");
 					}
 					bw.write("\n");
 				}
-				bw.write("pipe_2_sum: " + formatTime(pipe_2_sum) + "\n");
+				bw.write("pipe_2_sum: " + formatTimeInSeconds(pipe_2_sum) + "\n");
 				bw.write("pipe_2_res: " + ke_results.get(curr_id) + "\n");
 				if (pipe_1_timeouts.get(curr_id) != null) {
 					bw.write("pipe_1_timeout: " + pipe_1_timeouts.get(curr_id) + "\n");
@@ -905,10 +908,10 @@ public class Main {
 	 * Prints the given time in a nice format.
 	 */
 	private static void printTime(long time) {
-		System.out.println("- Time elapsed:  " + formatTime(time) + " sec");
+		System.out.println("- Time elapsed:  " + formatTimeInSeconds(time) + " sec");
 	}
 
-	private static String formatTime(long time) {
+	private static String formatTimeInSeconds(long time) {
 		return String.format("%.3f", (double)time/(double)1000).replace(',', '.');
 	}
 
