@@ -48,8 +48,10 @@ public class Main {
 	// Set this to use heuristics on the result of kernelization to improve HS ST
 	// runtime
 	static boolean use_heuristics_after_reduction = false;
-	// Set to use the bevern kernel before using the SF kernel
-	static boolean use_bevern_kernel_additionally = false;
+	// Set to use the sf kernel (after the bevern kernel, if that is also set)
+	static boolean use_sf_kernel = false;
+	// Set to use the bevern kernel (before using the SF kernel, if that is also set)
+	static boolean use_bevern_kernel = false;
 	// Set to use guarded logic if possible
 	static boolean use_guard = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
@@ -348,10 +350,15 @@ public class Main {
 		upper_k_opt.setRequired(false);
 		options.addOption(upper_k_opt);
 
-		Option bevern_opt = new Option("b", "bevern-kernel", false,
+		Option bevern_opt = new Option("be", "bevern-kernel", false,
 				"use the bevern kernel before going into the normal kernel");
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
+		
+		Option sf_opt = new Option("sf", "sf-kernel", false,
+				"use the bevern kernel before going into the normal kernel");
+		sf_opt.setRequired(false);
+		options.addOption(sf_opt);
 		
 		Option guard_opt = new Option("gu", "guard", false, "use guarded logic to speed up reduction if possible");
 		guard_opt.setRequired(false);
@@ -408,8 +415,10 @@ public class Main {
 			stop_k = Integer.parseInt(cmd.getOptionValue("k"));
 		}
 		if (cmd.hasOption("bevern-kernel")) {
-			skip_pipe_2 = false;
-			use_bevern_kernel_additionally = true;
+			use_bevern_kernel = true;
+		}
+		if (cmd.hasOption("sf-kernel")) {
+			use_sf_kernel = true;
 		}
 		if (cmd.hasOption("guard")) {
 			use_guard = true;
@@ -635,10 +644,12 @@ public class Main {
 			// Copy reduced graph to kernel
 			curr_kernel = curr_redu_graph.copyThis();
 			// Kernelize graph
-			if (use_bevern_kernel_additionally) {
+			if (use_bevern_kernel) {
 				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
 			}
-			curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
+			if(use_sf_kernel) {
+				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);				
+			}
 		} catch (TimeoutException e) {
 			long timeout_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (timeout_stop - kernel_start_time) / 1000);
