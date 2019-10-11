@@ -16,7 +16,7 @@ import org.apache.commons.cli.*;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = false;
+	static boolean call_from_cmd = true;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -135,7 +135,7 @@ public class Main {
 			prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 		}
 		graph_dir_path = prefix + "input_graphs" + File.separator + graph_dataset;
-		form_dir_path = prefix  + formula_set;
+		form_dir_path = prefix  + "instances" + formula_set;
 
 		// Collect and sort files
 		File graph_folder = new File(graph_dir_path);
