@@ -254,8 +254,13 @@ public class Formula {
 			for(int i = 0; i < (uni_max-uni_min); i++) {
 				universe[i] = uni_min + i;
 			}
-			// Guard is only important for reduction, thus can be skipped
+			// Guard Relation
 			line = br.readLine();
+			if (!line.isEmpty()) {
+				guard_rel_id = line.substring(0, 1);
+			} else {
+				guard_rel_id = null;
+			}
 			// Bound variables
 			line = br.readLine();
 			bound_variables = line.split(",");

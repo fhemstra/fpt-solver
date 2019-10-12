@@ -139,12 +139,19 @@ public class Main {
 		}
 
 		// Collect and sort files
-		File graph_folder = new File(path_to_graph_set);
+		File graph_folder = null;
+		File[] graph_files = null;
+		// Only collect graphs if needed
+		if(!internal) {
+			graph_folder = new File(path_to_graph_set);
+			graph_files = graph_folder.listFiles();
+		}
+		// Forms are always needed
 		File form_folder = new File(path_to_formula_set);
-		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 
-		if (graph_files == null && !internal) {
+		// Return if we want to use graphs but can't find any
+		if (!internal && graph_files == null) {
 			System.out.println("No graph files found.");
 			return;
 		}
@@ -153,68 +160,68 @@ public class Main {
 			return;
 		}
 
-		// Apply filters if any are set
-		File[] filtered_graph_files;
-		if (only_single_graph || only_first_x_graphs) {
-			// Filter files based on settings
-			ArrayList<File> filtered_graph_files_list = new ArrayList<File>();
-			for (int j = 0; j < graph_files.length; j++) {
-				// Only test a single graph
-				if (only_single_graph) {
-					// Get filename from path
-					String curr_graph_path = graph_files[j].getAbsolutePath();
-					String[] path_split = curr_graph_path.split("\\\\");
-					String file_name = path_split[path_split.length - 1];
-					// Check if this is the specified file
-					if (file_name.equals(single_graph_name)) {
+		// Apply filters to graphs if any are set and we are not internal
+		File[] filtered_graph_files = null;
+		if (!internal) {
+			if (only_single_graph || only_first_x_graphs) {
+				// Filter files based on settings
+				ArrayList<File> filtered_graph_files_list = new ArrayList<File>();
+				for (int j = 0; j < graph_files.length; j++) {
+					// Only test a single graph
+					if (only_single_graph) {
+						// Get filename from path
+						String curr_graph_path = graph_files[j].getAbsolutePath();
+						String[] path_split = curr_graph_path.split("\\\\");
+						String file_name = path_split[path_split.length - 1];
+						// Check if this is the specified file
+						if (file_name.equals(single_graph_name)) {
+							filtered_graph_files_list.add(graph_files[j]);
+						}
+					}
+					// Only test the first x graphs
+					if (only_first_x_graphs && j < number_of_graphs_to_test) {
 						filtered_graph_files_list.add(graph_files[j]);
 					}
 				}
-				// Only test the first x graphs
-				if (only_first_x_graphs && j < number_of_graphs_to_test) {
-					filtered_graph_files_list.add(graph_files[j]);
+				// Leave, if there are no graph files
+				if (filtered_graph_files_list.isEmpty()) {
+					System.out.println("No graph files found.");
+					return;
+				}
+				// Convert to Array
+				filtered_graph_files = new File[filtered_graph_files_list.size()];
+				for (int i = 0; i < filtered_graph_files_list.size(); i++) {
+					filtered_graph_files[i] = filtered_graph_files_list.get(i);
 				}
 			}
-			// Leave, if there are no graph files
-			if (filtered_graph_files_list.isEmpty()) {
-				System.out.println("No graph files found.");
-				return;
+			// Else don't filter anything
+			else {
+				filtered_graph_files = graph_files;
 			}
-			// Convert to Array
-			filtered_graph_files = new File[filtered_graph_files_list.size()];
-			for (int i = 0; i < filtered_graph_files_list.size(); i++) {
-				filtered_graph_files[i] = filtered_graph_files_list.get(i);
+			// Sort files by their size (nr of nodes)
+			if (sort_by_nodes) {
+				Arrays.sort(filtered_graph_files, new Comparator<File>() {
+					public int compare(File file_1, File file_2) {
+						int graph_1_size = graphSize(file_1.getAbsolutePath());
+						int graph_2_size = graphSize(file_2.getAbsolutePath());
+						if (graph_1_size == graph_2_size)
+							return 0;
+						else if (graph_1_size > graph_2_size)
+							return 1;
+						else
+							return -1;
+					}
+				});
 			}
+			// Otherwise sort by file name
+			else {
+				Arrays.sort(filtered_graph_files, new Comparator<File>() {
+					public int compare(File file_1, File file_2) {
+						return file_1.getName().compareTo(file_2.getName());
+					}
+				});
+			} 
 		}
-		// Else don't filter anything
-		else {
-			filtered_graph_files = graph_files;
-		}
-
-		// Sort files by their size (nr of nodes)
-		if (sort_by_nodes) {
-			Arrays.sort(filtered_graph_files, new Comparator<File>() {
-				public int compare(File file_1, File file_2) {
-					int graph_1_size = graphSize(file_1.getAbsolutePath());
-					int graph_2_size = graphSize(file_2.getAbsolutePath());
-					if (graph_1_size == graph_2_size)
-						return 0;
-					else if (graph_1_size > graph_2_size)
-						return 1;
-					else
-						return -1;
-				}
-			});
-		}
-		// Otherwise sort by file name
-		else {
-			Arrays.sort(filtered_graph_files, new Comparator<File>() {
-				public int compare(File file_1, File file_2) {
-					return file_1.getName().compareTo(file_2.getName());
-				}
-			});
-		}
-
 		// Prints
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
 		// Construct Formulas
