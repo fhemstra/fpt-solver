@@ -11,8 +11,8 @@ def plot_one_set_of_results(directory_name):
 	file_list = [os.path.join(directory_name, file) for file in output_dir_list if ".res" == file[-4:]]
 	assert len(file_list) > 0, "No RES files in output directory."
 
-	# Find solved files
-	solved_files = []
+	# Find kernelized files
+	kernelized_files = []
 	for curr_file in file_list:
 		content = []
 		with open(curr_file) as file:
@@ -20,61 +20,48 @@ def plot_one_set_of_results(directory_name):
 		# Remove whitespace characters
 		content = [x.strip() for x in content]
 
-		# Check if the current file has been solved
+		# Check if the current file has been kernelized
 		for entry in content:
-			if("pipe_2_res: true" in entry):
-				solved_files.append(curr_file)
+			if("kernel_times:" in entry):
+				kernelized_files.append(curr_file)
 				break
 
-	solution_k_list = []
-	# Collect k values per solved file
-	for curr_file in solved_files:
+	kernel_size_list = []
+	# Collect average kernel size per solved file
+	for curr_file in kernelized_files:
 		content = []
 		with open(curr_file) as file:
 			content = file.readlines()
 		# Remove whitespace characters
 		content = [x.strip() for x in content]
 
-		# Get the solution k
+		# Get kernel sizes
 		for entry in content:
-			if("solved_k" in entry):
+			if("kernel_edges" in entry):
 				split_entry = entry.split(':')
-				k = int(split_entry[1].strip())
-				solution_k_list.append(k)
+				str_values = split_entry[1].split(';')
+				# Remove empty entry
+				str_values.pop()
+				int_values = [int(val) for val in str_values]
+				# Calc average
+				average = sum(int_values)/float(len(int_values))
+				kernel_size_list.append(average)
 				break
 
-	solver_times = []
-	# Collect time values per solved file
-	for curr_file in solved_files:
-		content = []
-		with open(curr_file) as file:
-			content = file.readlines()
-		# Remove whitespace characters
-		content = [x.strip() for x in content]
+	# Print kernelized files
+	print("Kernelized files:")
+	for i in range(len(kernelized_files)):
+		print(kernelized_files[i] + ', size = ' + str(kernel_size_list[i]))
 
-		# Get the time it took to solve the file
-		for entry in content:
-			if("pipe_2_sum" in entry):
-				split_entry = entry.split(':')
-				time = float(split_entry[1].strip())
-				solver_times.append(time)
-				break
-
-	# Print solved files
-	print("Solved files:")
-	for i in range(len(solved_files)):
-		print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
-
-	# Sort list of times
-	solver_times.sort()
+	# Sort list of sizes
+	kernel_size_list.sort()
 	print("Reading done.")
 
-	# Results are always 1 for solved graphs
-	ones = np.ones(len(solver_times))
-	prefix_sum = np.cumsum(ones)
+	# Sum up ones (each size value referrs to one instance)
+	prefix_sum = np.cumsum(np.ones(len(kernel_size_list)))
 
 	# Plot stuff
-	plt.plot(solver_times, prefix_sum)
+	plt.plot(kernel_size_list, prefix_sum)
 
 def main():
 	# Close previous plots
@@ -87,9 +74,9 @@ def main():
 		directory_name = input_args[i]
 		plot_one_set_of_results(directory_name)
 
-	plt.xlabel('Zeit in Sekunden')
+	plt.xlabel('Kernelgröße in Hyperkanten')
 	plt.ylabel('Instanzen')
-	plt.title('Zahl der gelösten Instanzen über Zeit')
+	plt.title('Zahl der kernelisierten Instanzen pro Kernelgröße')
 	plt.legend(labels=input_args[1:], loc='best')
 	plt.show()
 
