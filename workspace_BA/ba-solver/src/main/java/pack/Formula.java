@@ -18,7 +18,6 @@ import java.util.concurrent.TimeoutException;
 public class Formula {
 	String formula_name;
 	String graph_name;
-	String identifier;
 	String guard_rel_id;
 	double graph_density;
 	int[] universe;
@@ -38,7 +37,6 @@ public class Formula {
 	public Formula(String path) {
 		parseInternalFormula(path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
-		identifier = graph_name + "," + formula_name;
 	}
 
 	// TODO make PACE-format file.
@@ -49,7 +47,6 @@ public class Formula {
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
-		identifier = graph_name + "," + formula_name;
 	}
 
 	/**
@@ -661,6 +658,10 @@ public class Formula {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getIdentifier() {
+		return this.graph_name + "," + this.formula_name;
 	}
 
 }
