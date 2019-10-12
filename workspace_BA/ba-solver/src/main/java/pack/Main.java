@@ -58,16 +58,12 @@ public class Main {
 	static boolean use_guard = false;
 	// Set this if the timeout per graph should be accumulated over all k (for PACE)
 	static boolean accumulate_time_over_k = true;
-	// Select a dataset
-//	static String graph_dataset = "pace";
-//	static String graph_dataset = "k_star_graphs";
-//	static String graph_dataset = "d_reg_graphs";
-	static String path_to_graph_set = "gnm_graphs";
-//	static String graph_dataset = "bara_alb_graphs";
-//	static String graph_dataset = "watts_strog_graphs";
-//	static String graph_dataset = "reference_set_d2";
+	// Set to use logical structures from the provided formula files
+	static boolean internal = false;
+	// Set the path to a directory containing graphs
+	static String path_to_graph_set;
 	// Select formula set
-	static String path_to_formula_set = "vc";
+	static String path_to_formula_set;
 	// ++++++++++ Settings done +++++++++
 
 	// +++++++ RESULT CONTAINERS +++++++
@@ -130,15 +126,16 @@ public class Main {
 			System.out.println(
 					"These binaries were built for use in the eclipse console. Recompile with updated settings.");
 			// Collect new default values for debugging
-			skip_pipe_1 = false;
-			skip_pipe_2 = true;
-//			use_heuristics_after_reduction = true;
+			skip_pipe_1 = true;
+			skip_pipe_2 = false;
+			use_heuristics_after_reduction = true;
 			timeout_active = true;
 			timeout_value = 1000;
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = 3;
 			path_to_graph_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\input_graphs\\reference_vc";
 			path_to_formula_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\instances\\vc";
+			internal = true;
 		}
 
 		// Collect and sort files
@@ -147,7 +144,7 @@ public class Main {
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 
-		if (graph_files == null) {
+		if (graph_files == null && !internal) {
 			System.out.println("No graph files found.");
 			return;
 		}
@@ -319,7 +316,7 @@ public class Main {
 		Options options = new Options();
 
 		Option dataset_opt = new Option("g", "graph-set", true, "path to the directory containing graphs");
-		dataset_opt.setRequired(true);
+		dataset_opt.setRequired(false);
 		options.addOption(dataset_opt);
 
 		Option form_set_opt = new Option("f", "formula-set", true, "path to the directory containing formulas");
@@ -373,6 +370,10 @@ public class Main {
 		Option guard_opt = new Option("gu", "guard", false, "use guarded logic to speed up reduction if possible");
 		guard_opt.setRequired(false);
 		options.addOption(guard_opt);
+		
+		Option internal_opt = new Option("int", "internal", false, "use strctures inside formula files provided by -f");
+		internal_opt.setRequired(false);
+		options.addOption(internal_opt);
 
 		// Init parser
 		CommandLineParser parser = new DefaultParser();
@@ -433,35 +434,45 @@ public class Main {
 		if (cmd.hasOption("guard")) {
 			use_guard = true;
 		}
+		if (cmd.hasOption("internal")) {
+			internal = true;
+		}
 	}
 
 	private static void constructForms(File[] graph_files, File[] form_files) {
 		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
-			for (int j = 0; j < graph_files.length; j++) {
-				String curr_graph_path = graph_files[j].getAbsolutePath();
-				int curr_graph_size = graphSize(curr_graph_path);
-				String curr_graph_file_name = graph_files[j].getName();
-				String curr_graph_name = curr_graph_file_name.split("\\.")[0];
-				// Only take graphs, that are small enough
-				if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
-					graph_names.add(curr_graph_name);
-					graph_sizes.put(curr_graph_name, curr_graph_size);
-					// Constructing Formula
-					Formula curr_formula = new Formula(form_path, curr_graph_path);
-					System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
-							+ " nodes on formula \"" + curr_formula.formula_name + "\".");
-					forms.add(curr_formula);
-				}
-				// Graph is too big
-				else if (!mute) {
-					System.out.println(
-							"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+			// If internal logical structures should be used
+			if(internal) {
+				Formula curr_formula = new Formula(form_path);
+				forms.add(curr_formula);
+				System.out.println("  Accepted formula \"" + curr_formula.formula_name + "\" wit internal logical structure.");
+			}
+			// Else use provided graph files
+			else {				
+				for (int j = 0; j < graph_files.length; j++) {
+					String curr_graph_path = graph_files[j].getAbsolutePath();
+					int curr_graph_size = graphSize(curr_graph_path);
+					String curr_graph_file_name = graph_files[j].getName();
+					String curr_graph_name = curr_graph_file_name.split("\\.")[0];
+					// Only take graphs, that are small enough
+					if (curr_graph_size <= max_graph_size || max_graph_size == -1) {
+						graph_names.add(curr_graph_name);
+						graph_sizes.put(curr_graph_name, curr_graph_size);
+						// Constructing Formula
+						Formula curr_formula = new Formula(form_path, curr_graph_path);
+						System.out.println("  Accepted \"" + graph_files[j].getName() + "\" with " + curr_graph_size
+								+ " nodes on formula \"" + curr_formula.formula_name + "\".");
+						forms.add(curr_formula);
+					}
+					// Graph is too big
+					else if (!mute) {
+						System.out.println(
+								"  Discarded " + graph_files[j].getName() + " with " + curr_graph_size + " nodes.");
+					}
 				}
 			}
-			// TODO only use the first formula
-			// break;
-		} // Reduction over
+		}
 	}
 
 	private static void reduceFormsToHyps() {

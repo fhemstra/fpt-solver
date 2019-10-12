@@ -58,13 +58,11 @@ public class Formula {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(form_path));
 			String line = "";
-
 			// Name of the formula
 			line = br.readLine();
 			formula_name = line;
 			graph_name = new File(graph_path).getName().split("\\.")[0];
-			// Universe from .gr file -> skip a line
-			line = br.readLine();
+			// Universe from .gr file
 			universe = getExternalUniverse(graph_path);
 			// Skip relations, only E is important
 			line = br.readLine();
@@ -187,60 +185,77 @@ public class Formula {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
 			String line = "";
-
 			// Name of the formula
 			line = br.readLine();
 			formula_name = line;
 			graph_name = "internal";
-			// Universe
-			line = br.readLine();
-			int universe_size = Integer.parseInt(line);
-			universe = new int[universe_size];
-			for (int i = 0; i < universe_size; i++) {
-				universe[i] = i + 1;
-			}
-			// Signature
-			// All relations are listed in the next lines, where the last relation ends on
-			// ';'
-			ArrayList<String> relations = new ArrayList<String>();
+			// Relations are listed in the next lines. The last relation ends on ';'
+			ArrayList<String> relation_lines = new ArrayList<String>();
 			line = br.readLine();
 			while (true) {
-				// if this is the last line, ending on ';'
+				// If this is the last line, ending on ';'
 				if (line.charAt(line.length() - 1) == ';') {
 					// Delete ';' and add line, then leave
-					relations.add(line.substring(0, line.length() - 1));
+					relation_lines.add(line.substring(0, line.length() - 1));
 					break;
 				} else {
-					relations.add(line);
+					relation_lines.add(line);
 				}
 				line = br.readLine();
 			}
-			// Solution S is not contained in rels
+			// Collect Relation Objects into map (except Solution S)
 			relation_map = new HashMap<String, Relation>();
-			for (String s : relations) {
-				int negation_offset = (s.charAt(0) == '~') ? 1 : 0;
-				String identifier = s.substring(negation_offset, negation_offset + 1);
-				int arity = Integer.parseInt(s.substring(negation_offset + 1, negation_offset + 2));
-				int from = s.indexOf("{") + 1;
-				int to = s.indexOf("}");
+			// Find min and max universe elements on the way
+			uni_min = -1;
+			uni_max = -1;
+			for (String s : relation_lines) {
+				// Process statements like E2 = {(1|2),(3|4)}
+				String identifier = s.substring(0, 1);
+				int arity = Integer.parseInt(s.substring(1, 2));
+				int left_bracket = s.indexOf("{") + 1;
+				int right_bracket = s.indexOf("}");
 				// Check if Relation is empty
-				if (!(to > from)) {
+				if (!(right_bracket > left_bracket)) {
+					// Add empty Relation
 					relation_map.put(identifier, new Relation(identifier, arity, new HashSet<Tuple>()));
 					continue;
 				}
-				String content = s.substring(from, to);
+				// Else, collect (1|2),(3|4)
+				String content = s.substring(left_bracket, right_bracket);
 				String[] content_split = content.split(",");
+				// Matrix of elements: [[1,2],[3,4]]
 				int[][] elements = new int[content_split.length][arity];
-				HashSet<Tuple> hs = new HashSet<Tuple>();
+				// Init set of tuples which will make up the relation
+				HashSet<Tuple> relation_set = new HashSet<Tuple>();
+				// Loop through Tuples
 				for (int i = 0; i < content_split.length; i++) {
 					String[] element_split = content_split[i].split("\\|");
+					// Loop through elements per Tuple
 					for (int j = 0; j < arity; j++) {
-						elements[i][j] = Integer.parseInt(element_split[j].replaceAll("[()]", ""));
+						// Add element to Tuple
+						int elem = Integer.parseInt(element_split[j].replaceAll("[()]", ""));
+						elements[i][j] = elem;
+						// Check for min and max
+						if(elem < uni_min || uni_min == -1) {
+							uni_min = elem;
+						}
+						if(elem > uni_max || uni_max == -1) {
+							uni_max = elem;
+						}
 					}
-					hs.add(new Tuple(elements[i]));
+					// Convert int[] to Tuple and add to relation set
+					relation_set.add(new Tuple(elements[i]));
 				}
-				relation_map.put(identifier, new Relation(identifier, arity, hs));
+				// Add Relation to relation map, mapping from identifier (E) to the Relation Object
+				relation_map.put(identifier, new Relation(identifier, arity, relation_set));
 			}
+			// Construct universe from min and max
+			universe = new int[uni_max-uni_min];
+			for(int i = 0; i < (uni_max-uni_min); i++) {
+				universe[i] = uni_min + i;
+			}
+			// Guard is only important for reduction, thus can be skipped
+			line = br.readLine();
 			// Bound variables
 			line = br.readLine();
 			bound_variables = line.split(",");
@@ -258,7 +273,7 @@ public class Formula {
 			}
 			br.close();
 			// TODO Add flag which states if the solution should be true or not
-			// TODO Add flag which lets Relations be refelxive
+			// TODO Add flag which lets Relations be reflexive
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
