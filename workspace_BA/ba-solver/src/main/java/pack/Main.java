@@ -136,7 +136,7 @@ public class Main {
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = 3;
 			path_to_graph_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\input_graphs\\reference_vc";
-			path_to_formula_set = "C:\\\\Users\\\\falko\\\\Documents\\\\Eigenes\\\\Uni\\\\6_Semester\\\\Bachelorarbeit\\\\Bachelorarbeit_Code\\\\workspace_BA\\\\ba-solver\\\\src\\\\main\\\\resources\\\\instances\\\\vc";
+			path_to_formula_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\instances\\vc";
 		}
 
 		// Collect and sort files
