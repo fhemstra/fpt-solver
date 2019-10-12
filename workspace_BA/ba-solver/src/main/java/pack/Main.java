@@ -104,8 +104,10 @@ public class Main {
 	static HashSet<String> pipe_1_solved_forms = new HashSet<String>();
 	static HashSet<String> pipe_2_solved_graphs = new HashSet<String>();
 	static HashSet<String> timed_out_graphs = new HashSet<String>();
-	// Save the smallest k that solved a graph
-	static HashMap<String, Integer> solution_k = new HashMap<String, Integer>();
+	// Save the smallest k that solved a graph in pipe 1
+	static HashMap<String, Integer> pipe_1_solution_k = new HashMap<String, Integer>();
+	// Save the smallest k that solved a graph in pipe 2
+	static HashMap<String, Integer> pipe_2_solution_k = new HashMap<String, Integer>();
 	// Check lower bounds of graphs (kernels) so we don't waste time with k = 1
 	static int first_relevant_k = stop_k;
 	static HashMap<String, Integer> lower_bounds_per_graph = new HashMap<String, Integer>();
@@ -591,8 +593,10 @@ public class Main {
 			System.out.println();
 
 		// Process results
-		if (st_result)
+		if (st_result) {
+			pipe_1_solution_k.put(curr_name, k_par);
 			System.out.println("  TRUE");
+		}
 		search_tree_results.put(curr_name, st_result);
 		long st_time_passed = st_stop_time - st_start_time;
 		if (search_tree_times.get(curr_name) != null) {
@@ -784,7 +788,7 @@ public class Main {
 					k_used_by_heur += k_used_in_heuristics_per_graph.get(curr_name);
 				}
 				int actual_k = k_par + k_used_by_heur;
-				solution_k.put(curr_name, actual_k);
+				pipe_2_solution_k.put(curr_name, actual_k);
 				System.out.println("  TRUE");
 				// Note that the current graph has been solved
 				pipe_2_solved_graphs.add(curr_kernel.getIdentifier());
@@ -884,8 +888,11 @@ public class Main {
 				if (actual_lower_bounds_per_graph.get(curr_id) != null) {
 					bw.write("lowest_k: " + actual_lower_bounds_per_graph.get(curr_id) + "\n");
 				}
-				if (solution_k.get(curr_id) != null) {
-					bw.write("solved_k: " + solution_k.get(curr_id) + "\n");
+				if (pipe_1_solution_k.get(curr_id) != null) {
+					bw.write("pipe_1_sol_k: " + pipe_1_solution_k.get(curr_id) + "\n");
+				}
+				if (pipe_2_solution_k.get(curr_id) != null) {
+					bw.write("pipe_2_sol_k: " + pipe_2_solution_k.get(curr_id) + "\n");
 				}
 				if (search_tree_times.get(curr_id) != null) {
 					bw.write("pipe_1_times:");

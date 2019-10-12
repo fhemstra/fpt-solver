@@ -22,7 +22,7 @@ def plot_one_set_of_results(directory_name):
 
 		# Check if the current file has been solved
 		for entry in content:
-			if("pipe_2_res: true" in entry):
+			if("pipe_2_res: true" in entry or "pipe_1_res: true" in entry):
 				solved_files.append(curr_file)
 				break
 
@@ -37,7 +37,7 @@ def plot_one_set_of_results(directory_name):
 
 		# Get the solution k
 		for entry in content:
-			if("solved_k" in entry):
+			if("pipe_2_sol_k" in entry or "pipe_1_sol_k" in entry):
 				split_entry = entry.split(':')
 				k = int(split_entry[1].strip())
 				solution_k_list.append(k)
@@ -54,16 +54,16 @@ def plot_one_set_of_results(directory_name):
 
 		# Get the time it took to solve the file
 		for entry in content:
-			if("pipe_2_sum" in entry):
+			if("pipe_2_sum" in entry or "pipe_1_sum" in entry):
 				split_entry = entry.split(':')
 				time = float(split_entry[1].strip())
 				solver_times.append(time)
 				break
 
 	# Print solved files
-	print("Solved files:")
-	for i in range(len(solved_files)):
-		print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
+	# print("Solved files:")
+	# for i in range(len(solved_files)):
+	# 	print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
 
 	# Sort list of times
 	solver_times.sort()
