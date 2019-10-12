@@ -60,12 +60,12 @@ public class Main {
 //	static String graph_dataset = "pace";
 //	static String graph_dataset = "k_star_graphs";
 //	static String graph_dataset = "d_reg_graphs";
-	static String graph_dataset = "gnm_graphs";
+	static String path_to_graph_set = "gnm_graphs";
 //	static String graph_dataset = "bara_alb_graphs";
 //	static String graph_dataset = "watts_strog_graphs";
 //	static String graph_dataset = "reference_set_d2";
 	// Select formula set
-	static String formula_set = "vc";
+	static String path_to_formula_set = "vc";
 	// ++++++++++ Settings done +++++++++
 	
 	// +++++++ RESULT CONTAINERS +++++++
@@ -133,22 +133,10 @@ public class Main {
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = 3;
 		}
-		
-		// Construct paths to input directories
-		String graph_dir_path = "";
-		String form_dir_path = "";
-		String prefix = "";
-		if (call_from_cmd) {
-			prefix = ".." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-		} else {
-			prefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-		}
-		graph_dir_path = prefix + "input_graphs" + File.separator + graph_dataset;
-		form_dir_path = prefix  + "instances" + File.separator + formula_set;
 
 		// Collect and sort files
-		File graph_folder = new File(graph_dir_path);
-		File form_folder = new File(form_dir_path);
+		File graph_folder = new File(path_to_graph_set);
+		File form_folder = new File(path_to_formula_set);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
 		
@@ -307,11 +295,11 @@ public class Main {
 	private static void handleInputArgs(String[] args) {
 		Options options = new Options();
 
-		Option dataset_opt = new Option("g", "graph-set", true, "name of the directory containing graphs");
+		Option dataset_opt = new Option("g", "graph-set", true, "path to the directory containing graphs");
 		dataset_opt.setRequired(true);
 		options.addOption(dataset_opt);
 
-		Option form_set_opt = new Option("f", "formula-set", true, "name of the directory containing formulas");
+		Option form_set_opt = new Option("f", "formula-set", true, "path to the directory containing formulas");
 		form_set_opt.setRequired(true);
 		options.addOption(form_set_opt);
 
@@ -379,9 +367,9 @@ public class Main {
 		}
 
 		// Process inputs
-		graph_dataset = cmd.getOptionValue("graph-set");
+		path_to_graph_set = cmd.getOptionValue("graph-set");
 		if (cmd.getOptionValue("formula-set") != null) {
-			formula_set = cmd.getOptionValue("formula-set");
+			path_to_formula_set = cmd.getOptionValue("formula-set");
 		}
 		if (cmd.getOptionValue("timeout") != null) {
 			timeout_active = true;
