@@ -48,14 +48,15 @@ def generate_hyp(i, d_par, stub_path, n, m):
 	formname_formated = form_name.strip()
 	formname_formated = formname_formated.replace('-','_')
 	# Create paths
-	filename = formname_formated + "_hyp_n_" + str(n) + "_m_" + str(int(m)) + "_d_" + str(d_par) + "_" + str(i) + ".form"
+	filename_prefix = formname_formated + "_hyp_n_" + str(n) + "_m_" + str(int(m)) + "_d_" + str(d_par) + "_" + str(i)
+	filename = filename_prefix + ".form"
 	print(str(filename))
 	full_dest_path = dest_dir + os.sep + filename
 
 	# Save everything
 	with open(full_dest_path, 'w') as curr_file:
-		# Formula name first
-		curr_file.write(str(form_name))
+		# File name first
+		curr_file.write(str(filename_prefix) + '\n')
 
 		# Now fill in the edge relation of arity d
 		curr_file.write('E' + str(d_par) + ' = {')
