@@ -907,35 +907,6 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns a set of edges only containing the specified nodes. Edges containing
-	 * nodes which have been deleted will shrink by doing this.
-	 */
-	private ArrayList<Tuple> update_edges(int[] local_nodes, ArrayList<Tuple> local_edges) {
-		ArrayList<Tuple> updated_edges = new ArrayList<Tuple>();
-		// Fill node set
-		HashSet<Integer> node_set = new HashSet<Integer>();
-		for (int node : local_nodes) {
-			node_set.add(node);
-		}
-		// Prevent the empty edge from being removed
-		node_set.add(-1);
-		// Check edges for deleted nodes
-		for (Tuple edge : local_edges) {
-			for (int edge_node : edge.elements) {
-				// Remove deleted nodes from edges
-				if (!node_set.contains(edge_node)) {
-					edge.removeElement(edge_node);
-				}
-			}
-			// Add edge, also if it is empty, // TODO Do this properly
-			if (!updated_edges.contains(edge) || edge.onlyMinusOne()) {
-				updated_edges.add(edge);
-			}
-		}
-		return updated_edges;
-	}
-
-	/**
 	 * Returns a copy of this Hypergraph.
 	 * 
 	 * @return
