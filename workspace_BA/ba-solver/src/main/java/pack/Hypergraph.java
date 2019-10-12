@@ -1,4 +1,5 @@
 package pack;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -255,7 +256,8 @@ public class Hypergraph {
 	 * @throws TimeoutException
 	 * 
 	 */
-	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout, boolean timeout_active) throws TimeoutException {
+	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout, boolean timeout_active)
+			throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout && timeout_active) {
 			throw new TimeoutException();
@@ -267,7 +269,7 @@ public class Hypergraph {
 			return this;
 		// Having no nodes means having only -1 entries
 		int[] init_nodes = new int[this.nodes.length];
-		for(int i = 0; i < init_nodes.length; i++) {
+		for (int i = 0; i < init_nodes.length; i++) {
 			init_nodes[i] = -1;
 		}
 		// Init kernel as empty hypergraph
@@ -385,7 +387,8 @@ public class Hypergraph {
 		return kernel;
 	}
 
-	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout, boolean timeout_active) throws TimeoutException {
+	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout, boolean timeout_active)
+			throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout && timeout_active) {
 			throw new TimeoutException();
@@ -598,7 +601,7 @@ public class Hypergraph {
 		HashSet<Integer> marked_elements = new HashSet<Integer>();
 		for (Tuple e : edges_to_search) {
 			// Skip empty edges
-			if(e.onlyMinusOne()) {
+			if (e.onlyMinusOne()) {
 				continue;
 			}
 			// Check if e contains any marked nodes
@@ -614,8 +617,8 @@ public class Hypergraph {
 				res.add(e);
 				// Mark all nodes in e
 				for (int node : e.elements) {
-					if(node != -1) {
-						marked_elements.add(node);						
+					if (node != -1) {
+						marked_elements.add(node);
 					}
 				}
 			}
@@ -665,23 +668,25 @@ public class Hypergraph {
 	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
 	 * or not. Initially the solution sol is supposed to be empty.
 	 */
-	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout, boolean use_branch_and_bound, boolean timeout_active)
-			throws TimeoutException {
+	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout,
+			boolean use_branch_and_bound, boolean timeout_active) throws TimeoutException {
 		// TODO return solution
 		// If heuristics used more than k_par nodes
-		if(k_par < 0) {
+		if (k_par < 0) {
 			return false;
 		}
 		// Test bounding condition
-		if(use_branch_and_bound) {
-			// If there is a matching left which is bigger than what we can afford, return false
+		if (use_branch_and_bound) {
+			// If there is a matching left which is bigger than what we can afford, return
+			// false
 			int max_match_size = calcMaxMatchSize(sol);
 			int k_left = k_par - sol.size();
-			if(k_left < max_match_size) {
+			if (k_left < max_match_size) {
 				return false;
 			}
 		}
-		// If there is still a solution to be found, test if all edges are covered. Branch if not.
+		// If there is still a solution to be found, test if all edges are covered.
+		// Branch if not.
 		for (int i = 0; i < this.edges.size(); i++) {
 			// Check for timeout
 			if (System.currentTimeMillis() > hs_timeout && timeout_active) {
@@ -731,44 +736,47 @@ public class Hypergraph {
 
 	/**
 	 * Returns the size of a maximal matching on the not covered edges of this.
-	 * @param sol The nodes that are part of the current solution and shall be ignored.
+	 * 
+	 * @param sol The nodes that are part of the current solution and shall be
+	 *            ignored.
 	 */
 	private int calcMaxMatchSize(HashSet<Integer> sol) {
 		HashSet<Integer> matching_nodes = new HashSet<Integer>();
 		// Size of the matching refers to the number of edges
 		int matching_size = 0;
-		for(Tuple edge : this.edges) {
+		for (Tuple edge : this.edges) {
 			// Empty edges can not be part of matchings and do not need to be considered
-			if(edge.actualSize() == 0) {
+			if (edge.actualSize() == 0) {
 				continue;
 			}
 			// Check if edge is covered
 			boolean is_covered = false;
-			for(int edge_node : edge.elements) {
-				if(sol.contains(edge_node)) {
+			for (int edge_node : edge.elements) {
+				if (sol.contains(edge_node)) {
 					is_covered = true;
 					break;
 				}
-				
+
 			}
 			// If the edge is covered, go next
-			if(is_covered) {
+			if (is_covered) {
 				continue;
 			}
-			// If the edge is not covered, check if a node of the edge is contained in the matching
+			// If the edge is not covered, check if a node of the edge is contained in the
+			// matching
 			boolean is_matched = false;
-			for(int edge_node : edge.elements) {
-				if(matching_nodes.contains(edge_node)) {
-					is_matched =  true;
+			for (int edge_node : edge.elements) {
+				if (matching_nodes.contains(edge_node)) {
+					is_matched = true;
 					break;
 				}
 			}
 			// If the edge is already matched, it can not contribute to the matching
-			if(is_matched) {
+			if (is_matched) {
 				continue;
 			}
 			// Else add all nodes to the matching
-			for(int edge_node : edge.elements) {
+			for (int edge_node : edge.elements) {
 				matching_nodes.add(edge_node);
 			}
 			matching_size++;
@@ -827,39 +835,40 @@ public class Hypergraph {
 		}
 		HashSet<Integer> solution_nodes = new HashSet<Integer>();
 		// Remove singletons
-		for(Tuple edge : singletons_to_remove) {
+		for (Tuple edge : singletons_to_remove) {
 			// Remove edge
 			this.edges.remove(edge);
 			// Find node from singleton edge
-			for(int node : edge.elements) {
-				if(node != -1) {
+			for (int node : edge.elements) {
+				if (node != -1) {
 					solution_nodes.add(node);
 				}
 			}
 		}
 		// Remove the node contained in a singleton edge from the node set
-		for(int solution_node : solution_nodes) {
+		for (int solution_node : solution_nodes) {
 			int nodes_hash_before = this.nodes.hashCode();
 			// Remove solution nodes
 			this.nodes = arrWithout(this.nodes, solution_node);
 			int nodes_hash_after = this.nodes.hashCode();
 			// Make sure the nodes set actually changed
-			if(nodes_hash_before != nodes_hash_after) {
+			if (nodes_hash_before != nodes_hash_after) {
 				number_of_singletons_removed++;
 			}
 		}
-		// Now there are still edges that are covered by solution nodes, remove them as well
+		// Now there are still edges that are covered by solution nodes, remove them as
+		// well
 		ArrayList<Tuple> covered_edges = new ArrayList<Tuple>();
-		for(Tuple edge : this.edges) {
-			for(int sol_node : solution_nodes) {
-				if(edge.arrContains(sol_node)) {
+		for (Tuple edge : this.edges) {
+			for (int sol_node : solution_nodes) {
+				if (edge.arrContains(sol_node)) {
 					covered_edges.add(edge);
 				}
-				
+
 			}
 		}
 		// Remove covered edges
-		for(Tuple covered_edge : covered_edges) {
+		for (Tuple covered_edge : covered_edges) {
 			this.edges.remove(covered_edge);
 		}
 		return number_of_singletons_removed;
@@ -868,8 +877,8 @@ public class Hypergraph {
 	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
 		HashMap<Integer, ArrayList<Tuple>> node_occurences = new HashMap<Integer, ArrayList<Tuple>>();
 		// Init map by looking through nodes
-		for(int node : this.nodes) {
-			if(node == -1) {
+		for (int node : this.nodes) {
+			if (node == -1) {
 				continue;
 			}
 			node_occurences.put(node, null);
@@ -925,21 +934,22 @@ public class Hypergraph {
 		}
 		return updated_edges;
 	}
-	
+
 	/**
 	 * Returns a copy of this Hypergraph.
+	 * 
 	 * @return
 	 */
 	public Hypergraph copyThis() {
 		// Copy nodes
 		int[] copy_nodes = new int[this.nodes.length];
-		for(int i = 0; i < this.nodes.length; i++) {
+		for (int i = 0; i < this.nodes.length; i++) {
 			copy_nodes[i] = this.nodes[i];
 		}
-		
+
 		// Copy edges
 		ArrayList<Tuple> copy_edges = new ArrayList<Tuple>();
-		for(Tuple edge : this.edges) {
+		for (Tuple edge : this.edges) {
 			Tuple copy_of_edge = null;
 			// Copy edge (Tuple), if hashIDs are equal an exception is thrown
 			copy_of_edge = edge.copyThis();
@@ -948,7 +958,7 @@ public class Hypergraph {
 
 		// Contruct copy hyp
 		Hypergraph copy_hyp = new Hypergraph(copy_nodes, copy_edges);
-		
+
 		// Also copy name
 		copy_hyp.hypergraph_name = this.hypergraph_name;
 		copy_hyp.formula_name = this.formula_name;

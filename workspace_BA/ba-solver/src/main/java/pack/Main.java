@@ -1,4 +1,5 @@
 package pack;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -50,7 +51,8 @@ public class Main {
 	static boolean use_heuristics_after_reduction = false;
 	// Set to use the sf kernel (after the bevern kernel, if that is also set)
 	static boolean use_sf_kernel = false;
-	// Set to use the bevern kernel (before using the SF kernel, if that is also set)
+	// Set to use the bevern kernel (before using the SF kernel, if that is also
+	// set)
 	static boolean use_bevern_kernel = false;
 	// Set to use guarded logic if possible
 	static boolean use_guard = false;
@@ -67,7 +69,7 @@ public class Main {
 	// Select formula set
 	static String path_to_formula_set = "vc";
 	// ++++++++++ Settings done +++++++++
-	
+
 	// +++++++ RESULT CONTAINERS +++++++
 	// Init timers
 	// Formulas (like vertex-cover)
@@ -119,11 +121,12 @@ public class Main {
 		long main_init_time = System.currentTimeMillis();
 		// Get timestamp as date
 		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		// Process input args 
-		if(call_from_cmd) {
+		// Process input args
+		if (call_from_cmd) {
 			handleInputArgs(args);
 		} else {
-			System.out.println("These binaries were built for use in the eclipse console. Recompile with updated settings.");
+			System.out.println(
+					"These binaries were built for use in the eclipse console. Recompile with updated settings.");
 			// Collect new default values for debugging
 			skip_pipe_1 = false;
 			skip_pipe_2 = true;
@@ -141,16 +144,16 @@ public class Main {
 		File form_folder = new File(path_to_formula_set);
 		File[] graph_files = graph_folder.listFiles();
 		File[] form_files = form_folder.listFiles();
-		
-		if(graph_files == null) {
+
+		if (graph_files == null) {
 			System.out.println("No graph files found.");
 			return;
 		}
-		if(form_files == null) {
+		if (form_files == null) {
 			System.out.println("No formula files found.");
 			return;
 		}
-		
+
 		// Apply filters if any are set
 		File[] filtered_graph_files;
 		if (only_single_graph || only_first_x_graphs) {
@@ -188,7 +191,7 @@ public class Main {
 		else {
 			filtered_graph_files = graph_files;
 		}
-		
+
 		// Sort files by their size (nr of nodes)
 		if (sort_by_nodes) {
 			Arrays.sort(filtered_graph_files, new Comparator<File>() {
@@ -218,9 +221,9 @@ public class Main {
 		// Construct Formulas
 		constructForms(filtered_graph_files, form_files);
 		// Only reduce if pipe 2 is active
-		if(!skip_pipe_2) {
+		if (!skip_pipe_2) {
 			// Reduce graphs (+ heuristics)
-			reduceFormsToHyps();			
+			reduceFormsToHyps();
 		}
 		System.out.println("-------");
 
@@ -228,14 +231,15 @@ public class Main {
 		if (!skip_pipe_1) {
 			System.out.println("+++++ Pipe 1 +++++");
 			// Init pipe 1 timeouts
-			for(Formula form : forms) {
+			for (Formula form : forms) {
 				pipe_1_timeouts.put(form.getIdentifier(), false);
 			}
 			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
 				for (int j = 0; j < forms.size(); j++) {
 					Formula curr_form = forms.get(j);
 					// Skip solved or timed out forms
-					if (!pipe_1_solved_forms.contains(curr_form.getIdentifier()) && !pipe_1_timeouts.get(curr_form.getIdentifier())) {
+					if (!pipe_1_solved_forms.contains(curr_form.getIdentifier())
+							&& !pipe_1_timeouts.get(curr_form.getIdentifier())) {
 						boolean st_res = startNormalSearchTree(k_par, curr_form);
 						if (st_res) {
 							pipe_1_solved_forms.add(curr_form.getIdentifier());
@@ -250,7 +254,7 @@ public class Main {
 			// Pipeline 2: Kernelize + HS-Search
 			System.out.println("+++++ PIPE 2 ++++++");
 			// Init pipe 2 timeouts
-			for(Formula form : forms) {
+			for (Formula form : forms) {
 				pipe_2_timeouts.put(form.getIdentifier(), false);
 			}
 			for (int k_par = start_k; k_par <= stop_k; k_par += k_increment) {
@@ -260,11 +264,13 @@ public class Main {
 					// smaller k
 					if (reduced_graphs.get(j) == null) {
 						continue;
-					} else if(timed_out_graphs.contains(reduced_graphs.get(j).getIdentifier())) {
+					} else if (timed_out_graphs.contains(reduced_graphs.get(j).getIdentifier())) {
 						continue;
 					}
-					// If the graph has already been solved and we don't want to keep solving for bigger k
-					else if (accumulate_time_over_k && pipe_2_solved_graphs.contains(reduced_graphs.get(j).getIdentifier())) {
+					// If the graph has already been solved and we don't want to keep solving for
+					// bigger k
+					else if (accumulate_time_over_k
+							&& pipe_2_solved_graphs.contains(reduced_graphs.get(j).getIdentifier())) {
 						// Make empty entries and go to next graph
 						ke_results.put(reduced_graphs.get(j).getIdentifier(), true); // true for already solved
 					}
@@ -278,19 +284,19 @@ public class Main {
 						// Kernelize
 						Hypergraph curr_redu_graph = reduced_graphs.get(j);
 						Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph, j);
-						
+
 						// If kernelization was successful, go to HS Search
-						if(curr_kernel !=null) {
-							startHiSeSearchTree(k_par, j, curr_kernel);						
-						}						
+						if (curr_kernel != null) {
+							startHiSeSearchTree(k_par, j, curr_kernel);
+						}
 					} // End of Kernelization
-					// When all graphs are done, leave 
-					if(pipe_2_solved_graphs.size() == reduced_graphs.size() && accumulate_time_over_k) {
+						// When all graphs are done, leave
+					if (pipe_2_solved_graphs.size() == reduced_graphs.size() && accumulate_time_over_k) {
 						all_graphs_solved = true;
 					}
 				} // End of Pipeline 2
-				// When all graphs are done, leave
-				if(all_graphs_solved) {
+					// When all graphs are done, leave
+				if (all_graphs_solved) {
 					break;
 				}
 			} // End of loop through k
@@ -339,11 +345,10 @@ public class Main {
 		skip_pipe_2_opt.setRequired(false);
 		options.addOption(skip_pipe_2_opt);
 
-		Option heuristics_opt = new Option("heu", "heuristics", false,
-				"use heuristics to speed up the calculation");
+		Option heuristics_opt = new Option("heu", "heuristics", false, "use heuristics to speed up the calculation");
 		heuristics_opt.setRequired(false);
 		options.addOption(heuristics_opt);
-		
+
 		Option bround_opt = new Option("bo", "bound", false,
 				"use matchings to branch and bound and speed up solution after kernelization");
 		bround_opt.setRequired(false);
@@ -357,12 +362,12 @@ public class Main {
 				"use the bevern kernel before going into the normal kernel");
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
-		
+
 		Option sf_opt = new Option("sf", "sf-kernel", false,
 				"use the bevern kernel before going into the normal kernel");
 		sf_opt.setRequired(false);
 		options.addOption(sf_opt);
-		
+
 		Option guard_opt = new Option("gu", "guard", false, "use guarded logic to speed up reduction if possible");
 		guard_opt.setRequired(false);
 		options.addOption(guard_opt);
@@ -456,9 +461,9 @@ public class Main {
 			// break;
 		} // Reduction over
 	}
-	
+
 	private static void reduceFormsToHyps() {
-		for(Formula curr_formula : forms) {
+		for (Formula curr_formula : forms) {
 			// Reducing Formula to Hypergraph
 			System.out.print("> Reduction");
 			long redu_start_time = System.currentTimeMillis();
@@ -471,8 +476,8 @@ public class Main {
 					System.out.println(" (without guard), " + curr_formula.nr_of_assignments + " assignments");
 					reduced_graph = curr_formula.reduceToHsWoGuard(mute, reduction_timeout, timeout_active);
 				} else {
-					int nr_of_guard_assignments = curr_formula.relation_map
-							.get(curr_formula.guard_rel_id).elements.size();
+					int nr_of_guard_assignments = curr_formula.relation_map.get(curr_formula.guard_rel_id).elements
+							.size();
 					System.out.println(" (with guard), " + nr_of_guard_assignments + " assignments");
 					reduced_graph = curr_formula.reduceToHsWithGuard(mute, reduction_timeout, timeout_active);
 				}
@@ -482,19 +487,19 @@ public class Main {
 				System.out.println("! Reduction timed out.");
 			}
 			long redu_stop_time = System.currentTimeMillis();
-	
+
 			// If there was no timeout
 			if (reduced_graph != null) {
 				// Process results
 				long redu_time_passed = redu_stop_time - redu_start_time;
 				reduction_times.put(reduced_graph.getIdentifier(), redu_time_passed);
-				redu_time_long = redu_stop_time  - redu_start_time;
+				redu_time_long = redu_stop_time - redu_start_time;
 				printTime(redu_time_passed);
 				// Save data about reduction
 				reduced_graphs.add(reduced_graph);
 				reduced_edges.put(reduced_graph.getIdentifier(), reduced_graph.edges.size());
 				reduced_nodes.put(reduced_graph.getIdentifier(), actualArraySize(reduced_graph.nodes));
-	
+
 				// Use heuristics to shrink the graph
 				if (use_heuristics_after_reduction) {
 					System.out.print("> Heuristics, ");
@@ -518,9 +523,8 @@ public class Main {
 						System.out.println("! Heuristics timed out.");
 					}
 					// Add k_decrease to list
-					k_used_in_heuristics_per_graph.put(reduced_graph.getIdentifier(),
-							k_decrease);
-	
+					k_used_in_heuristics_per_graph.put(reduced_graph.getIdentifier(), k_decrease);
+
 					// If heuristics did not time out
 					if (done) {
 						// Process results
@@ -543,18 +547,16 @@ public class Main {
 					actual_lower_bounds_per_graph.put(reduced_graph.getIdentifier(),
 							lower_bound_k + k_used_in_heuristics_per_graph.get(reduced_graph.getIdentifier()));
 				} else {
-					actual_lower_bounds_per_graph.put(reduced_graph.getIdentifier(),
-							lower_bound_k);
+					actual_lower_bounds_per_graph.put(reduced_graph.getIdentifier(), lower_bound_k);
 				}
 			}
 		}
 	}
 
 	private static boolean startNormalSearchTree(int k_par, Formula curr_form) {
-		boolean st_result = false;		
+		boolean st_result = false;
 		String curr_name = curr_form.getIdentifier();
-		System.out.println(
-				"> SearchTree, " + curr_name + ", k = " + k_par);
+		System.out.println("> SearchTree, " + curr_name + ", k = " + k_par);
 
 		// Generate first assignment
 		int[] start_assignment = new int[curr_form.c_par];
@@ -567,20 +569,20 @@ public class Main {
 		long st_timeout = st_start_time + timeout_value;
 		if (accumulate_time_over_k && search_tree_times.get(curr_name) != null) {
 			Double prev_time_used = 0.0;
-			for(long time : search_tree_times.get(curr_name)) {
+			for (long time : search_tree_times.get(curr_name)) {
 				prev_time_used += time;
 			}
 			st_timeout -= prev_time_used;
 		}
 		// SearchTree
 		try {
-			st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0,
-					st_timeout, timeout_active);
+			st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0, st_timeout,
+					timeout_active);
 			pipe_1_timeouts.put(curr_name, false);
 		} catch (TimeoutException e) {
 			System.out.println("! ST timed out.");
 			pipe_1_timeouts.put(curr_name, true);
-		} catch (StackOverflowError e){
+		} catch (StackOverflowError e) {
 			System.out.println("! ST overflowed.");
 			pipe_1_timeouts.put(curr_name, true);
 		}
@@ -589,23 +591,24 @@ public class Main {
 			System.out.println();
 
 		// Process results
-		if(st_result) System.out.println("  TRUE");
+		if (st_result)
+			System.out.println("  TRUE");
 		search_tree_results.put(curr_name, st_result);
 		long st_time_passed = st_stop_time - st_start_time;
-		if(search_tree_times.get(curr_name) != null) {
+		if (search_tree_times.get(curr_name) != null) {
 			ArrayList<Long> used_time = search_tree_times.get(curr_name);
 			used_time.add(st_time_passed);
 			search_tree_times.put(curr_name, used_time);
 		} else {
 			ArrayList<Long> used_time = new ArrayList<Long>();
 			used_time.add(st_time_passed);
-			search_tree_times.put(curr_name, used_time);				
+			search_tree_times.put(curr_name, used_time);
 		}
 		printTime(st_time_passed);
 		return st_result;
 	}
 
-	private static Hypergraph startKernelizer(int k_par, Hypergraph curr_redu_graph, int graph_index) {	
+	private static Hypergraph startKernelizer(int k_par, Hypergraph curr_redu_graph, int graph_index) {
 		String curr_name = curr_redu_graph.getIdentifier();
 		if (k_par < first_relevant_k) {
 			// Save the first k we used for later (result printing)
@@ -616,17 +619,16 @@ public class Main {
 		}
 		// Construct print about kernels
 		String attachment = "";
-		if(use_sf_kernel) {
+		if (use_sf_kernel) {
 			attachment += " sf";
 		}
-		if(use_bevern_kernel) {
-			attachment += " bev"; 
+		if (use_bevern_kernel) {
+			attachment += " bev";
 		}
 		if (use_heuristics_after_reduction) {
-			int k_after_heuristics = k_par + k_used_in_heuristics_per_graph
-					.get(curr_name);
-			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par
-					+ ", actual k = " + k_after_heuristics + "," + attachment);
+			int k_after_heuristics = k_par + k_used_in_heuristics_per_graph.get(curr_name);
+			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par + ", actual k = " + k_after_heuristics
+					+ "," + attachment);
 		} else {
 			System.out.println("> Kernelization, " + curr_name + ", k = " + k_par + "," + attachment);
 		}
@@ -636,11 +638,11 @@ public class Main {
 		long kernel_start_time = System.currentTimeMillis();
 		// Start + Redu + timeout
 		long kernel_timeout = kernel_start_time + timeout_value;
-		if(reduction_times.get(curr_name) != null) {
+		if (reduction_times.get(curr_name) != null) {
 			kernel_timeout -= reduction_times.get(curr_name);
 		}
-		if(heuristic_times.get(curr_name) != null) {
-			kernel_timeout -= heuristic_times.get(curr_name);			
+		if (heuristic_times.get(curr_name) != null) {
+			kernel_timeout -= heuristic_times.get(curr_name);
 		}
 		// Add previously used time
 		if (accumulate_time_over_k) {
@@ -661,14 +663,14 @@ public class Main {
 			if (use_bevern_kernel) {
 				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
 			}
-			if(use_sf_kernel) {
-				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);				
+			if (use_sf_kernel) {
+				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
 			}
 		} catch (TimeoutException e) {
 			long timeout_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (timeout_stop - kernel_start_time) / 1000);
-			System.out.println("! Kernelize timed out after additional "
-					+ String.format("%.3f", additional_time) + " sec.");
+			System.out.println(
+					"! Kernelize timed out after additional " + String.format("%.3f", additional_time) + " sec.");
 			pipe_2_timeouts.put(curr_name, true);
 			timed_out_graphs.add(curr_kernel.getIdentifier());
 			ke_results.put(curr_name, false);
@@ -681,13 +683,11 @@ public class Main {
 			System.out.println("  hyp nodes:     " + actualArraySize(curr_redu_graph.nodes));
 			int edges_removed = curr_redu_graph.edges.size() - curr_kernel.edges.size();
 			System.out.println("  edges removed: " + edges_removed);
-			int nodes_removed = actualArraySize(curr_redu_graph.nodes)
-					- actualArraySize(curr_kernel.nodes);
+			int nodes_removed = actualArraySize(curr_redu_graph.nodes) - actualArraySize(curr_kernel.nodes);
 			System.out.println("  nodes removed: " + nodes_removed);
 			System.out.println("  kernel edges:  " + curr_kernel.edges.size());
 			System.out.println("  kernel nodes:  " + actualArraySize(curr_kernel.nodes));
-			long sf_lemma_boundary = factorial(curr_redu_graph.d_par)
-					* (long) Math.pow(k_par, curr_redu_graph.d_par);
+			long sf_lemma_boundary = factorial(curr_redu_graph.d_par) * (long) Math.pow(k_par, curr_redu_graph.d_par);
 			System.out.println("  Lemma d!*k^d:  " + sf_lemma_boundary);
 		}
 
@@ -695,7 +695,7 @@ public class Main {
 		long kernel_time_passed = kernel_stop_time - kernel_start_time;
 		ArrayList<Long> time_passed_previously = kernel_times.get(curr_name);
 		// Add time to already used kernel time
-		if(time_passed_previously == null) {
+		if (time_passed_previously == null) {
 			ArrayList<Long> empty = new ArrayList<Long>();
 			empty.add(kernel_time_passed);
 			kernel_times.put(curr_name, empty);
@@ -742,18 +742,18 @@ public class Main {
 			}
 		});
 		// HS-SearchTree
-		System.out.println("- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", "
-				+ curr_kernel.edges.size());
+		System.out.println(
+				"- Nodes, Edges left: " + actualArraySize(curr_kernel.nodes) + ", " + curr_kernel.edges.size());
 		System.out.print("> HS-SearchTree, k = " + k_par + " ");
 		boolean hs_result = false;
 		// Set timer
 		long hs_start_time = System.currentTimeMillis();
 		long hs_timeout = hs_start_time + timeout_value;
-		if(reduction_times.get(curr_name) != null) {
+		if (reduction_times.get(curr_name) != null) {
 			hs_timeout -= reduction_times.get(curr_name);
 		}
-		if(heuristic_times.get(curr_name) != null) {
-			hs_timeout -= heuristic_times.get(curr_name);			
+		if (heuristic_times.get(curr_name) != null) {
+			hs_timeout -= heuristic_times.get(curr_name);
 		}
 		// Calc sum of previous times
 		if (accumulate_time_over_k) {
@@ -770,11 +770,11 @@ public class Main {
 			}
 			hs_timeout -= prev_time;
 		}
-		
+
 		// Start HS-SearchTree
 		try {
-			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout,
-					use_branch_and_bound, timeout_active);
+			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout, use_branch_and_bound,
+					timeout_active);
 			if (!mute)
 				System.out.println("\n");
 			if (hs_result) {
@@ -800,8 +800,7 @@ public class Main {
 				ArrayList<Long> prev_hs_times = hs_times.get(curr_name);
 				prev_hs_times.add(hs_time_passed);
 				hs_times.put(curr_name, prev_hs_times);
-			}
-			else {
+			} else {
 				// Make new list
 				ArrayList<Long> tmp_hs_times = new ArrayList<Long>();
 				tmp_hs_times.add(hs_time_passed);
@@ -818,8 +817,8 @@ public class Main {
 		} catch (StackOverflowError e) {
 			long emergency_stop = System.currentTimeMillis();
 			double additional_time = (double) ((double) (emergency_stop - hs_start_time) / 1000);
-			System.out.println(
-					"! HS-SearchTree overflowed out after additional " + String.format("%.3f", additional_time) + " sec.");
+			System.out.println("! HS-SearchTree overflowed out after additional "
+					+ String.format("%.3f", additional_time) + " sec.");
 			pipe_2_timeouts.put(curr_name, true);
 			timed_out_graphs.add(curr_kernel.getIdentifier());
 		}
@@ -829,20 +828,20 @@ public class Main {
 		if (!mute)
 			System.out.println("\n------------------------------------");
 		// Loop over all reduced graphs
-		for(Formula curr_form : forms) {
+		for (Formula curr_form : forms) {
 			String curr_id = curr_form.getIdentifier();
 			// Construct dir path
 			String result_dir_path = "";
 			if (call_from_cmd) {
-				result_dir_path = ".." + File.separator + ".." + File.separator + ".." + File.separator
-						+ "matlab_plots" + File.separator + "output_" + timestamp;
+				result_dir_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
+						+ File.separator + "output_" + timestamp;
 			} else {
 				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
 						+ "output_" + timestamp;
 			}
 			// Create the directory
 			new File(result_dir_path).mkdirs();
-			// Contruct file path 
+			// Contruct file path
 			String result_file_path = result_dir_path + File.separator + curr_id.substring(0, curr_id.length() - 3)
 					+ ".res";
 			// Calculate pipe_1_sum
@@ -850,18 +849,18 @@ public class Main {
 			if (search_tree_times.get(curr_id) != null) {
 				for (long time : search_tree_times.get(curr_id)) {
 					pipe_1_sum += time;
-				} 
+				}
 			}
 			// Calculate pipe_2_time
 			long kernel_sum = 0;
-			if(kernel_times.get(curr_id) != null) {
-				for(long time : kernel_times.get(curr_id)) {
+			if (kernel_times.get(curr_id) != null) {
+				for (long time : kernel_times.get(curr_id)) {
 					kernel_sum += time;
 				}
 			}
 			long hs_sum = 0;
-			if(hs_times.get(curr_id) != null) {
-				for(long time : hs_times.get(curr_id)) {
+			if (hs_times.get(curr_id) != null) {
+				for (long time : hs_times.get(curr_id)) {
 					hs_sum += time;
 				}
 			}
@@ -869,7 +868,7 @@ public class Main {
 			if (reduction_times.get(curr_id) != null) {
 				pipe_2_sum += reduction_times.get(curr_id);
 			}
-			if(heuristic_times.get(curr_id) != null) {
+			if (heuristic_times.get(curr_id) != null) {
 				pipe_2_sum += heuristic_times.get(curr_id);
 			}
 			// Open file
@@ -888,12 +887,12 @@ public class Main {
 				if (solution_k.get(curr_id) != null) {
 					bw.write("solved_k: " + solution_k.get(curr_id) + "\n");
 				}
-				if(search_tree_times.get(curr_id) != null) {
+				if (search_tree_times.get(curr_id) != null) {
 					bw.write("pipe_1_times:");
-					for(long time : search_tree_times.get(curr_id)) {
+					for (long time : search_tree_times.get(curr_id)) {
 						bw.write(formatTimeInSeconds(time) + ";");
 					}
-					bw.write("\n");					
+					bw.write("\n");
 					bw.write("pipe_1_sum: " + formatTimeInSeconds(pipe_1_sum) + "\n");
 					bw.write("pipe_1_res: " + search_tree_results.get(curr_id) + "\n");
 				}
@@ -908,14 +907,14 @@ public class Main {
 					bw.write("heur_edges: " + heuristic_edges.get(curr_id) + "\n");
 					bw.write("heur_k_used: " + k_used_in_heuristics_per_graph.get(curr_id) + "\n");
 				}
-				if(kernel_times.get(curr_id) != null) {
+				if (kernel_times.get(curr_id) != null) {
 					if (!kernel_times.get(curr_id).isEmpty()) {
 						bw.write("kernel_times: ");
 						for (long time : kernel_times.get(curr_id)) {
 							bw.write(formatTimeInSeconds(time) + ";");
 						}
 						bw.write("\n");
-					}					
+					}
 					bw.write("kernel_nodes: ");
 					for (int nodes : kernel_nodes.get(curr_id)) {
 						bw.write(nodes + ";");
@@ -934,15 +933,15 @@ public class Main {
 					}
 					bw.write("\n");
 				}
-				if (ke_results.get(curr_id)!= null) {
+				if (ke_results.get(curr_id) != null) {
 					bw.write("pipe_2_sum: " + formatTimeInSeconds(pipe_2_sum) + "\n");
 					bw.write("pipe_2_res: " + ke_results.get(curr_id) + "\n");
 				}
 				if (pipe_1_timeouts.get(curr_id) != null) {
 					bw.write("pipe_1_timeout: " + pipe_1_timeouts.get(curr_id) + "\n");
 				}
-				if(pipe_2_timeouts.get(curr_id) != null) {
-					bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_id) + "\n");					
+				if (pipe_2_timeouts.get(curr_id) != null) {
+					bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_id) + "\n");
 				}
 				bw.close();
 			} catch (IOException e) {
@@ -977,7 +976,7 @@ public class Main {
 	}
 
 	private static String formatTimeInSeconds(long time) {
-		return String.format("%.3f", (double)time/(double)1000).replace(',', '.');
+		return String.format("%.3f", (double) time / (double) 1000).replace(',', '.');
 	}
 
 	/**

@@ -1,4 +1,5 @@
 package pack;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,8 +32,8 @@ public class Formula {
 
 	// TODO make a format-file.
 	/**
-	 * Constructs a Formula from just a formula-file located at the given path.
-	 * The file must contain all information and must be formatted as can be seen in .
+	 * Constructs a Formula from just a formula-file located at the given path. The
+	 * file must contain all information and must be formatted as can be seen in .
 	 */
 	public Formula(String path) {
 		parseInternalFormula(path);
@@ -41,8 +42,9 @@ public class Formula {
 
 	// TODO make PACE-format file.
 	/**
-	 * Constructs a Formula for a graph problem. The formula itself must be specified in a formula file located at the first path.
-	 * The graph must be located at the second path and be formated as can be seen in .  
+	 * Constructs a Formula for a graph problem. The formula itself must be
+	 * specified in a formula file located at the first path. The graph must be
+	 * located at the second path and be formated as can be seen in .
 	 */
 	public Formula(String form_path, String graph_path) {
 		parseExternalFormula(form_path, graph_path);
@@ -63,11 +65,11 @@ public class Formula {
 			graph_name = new File(graph_path).getName().split("\\.")[0];
 			// Universe from .gr file -> skip a line
 			line = br.readLine();
-			universe = getExternalUniverse(graph_path);			
+			universe = getExternalUniverse(graph_path);
 			// Skip relations, only E is important
 			line = br.readLine();
-			while(true) {
-				if(line.contains(";")) {
+			while (true) {
+				if (line.contains(";")) {
 					break;
 				}
 				line = br.readLine();
@@ -75,12 +77,12 @@ public class Formula {
 			relation_map = new HashMap<String, Relation>();
 			// Parse external file
 			HashSet<Tuple> edge_set = parseExternalGraph(graph_path);
-			graph_density = Math.round((double)(edge_set.size()/2)/(double)universe.length);
+			graph_density = Math.round((double) (edge_set.size() / 2) / (double) universe.length);
 			Relation edge_relation = new Relation("E", 2, edge_set);
 			relation_map.put("E", edge_relation);
 			// Guard Relation
 			line = br.readLine();
-			if(!line.isEmpty()) {
+			if (!line.isEmpty()) {
 				guard_rel_id = line.substring(0, 1);
 			} else {
 				guard_rel_id = null;
@@ -120,14 +122,14 @@ public class Formula {
 			String line = br.readLine();
 			line = "";
 			// Find min and max element
-			while((line=br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				String[] line_split = line.split(" ");
-				for(String elem : line_split) {
+				for (String elem : line_split) {
 					int elem_int = Integer.parseInt(elem);
-					if(uni_min == -1 || uni_min > elem_int) {
+					if (uni_min == -1 || uni_min > elem_int) {
 						uni_min = elem_int;
 					}
-					if(uni_max == -1 || uni_max < elem_int) {
+					if (uni_max == -1 || uni_max < elem_int) {
 						uni_max = elem_int;
 					}
 				}
@@ -136,7 +138,7 @@ public class Formula {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		int universe_size = uni_max - uni_min + 1; 
+		int universe_size = uni_max - uni_min + 1;
 		if (universe_size > 0) {
 			int[] universe = new int[universe_size];
 			// PACE nodes go from min to max
@@ -150,7 +152,9 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the set of edges of the specified PACE-graph. For every entry (x,y) this adds the edges (x,y) and (y,x) because the graph is supposed to be undirected.
+	 * Returns the set of edges of the specified PACE-graph. For every entry (x,y)
+	 * this adds the edges (x,y) and (y,x) because the graph is supposed to be
+	 * undirected.
 	 */
 	private HashSet<Tuple> parseExternalGraph(String graph_path) {
 		HashSet<Tuple> edge_set = new HashSet<Tuple>();
@@ -193,20 +197,21 @@ public class Formula {
 			int universe_size = Integer.parseInt(line);
 			universe = new int[universe_size];
 			for (int i = 0; i < universe_size; i++) {
-				universe[i] = i+1;
+				universe[i] = i + 1;
 			}
 			// Signature
-			// All relations are listed in the next lines, where the last relation ends on ';'
+			// All relations are listed in the next lines, where the last relation ends on
+			// ';'
 			ArrayList<String> relations = new ArrayList<String>();
-			line = br.readLine(); 
-			while(true) {
+			line = br.readLine();
+			while (true) {
 				// if this is the last line, ending on ';'
-				if(line.charAt(line.length()-1) == ';') {
+				if (line.charAt(line.length() - 1) == ';') {
 					// Delete ';' and add line, then leave
-					relations.add(line.substring(0, line.length()-1));
+					relations.add(line.substring(0, line.length() - 1));
 					break;
 				} else {
-					relations.add(line);					
+					relations.add(line);
 				}
 				line = br.readLine();
 			}
@@ -260,40 +265,44 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the Hyphergraph which results when this formula is reduced to hitting-set.
-	 * @param reduction_timeout 
-	 * @throws TimeoutException 
+	 * Returns the Hyphergraph which results when this formula is reduced to
+	 * hitting-set.
+	 * 
+	 * @param reduction_timeout
+	 * @throws TimeoutException
 	 */
-	public Hypergraph reduceToHsWoGuard(boolean mute, long reduction_timeout, boolean timeout_active) throws TimeoutException {
+	public Hypergraph reduceToHsWoGuard(boolean mute, long reduction_timeout, boolean timeout_active)
+			throws TimeoutException {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
 		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
 		int[] curr_assignment = new int[c_par];
-		// generate first assignment 
-		for(int i = 0; i < c_par; i++) {
+		// generate first assignment
+		for (int i = 0; i < c_par; i++) {
 			curr_assignment[i] = universe[0];
 		}
 		double progress = 0;
 		for (long i = 0; i < nr_of_assignments; i++) {
 			// Check timeout
-			if(i % 10000 == 0 && timeout_active) {
-				if(System.currentTimeMillis() > reduction_timeout) {
-					throw new TimeoutException(); 
+			if (i % 10000 == 0 && timeout_active) {
+				if (System.currentTimeMillis() > reduction_timeout) {
+					throw new TimeoutException();
 				}
 			}
 			// prints
-			if(!mute && i % 500000 == 0) {
+			if (!mute && i % 500000 == 0) {
 				// print string
 				String curr_assignment_str = "";
 				curr_assignment_str = "";
-				for(int j = 0; j < c_par; j++) {
+				for (int j = 0; j < c_par; j++) {
 					curr_assignment_str += curr_assignment[j] + " ";
 				}
-				progress = (double)i/(nr_of_assignments-1);
+				progress = (double) i / (nr_of_assignments - 1);
 				progress *= 100;
 				String tmp = String.format("%.2f", progress);
-				System.out.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
+				System.out
+						.print("  Testing assignments , Progress " + tmp + "%, current: " + curr_assignment_str + "\r");
 			}
 			// Check current assignment on all clauses
 			for (int j = 0; j < clauses.size(); j++) {
@@ -310,7 +319,8 @@ public class Formula {
 			}
 			curr_assignment = nextAssignment(curr_assignment);
 		}
-		if(!mute) System.out.println();
+		if (!mute)
+			System.out.println();
 		// Nodes of the Hypergraph are derived from the universe of the formula
 		Hypergraph hyp = new Hypergraph(universe, hyp_edges);
 		// Copy name from this formula
@@ -319,7 +329,8 @@ public class Formula {
 		return hyp;
 	}
 
-	public Hypergraph reduceToHsWithGuard(boolean mute, long reduction_timeout, boolean timeout_active) throws TimeoutException {
+	public Hypergraph reduceToHsWithGuard(boolean mute, long reduction_timeout, boolean timeout_active)
+			throws TimeoutException {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
@@ -361,12 +372,12 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the assignment which comes after the given one. 
+	 * Returns the assignment which comes after the given one.
 	 */
 	private int[] nextAssignment(int[] curr_assignment) {
-		for(int i = c_par-1; i >= 0; i--) {
+		for (int i = c_par - 1; i >= 0; i--) {
 			// Increment the rightmost digit if possible
-			if(curr_assignment[i] < uni_max) {
+			if (curr_assignment[i] < uni_max) {
 				curr_assignment[i]++;
 				return curr_assignment;
 			}
@@ -379,7 +390,9 @@ public class Formula {
 	}
 
 	/**
-	 * Returns a Tuple of elements from the given assignment which are bound to S in the given clause, meaning they are candidates to branch over during solving or reducing this formula.
+	 * Returns a Tuple of elements from the given assignment which are bound to S in
+	 * the given clause, meaning they are candidates to branch over during solving
+	 * or reducing this formula.
 	 */
 	private Tuple findCandidates(String[] curr_clause, int[] assignment) {
 		HashSet<Integer> confirmed_candidates = new HashSet<Integer>();
@@ -417,7 +430,7 @@ public class Formula {
 		// variables = ["y","x"]
 		int[] assi_elements = new int[variables.length];
 		// Init empty
-		for(int i = 0; i < assi_elements.length; i++) {
+		for (int i = 0; i < assi_elements.length; i++) {
 			assi_elements[i] = -1;
 		}
 		// assi_elements = [-1,-1]
@@ -441,33 +454,34 @@ public class Formula {
 	 * an array containing c_par times the first element of the universe.
 	 * 
 	 * @param st_timeout
-	 * @throws TimeoutException 
+	 * @throws TimeoutException
 	 */
-	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index, long st_timeout, boolean timeout_active) throws TimeoutException {
+	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index,
+			long st_timeout, boolean timeout_active) throws TimeoutException {
 		// TODO return solution
-		
+
 		// Return if |S| > k
 		if (sol.size() > k_par) {
 			return false;
 		}
 		// Copy last assignment
 		int[] curr_assignment = new int[c_par];
-		for(int i = 0; i < c_par; i++) {
+		for (int i = 0; i < c_par; i++) {
 			curr_assignment[i] = last_assignment[i];
 		}
 		// Check all clauses considering S
 		for (long i = last_index; i < nr_of_assignments; i++) {
 			// Check timeout
-			if(i % 1000 == 0) {
-				if(System.currentTimeMillis() > st_timeout && timeout_active) {
-					throw new TimeoutException(); 
+			if (i % 1000 == 0) {
+				if (System.currentTimeMillis() > st_timeout && timeout_active) {
+					throw new TimeoutException();
 				}
 			}
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
 				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
 					// Only branch if there is still space in sol
-					if(sol.size() == k_par) {
+					if (sol.size() == k_par) {
 						return false;
 					}
 					HashSet<Integer> f = new HashSet<Integer>();
@@ -486,7 +500,7 @@ public class Formula {
 							// Try adding y to solution
 							sol.add(y);
 							// print
-							if(!mute) {
+							if (!mute) {
 								String prnt = "  ";
 								prnt += "S: ";
 								for (int s : sol)
@@ -497,10 +511,10 @@ public class Formula {
 							// if one branch is successful we win, else go back through recursion.
 							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i, st_timeout, timeout_active);
 							if (flag) {
-								if(!mute) {
+								if (!mute) {
 									System.out.println(sol);
 								}
-								return true;								
+								return true;
 							} else {
 								// Branch failed, remove y again to clean up sol for next branch.
 								sol.remove((Object) y);
@@ -520,8 +534,10 @@ public class Formula {
 	}
 
 	/**
-	 * Returns weather the specified clause holds under the given assignment with the Relation S
-	 * being sol. When ignore_S is true, the test on S is skipped. This is useful for Reduction, because there S stays empty and is therefore unnecessary to check.
+	 * Returns weather the specified clause holds under the given assignment with
+	 * the Relation S being sol. When ignore_S is true, the test on S is skipped.
+	 * This is useful for Reduction, because there S stays empty and is therefore
+	 * unnecessary to check.
 	 */
 	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol, boolean ignore_S) {
 		// Evaluate literals one at a time
@@ -532,7 +548,7 @@ public class Formula {
 			// Handle S(x)
 			if (id.equals("S")) {
 				// Ignore S during reduction, because it stays empty
-				if(ignore_S) {
+				if (ignore_S) {
 					continue;
 				}
 				// check if S contains the element
@@ -540,20 +556,21 @@ public class Formula {
 					return true;
 				}
 				// Else: look in all other available relations
-			} else if(id.equals("=")) {
+			} else if (id.equals("=")) {
 				// Check if the elements are equal
 				int reference = assi_elements[0];
 				boolean elems_are_equal = true;
-				for(int other_element : assi_elements) {
-					if(reference != other_element) {
+				for (int other_element : assi_elements) {
+					if (reference != other_element) {
 						elems_are_equal = false;
 					}
 				}
 				// Return true is the elements are equal
-				if(elems_are_equal) {
-					return true;					
+				if (elems_are_equal) {
+					return true;
 				}
-				// Else: Do not return, because this is a dijunction and can still become true for a different literal
+				// Else: Do not return, because this is a dijunction and can still become true
+				// for a different literal
 			} else {
 				Relation r = relation_map.get(id);
 				if (r != null) {
@@ -659,7 +676,7 @@ public class Formula {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getIdentifier() {
 		return this.graph_name + "," + this.formula_name;
 	}
