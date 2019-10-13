@@ -61,9 +61,10 @@ def plot_one_set_of_results(directory_name):
 				break
 
 	# Print solved files
-	# print("Solved files:")
-	# for i in range(len(solved_files)):
-	# 	print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
+	if len(solution_k_list) == len(solved_files):
+		print("Solved files:")
+		for i in range(len(solved_files)):
+			print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
 
 	# Sort list of times
 	solver_times.sort()
