@@ -3,6 +3,9 @@ import numpy as np
 import sys
 from matplotlib import pyplot as plt
 
+# Filter for graphs containing a string in their filename
+filter_string = 'cluster-deletion'
+
 def plot_one_set_of_results(directory_name):
 	# Get file path
 	script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -15,6 +18,11 @@ def plot_one_set_of_results(directory_name):
 	solved_files = []
 	for curr_file in file_list:
 		content = []
+		# Filter for certain files
+		if(len(filter_string) > 0):
+			if not filter_string in curr_file:
+				continue
+		# Read file
 		with open(curr_file) as file:
 			content = file.readlines()
 		# Remove whitespace characters
@@ -65,6 +73,9 @@ def plot_one_set_of_results(directory_name):
 		print("Solved files:")
 		for i in range(len(solved_files)):
 			print(solved_files[i] + ', k = ' + str(solution_k_list[i]) + ', time = ' + str(solver_times[i]))
+	else:
+		for i in range(len(solved_files)):
+			print(solved_files[i])
 
 	# Sort list of times
 	solver_times.sort()
@@ -88,10 +99,18 @@ def main():
 		directory_name = input_args[i]
 		plot_one_set_of_results(directory_name)
 
+	# Remove path from legend labels
+	legend_label_splits = [label.split('/') for label in input_args[1:]]
+	# Only take the last field of the split
+	legend_labels = [label_split[len(label_split)-1] for label_split in legend_label_splits]
+
+	# Plot settings
+	# plt.xlim(left=0)
+	# plt.ylim(bottom=0)
 	plt.xlabel('Zeit in Sekunden')
 	plt.ylabel('Instanzen')
 	plt.title('Zahl der gelösten Instanzen über Zeit')
-	plt.legend(labels=input_args[1:], loc='best')
+	plt.legend(labels=legend_labels, loc='best')
 	plt.show()
 
 if __name__ == "__main__":
