@@ -19,7 +19,7 @@ import org.apache.commons.cli.*;
 public class Main {
 	// +++++++++++ Settings +++++++++++++
 	// Set this if the software is called from cmd instead of eclipse
-	static boolean call_from_cmd = true;
+	static boolean call_from_cmd = false;
 	// Set this to mute debug output
 	static boolean mute = true;
 	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
@@ -134,7 +134,7 @@ public class Main {
 			only_first_x_graphs = true;
 			number_of_graphs_to_test = 3;
 			path_to_graph_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\input_graphs\\reference_vc";
-			path_to_formula_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\instances\\vc";
+			path_to_formula_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\instances\\internal_hyps";
 			internal = true;
 		}
 
@@ -864,7 +864,7 @@ public class Main {
 			// Create the directory
 			new File(result_dir_path).mkdirs();
 			// Contruct file path
-			String result_file_path = result_dir_path + File.separator + curr_id.split(".")[0] + ".res";
+			String result_file_path = result_dir_path + File.separator + curr_id + ".res";
 			// Calculate pipe_1_sum
 			long pipe_1_sum = 0;
 			if (search_tree_times.get(curr_id) != null) {

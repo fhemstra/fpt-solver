@@ -188,7 +188,6 @@ public class Formula {
 			// Name of the formula
 			line = br.readLine();
 			formula_name = line;
-			graph_name = "internal";
 			// Relations are listed in the next lines. The last relation ends on ';'
 			ArrayList<String> relation_lines = new ArrayList<String>();
 			line = br.readLine();
@@ -203,6 +202,8 @@ public class Formula {
 				}
 				line = br.readLine();
 			}
+			// For internal graphs the graph name should still be unique
+			graph_name = "internal" + Integer.toString(relation_lines.hashCode());
 			// Collect Relation Objects into map (except Solution S)
 			relation_map = new HashMap<String, Relation>();
 			// Find min and max universe elements on the way
