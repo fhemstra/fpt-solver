@@ -864,8 +864,7 @@ public class Main {
 			// Create the directory
 			new File(result_dir_path).mkdirs();
 			// Contruct file path
-			String result_file_path = result_dir_path + File.separator + curr_id.substring(0, curr_id.length() - 3)
-					+ ".res";
+			String result_file_path = result_dir_path + File.separator + curr_id.split(".")[0] + ".res";
 			// Calculate pipe_1_sum
 			long pipe_1_sum = 0;
 			if (search_tree_times.get(curr_id) != null) {
