@@ -4,7 +4,7 @@ import sys
 from matplotlib import pyplot as plt
 
 # Filter for graphs containing a string in their filename
-filter_string = 'cluster-deletion'
+filter_string = ''
 
 def plot_one_set_of_results(directory_name):
 	# Get file path
@@ -89,6 +89,8 @@ def plot_one_set_of_results(directory_name):
 	plt.plot(solver_times, prefix_sum)
 
 def main():
+	# Print filter string
+	print('Filter String: ' + filter_string)
 	# Close previous plots
 	plt.close("all")
 	# Break if no dirs are passed

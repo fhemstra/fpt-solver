@@ -1,0 +1,17 @@
+file: gnm_n_50_m_75_0,cluster-deletion-d2-c3
+formula: cluster-deletion-d2-c3
+universe_size: 50
+c_par: 3
+dens: 2.0
+lowest_k: 12
+pipe_2_sol_k: 18
+redu_time: 0.219
+redu_nodes: 50
+redu_edges: 199
+kernel_times: 0.016;0.000;0.016;0.000;0.016;0.015;0.016;
+kernel_nodes: 49;49;49;49;49;49;49;
+kernel_edges: 199;199;199;199;199;199;199;
+hs_st_times: 0.000;0.000;0.000;0.026;0.094;0.594;1.848;
+pipe_2_sum: 2.860
+pipe_2_res: true
+pipe_2_timeout: false

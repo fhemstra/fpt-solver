@@ -1,0 +1,15 @@
+file: vc-exact_014,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 25123
+c_par: 2
+dens: 1.0
+lowest_k: 5111
+redu_time: 8.895
+redu_nodes: 25123
+redu_edges: 20012
+kernel_times: 1.937;
+kernel_nodes: 25123;
+kernel_edges: 20012;
+pipe_2_sum: 10.832
+pipe_2_res: false
+pipe_2_timeout: true

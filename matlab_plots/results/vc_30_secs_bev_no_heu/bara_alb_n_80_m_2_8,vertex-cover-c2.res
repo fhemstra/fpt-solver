@@ -1,0 +1,17 @@
+file: bara_alb_n_80_m_2_8,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 80
+c_par: 2
+dens: 2.0
+lowest_k: 26
+pipe_2_sol_k: 36
+redu_time: 0.000
+redu_nodes: 80
+redu_edges: 156
+kernel_times: 0.000;0.000;0.000;0.000;0.000;0.000;0.000;0.000;0.000;0.000;0.000;
+kernel_nodes: 80;80;80;80;80;80;80;80;80;80;80;
+kernel_edges: 156;156;156;156;156;156;156;156;156;156;156;
+hs_st_times: 0.000;0.000;0.000;0.000;0.016;0.016;0.062;0.203;0.688;2.932;5.837;
+pipe_2_sum: 9.754
+pipe_2_res: true
+pipe_2_timeout: false

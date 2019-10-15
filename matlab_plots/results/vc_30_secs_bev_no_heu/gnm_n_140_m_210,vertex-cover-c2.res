@@ -1,0 +1,16 @@
+file: gnm_n_140_m_210,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 140
+c_par: 2
+dens: 1.0
+lowest_k: 54
+redu_time: 0.000
+redu_nodes: 140
+redu_edges: 210
+kernel_times: 0.000;0.000;0.000;0.000;0.000;0.000;0.016;0.000;0.000;
+kernel_nodes: 138;138;138;138;138;138;138;138;138;
+kernel_edges: 210;210;210;210;210;210;210;210;210;
+hs_st_times: 0.000;0.000;0.015;0.047;0.266;1.265;4.808;17.650;
+pipe_2_sum: 24.067
+pipe_2_res: false
+pipe_2_timeout: true

@@ -1,0 +1,17 @@
+file: bara_alb_n_60_m_2_9,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 60
+c_par: 2
+dens: 2.0
+lowest_k: 22
+pipe_2_sol_k: 27
+redu_time: 0.000
+redu_nodes: 60
+redu_edges: 116
+kernel_times: 0.016;0.000;0.000;0.000;0.000;0.000;
+kernel_nodes: 60;60;60;60;60;60;
+kernel_edges: 116;116;116;116;116;116;
+hs_st_times: 0.000;0.000;0.000;0.015;0.046;0.047;
+pipe_2_sum: 0.124
+pipe_2_res: true
+pipe_2_timeout: false

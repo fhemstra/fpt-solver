@@ -1,0 +1,16 @@
+file: watts_strog_n_40_k_6_p_0,cluster-deletion-d2-c3
+formula: cluster-deletion-d2-c3
+universe_size: 40
+c_par: 3
+dens: 3.0
+lowest_k: 13
+redu_time: 0.128
+redu_nodes: 40
+redu_edges: 520
+kernel_times: 0.000;0.016;0.000;0.016;0.016;0.015;0.016;0.000;
+kernel_nodes: 40;40;40;40;40;40;40;40;
+kernel_edges: 520;520;520;520;520;520;520;520;
+hs_st_times: 0.000;0.000;0.016;0.047;0.312;1.901;11.818;
+pipe_2_sum: 14.301
+pipe_2_res: false
+pipe_2_timeout: true

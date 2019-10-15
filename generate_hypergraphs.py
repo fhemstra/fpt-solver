@@ -97,9 +97,9 @@ def main():
 	d_par = int(input_args[1])
 	# Next is the path to a stub formula file
 	stub_path = input_args[2]
-	for n in range(20, 300, 20):
+	for n in range(20, 160, 20):
 		for i in range(variance_count):
-			m = int(n*1.5)
+			m = int(n*1)
 			generate_hyp(i, d_par, stub_path, n, m)
 
 	print('Done.')

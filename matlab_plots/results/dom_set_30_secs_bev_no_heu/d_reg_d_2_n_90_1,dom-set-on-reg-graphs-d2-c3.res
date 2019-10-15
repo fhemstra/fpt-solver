@@ -1,0 +1,17 @@
+file: d_reg_d_2_n_90_1,dom-set-on-reg-graphs-d2-c3
+formula: dom-set-on-reg-graphs-d2-c3
+universe_size: 90
+c_par: 3
+dens: 1.0
+lowest_k: 24
+pipe_2_sol_k: 30
+redu_time: 1.156
+redu_nodes: 90
+redu_edges: 90
+kernel_times: 0.000;0.000;0.000;0.000;0.000;0.000;0.000;
+kernel_nodes: 90;90;90;90;90;90;90;
+kernel_edges: 90;90;90;90;90;90;90;
+hs_st_times: 0.000;0.000;0.000;0.078;0.726;5.247;12.761;
+pipe_2_sum: 19.968
+pipe_2_res: true
+pipe_2_timeout: false

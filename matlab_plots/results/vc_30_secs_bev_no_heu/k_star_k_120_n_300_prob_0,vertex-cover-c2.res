@@ -1,0 +1,17 @@
+file: k_star_k_120_n_300_prob_0,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 300
+c_par: 2
+dens: 4.0
+lowest_k: 119
+pipe_2_sol_k: 120
+redu_time: 0.057
+redu_nodes: 300
+redu_edges: 1280
+kernel_times: 0.016;0.015;
+kernel_nodes: 300;300;
+kernel_edges: 1280;1280;
+hs_st_times: 0.000;0.016;
+pipe_2_sum: 0.104
+pipe_2_res: true
+pipe_2_timeout: false
