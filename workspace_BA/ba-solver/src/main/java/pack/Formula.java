@@ -286,7 +286,7 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the Hyphergraph which results when this formula is reduced to
+	 * Returns the Hypergraph which results when this formula is reduced to
 	 * hitting-set.
 	 * 
 	 * @param reduction_timeout

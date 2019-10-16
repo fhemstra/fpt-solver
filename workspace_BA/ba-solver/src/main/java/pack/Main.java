@@ -378,7 +378,7 @@ public class Main {
 		guard_opt.setRequired(false);
 		options.addOption(guard_opt);
 		
-		Option internal_opt = new Option("int", "internal", false, "use strctures inside formula files provided by -f");
+		Option internal_opt = new Option("int", "internal", false, "use structures inside formula files provided by -f");
 		internal_opt.setRequired(false);
 		options.addOption(internal_opt);
 
