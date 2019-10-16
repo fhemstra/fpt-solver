@@ -90,7 +90,8 @@ def plot_one_set_of_results(directory_name):
 
 def main():
 	# Print filter string
-	print('Filter String: ' + filter_string)
+	if(len(filter_string) > 0):
+		print('Filter String: ' + filter_string)
 	# Close previous plots
 	plt.close("all")
 	# Break if no dirs are passed

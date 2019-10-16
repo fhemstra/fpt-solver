@@ -100,9 +100,8 @@ def generate_cluster_graph(n, k, i):
 			curr_file.write(str(edge[0]) + ' ' + str(edge[1]) + '\n')
 
 def main():
-	for n in range(20, 160, 20):
-		quater_n = int(n/4)
-		for k in range(2,16,2):
+	for n in range(40, 180, 20):
+		for k in range(5,35,5):
 			for i in range(variance_count):
 				generate_cluster_graph(n, k, i)
 
