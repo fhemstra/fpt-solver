@@ -391,7 +391,7 @@ public class Main {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
-			formatter.printHelp("utility-name", options);
+			formatter.printHelp("", options);
 			// Leave if there was an error
 			System.exit(1);
 		}

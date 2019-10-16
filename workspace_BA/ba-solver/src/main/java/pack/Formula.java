@@ -379,7 +379,8 @@ public class Formula {
 					}
 				} else {
 					// This should not occur, no clause should be fulfilled
-					System.out.println("This is weird.");
+					System.out.println("Paramter d of relation and assignment does not match. You probably need to fix the input file.");
+					System.exit(0);
 				}
 			}
 			cntr++;

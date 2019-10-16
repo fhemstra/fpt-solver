@@ -1,0 +1,5 @@
+hitting-set-on-reg-graphs-d4-c4
+
+E
+w,x,y,z
+~E(w,x,y,z) S(w) S(x) S(y) S(z)
