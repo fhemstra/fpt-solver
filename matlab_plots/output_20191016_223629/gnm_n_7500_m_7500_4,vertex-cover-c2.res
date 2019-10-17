@@ -1,0 +1,15 @@
+file: gnm_n_7500_m_7500_4,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 7500
+c_par: 2
+dens: 1.0
+lowest_k: 2474
+redu_time: 1.454
+redu_nodes: 7500
+redu_edges: 7500
+kernel_times: 0.268;
+kernel_nodes: 6468;
+kernel_edges: 7500;
+pipe_2_sum: 1.722
+pipe_2_res: false
+pipe_2_timeout: true

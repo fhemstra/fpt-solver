@@ -1,0 +1,16 @@
+file: watts_strog_n_40_k_6_p_0,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 40
+c_par: 2
+dens: 3.0
+lowest_k: 16
+redu_time: 0.000
+redu_nodes: 40
+redu_edges: 120
+kernel_times: 0.000;0.000;0.000;0.000;0.000;0.000;0.000;
+kernel_nodes: 40;40;40;40;40;40;40;
+kernel_edges: 120;120;120;120;120;120;120;
+hs_st_times: 0.360;0.567;1.170;2.504;5.900;10.971;
+pipe_2_sum: 21.472
+pipe_2_res: false
+pipe_2_timeout: true

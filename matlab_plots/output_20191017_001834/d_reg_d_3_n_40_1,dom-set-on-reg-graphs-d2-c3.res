@@ -1,0 +1,16 @@
+file: d_reg_d_3_n_40_1,dom-set-on-reg-graphs-d2-c3
+formula: dom-set-on-reg-graphs-d2-c3
+universe_size: 40
+c_par: 3
+dens: 1.0
+lowest_k: 10
+redu_time: 0.125
+redu_nodes: 40
+redu_edges: 118
+kernel_times: 0.000;0.000;0.000;0.000;0.000;0.000;
+kernel_nodes: 40;40;40;40;40;40;
+kernel_edges: 118;118;118;118;118;118;
+hs_st_times: 0.094;0.323;1.408;3.328;12.009;
+pipe_2_sum: 17.287
+pipe_2_res: false
+pipe_2_timeout: true

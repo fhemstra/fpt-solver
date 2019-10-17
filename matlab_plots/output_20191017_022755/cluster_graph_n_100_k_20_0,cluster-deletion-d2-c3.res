@@ -1,0 +1,15 @@
+file: cluster_graph_n_100_k_20_0,cluster-deletion-d2-c3
+formula: cluster-deletion-d2-c3
+universe_size: 100
+c_par: 3
+dens: 27.0
+lowest_k: 20
+redu_time: 21.483
+redu_nodes: 100
+redu_edges: 25482
+kernel_times: 0.656;
+kernel_nodes: 100;
+kernel_edges: 25482;
+pipe_2_sum: 22.139
+pipe_2_res: false
+pipe_2_timeout: true

@@ -849,15 +849,16 @@ public class Main {
 	private static void collectResults(String timestamp) {
 		if (!mute)
 			System.out.println("\n------------------------------------");
-		// Loop over all reduced graphs
+		// Loop over all formulas
 		for (Formula curr_form : forms) {
 			String curr_id = curr_form.getIdentifier();
 			// Construct dir path
 			String result_dir_path = "";
 			if (call_from_cmd) {
-				result_dir_path = ".." + File.separator + ".." + File.separator + ".." + File.separator + "matlab_plots"
-						+ File.separator + "output_" + timestamp;
+				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
+						+ "output_" + timestamp;
 			} else {
+				// TODO Könnte mitlerweile falsch sein
 				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
 						+ "output_" + timestamp;
 			}
@@ -968,6 +969,7 @@ public class Main {
 					bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_id) + "\n");
 				}
 				bw.close();
+				System.out.println("Printed results to " + result_dir_path + ".");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

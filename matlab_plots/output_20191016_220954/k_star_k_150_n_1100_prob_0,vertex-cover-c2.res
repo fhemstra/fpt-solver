@@ -1,0 +1,15 @@
+file: k_star_k_150_n_1100_prob_0,vertex-cover-c2
+formula: vertex-cover-c2
+universe_size: 1100
+c_par: 2
+dens: 8.0
+lowest_k: 150
+redu_time: 2.879
+redu_nodes: 1100
+redu_edges: 8647
+kernel_times: 0.094;
+kernel_nodes: 1100;
+kernel_edges: 8647;
+pipe_2_sum: 2.973
+pipe_2_res: false
+pipe_2_timeout: true
