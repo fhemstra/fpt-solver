@@ -1,0 +1,2 @@
+#!/bin/bash
+python plot_cactus.py final_runs/dom_set_30_secs_st final_runs/dom_set_30_secs_bev_default final_runs/dom_set_30_secs_bev_heu final_runs/dom_set_30_secs_bev_opt final_runs/dom_set_30_secs_sf_opt final_runs/dom_set_30_secs_both_opt
