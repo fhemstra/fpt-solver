@@ -87,9 +87,9 @@ def plot_one_set_of_results(directory_name):
 	prefix_sum = np.cumsum(ones)
 
 	# Construct file name
-	time_float = datetime.datetime.now().timestamp()
-	timestamp = str(time_float)
-	filename = "tikz_data_" + timestamp + ".data"
+	out_name_split = directory_name.split('/')
+	out_name = out_name_split[len(out_name_split)-1]
+	filename = out_name + ".data"
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	full_path = dir_path + os.sep + filename
 	print("Results printed to: " + str(full_path) + ".")
