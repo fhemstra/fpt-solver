@@ -18,5 +18,5 @@ echo "------------"
 java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -sf -gu -heu -bo -int
 echo "------------"
 # Hit-Set bev + sf + heu + bound (hs_both_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -bev -sf -gu -heu -bo
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -bev -sf -gu -heu -bo -int
 echo "------------"

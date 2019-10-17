@@ -97,7 +97,7 @@ def plot_one_set_of_results(directory_name):
 	# Print data to .data file for Tikz
 	with open(full_path, 'w') as curr_file:
 		for i in range(len(ones)):
-			curr_file.write(str(prefix_sum[i]) + " " + str(prefix_sum[i]) + "\n")
+			curr_file.write(str(solver_times[i]) + " " + str(prefix_sum[i]) + "\n")
 
 	# Plot stuff
 	plt.plot(solver_times, prefix_sum)
