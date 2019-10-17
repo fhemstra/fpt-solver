@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import sys
+import datetime
 from matplotlib import pyplot as plt
 
 # Filter for graphs containing a string in their filename
@@ -85,6 +86,19 @@ def plot_one_set_of_results(directory_name):
 	ones = np.ones(len(solver_times))
 	prefix_sum = np.cumsum(ones)
 
+	# Construct file name
+	time_float = datetime.datetime.now().timestamp()
+	timestamp = str(int(time_float))
+	filename = "tikz_data_" + timestamp + ".data"
+	dir_path = os.path.dirname(os.path.realpath(__file__))
+	full_path = dir_path + os.sep + filename
+	print("Results printed to: " + str(full_path) + ".")
+
+	# Print data to .data file for Tikz
+	with open(full_path, 'w') as curr_file:
+		for i in range(len(ones)):
+			curr_file.write(str(prefix_sum[i]) + " " + str(prefix_sum[i]) + "\n")
+
 	# Plot stuff
 	plt.plot(solver_times, prefix_sum)
 
@@ -114,7 +128,7 @@ def main():
 	plt.ylabel('Instanzen')
 	plt.title('Zahl der gelösten Instanzen über Zeit')
 	plt.legend(labels=legend_labels, loc='best')
-	plt.show()
+	# plt.show()
 
 if __name__ == "__main__":
 	main()
