@@ -1,0 +1,2 @@
+#!/bin/bash
+python plot_cactus.py final_runs/hs_30_secs_st_guard final_runs/hs_30_secs_bev_default final_runs/hs_30_secs_bev_guard final_runs/hs_30_secs_bev_guard_heu final_runs/hs_30_secs_bev_opt final_runs/hs_30_secs_sf_opt final_runs/hs_30_secs_both_opt

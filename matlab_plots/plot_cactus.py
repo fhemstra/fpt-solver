@@ -88,7 +88,7 @@ def plot_one_set_of_results(directory_name):
 
 	# Construct file name
 	time_float = datetime.datetime.now().timestamp()
-	timestamp = str(int(time_float))
+	timestamp = str(time_float)
 	filename = "tikz_data_" + timestamp + ".data"
 	dir_path = os.path.dirname(os.path.realpath(__file__))
 	full_path = dir_path + os.sep + filename
@@ -128,7 +128,7 @@ def main():
 	plt.ylabel('Instanzen')
 	plt.title('Zahl der gelösten Instanzen über Zeit')
 	plt.legend(labels=legend_labels, loc='best')
-	# plt.show()
+	plt.show()
 
 if __name__ == "__main__":
 	main()
