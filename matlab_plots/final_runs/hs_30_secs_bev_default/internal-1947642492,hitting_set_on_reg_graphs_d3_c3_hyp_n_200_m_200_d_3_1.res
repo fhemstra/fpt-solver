@@ -1,0 +1,15 @@
+file: internal-1947642492,hitting_set_on_reg_graphs_d3_c3_hyp_n_200_m_200_d_3_1
+formula: hitting_set_on_reg_graphs_d3_c3_hyp_n_200_m_200_d_3_1
+universe_size: 199
+c_par: 3
+dens: 0.0
+lowest_k: 45
+redu_time: 15.399
+redu_nodes: 199
+redu_edges: 196
+kernel_times: 0.000;
+kernel_nodes: 188;
+kernel_edges: 196;
+pipe_2_sum: 15.399
+pipe_2_res: false
+pipe_2_timeout: true

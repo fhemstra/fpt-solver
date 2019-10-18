@@ -1,0 +1,15 @@
+file: internal-156231850,hitting_set_on_reg_graphs_d4_c4_hyp_n_180_m_180_d_4_0
+formula: hitting_set_on_reg_graphs_d4_c4_hyp_n_180_m_180_d_4_0
+universe_size: 178
+c_par: 4
+dens: 0.0
+lowest_k: 27
+redu_time: 0.000
+redu_nodes: 178
+redu_edges: 180
+kernel_times: 0.000;
+kernel_nodes: 175;
+kernel_edges: 180;
+pipe_2_sum: 0.000
+pipe_2_res: false
+pipe_2_timeout: true
