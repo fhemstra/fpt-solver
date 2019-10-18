@@ -1,22 +1,19 @@
 #!/bin/bash
-# Hit-Set st (hs_st_guard)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -st -gu -int
+# Dom-Set st (dom_set_st)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -st
 echo "------------"
-# Hit-Set bev (hs_bev_default)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -be -int
+# Dom-Set bev (dom_set_bev_default)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be
 echo "------------"
-# Hit-Set bev (hs_bev_guard)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -be -gu -int
+# Dom-Set bev + heu (dom_set_bev_heu)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -heu
 echo "------------"
-# Hit-Set bev + heu (hs_bev_guard_heu)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -be -gu -heu -int
+# Dom-Set bev + heu + bound (dom_set_bev_opt)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -heu -bo
 echo "------------"
-# Hit-Set bev + heu + bound (hs_bev_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -be -gu -heu -bo -int
+# Dom-Set sf + heu + bound (dom_set_sf_opt)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -sf -heu -bo
 echo "------------"
-# Hit-Set sf + heu + bound (hs_sf_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -sf -gu -heu -bo -int
-echo "------------"
-# Hit-Set bev + sf + heu + bound (hs_both_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/internal_hyps -t 30 -ke -bev -sf -gu -heu -bo -int
+# Dom-Set bev + sf + heu + bound (dom_set_both_opt)
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -sf -heu -bo
 echo "------------"
