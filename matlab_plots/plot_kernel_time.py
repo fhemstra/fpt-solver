@@ -50,13 +50,24 @@ def plot_one_set_of_results(directory_name):
 				break
 
 	# Print kernelized files
-	print("Kernelized files:")
-	for i in range(len(kernelized_files)):
-		print(kernelized_files[i] + ', time = ' + str(kernel_time_list[i]))
+	# print("Kernelized files:")
+	# for i in range(len(kernelized_files)):
+	# 	print(kernelized_files[i] + ', time = ' + str(kernel_time_list[i]))
 
 	# Sort list of times
 	kernel_time_list.sort()
-	print("Reading done.")
+	# print("Reading done.")
+
+	# Calculate interesting stuff
+	if(len(kernel_time_list) > 0):
+		np_times = np.array(kernel_time_list)
+		
+		print(directory_name)
+		print('mean time: ' + str(np.mean(np_times)))
+		print('medi time: ' + str(np.median(np_times)))
+		print('max  time: ' + str(np.max(np_times)))
+		print('min  time: ' + str(np.min(np_times)))
+		print('sum  time: ' + str(np.sum(np_times)))
 
 	# Sum up ones (each size value referrs to one instance)
 	prefix_sum = np.cumsum(np.ones(len(kernel_time_list)))

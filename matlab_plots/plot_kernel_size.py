@@ -27,7 +27,7 @@ def plot_one_set_of_results(directory_name):
 				break
 
 	kernel_size_list = []
-	# Collect average kernel size per solved file
+	# Collect average kernel size per solved file (over all k the file has been tested on)
 	for curr_file in kernelized_files:
 		content = []
 		with open(curr_file) as file:
@@ -49,13 +49,23 @@ def plot_one_set_of_results(directory_name):
 				break
 
 	# Print kernelized files
-	print("Kernelized files:")
-	for i in range(len(kernelized_files)):
-		print(kernelized_files[i] + ', size = ' + str(kernel_size_list[i]))
+	# print("Kernelized files:")
+	# for i in range(len(kernelized_files)):
+	# 	print(kernelized_files[i] + ', size = ' + str(kernel_size_list[i]))
 
 	# Sort list of sizes
 	kernel_size_list.sort()
 	print("Reading done.")
+
+	# Calculate interesting stuff
+	if(len(kernel_size_list) > 0):
+		np_sizes = np.array(kernel_size_list)
+
+		print(directory_name)
+		print('mean size: ' + str(np.mean(np_sizes)))
+		print('medi size: ' + str(np.median(np_sizes)))
+		print('max size:  ' + str(np.max(np_sizes)))
+		print('min size:  ' + str(np.min(np_sizes)))
 
 	# Sum up ones (each size value referrs to one instance)
 	prefix_sum = np.cumsum(np.ones(len(kernel_size_list)))
