@@ -1,14 +1,11 @@
 package pack;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeoutException;
 
@@ -52,7 +49,7 @@ public class Formula {
 	}
 
 	/**
-	 * Parses a graph and a formula.
+	 * Parses a graph and a formula from their given file locations.
 	 */
 	private void parseExternalFormula(String form_path, String graph_path) {
 		try {
@@ -179,7 +176,7 @@ public class Formula {
 	}
 
 	/**
-	 * Parses a file specified by the path parameter into an formula instance.
+	 * Parses a file specified by the path parameter to an formula instance.
 	 */
 	private void parseInternalFormula(String path) {
 		try {
@@ -286,11 +283,7 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the Hypergraph which results when this formula is reduced to
-	 * hitting-set.
-	 * 
-	 * @param reduction_timeout
-	 * @throws TimeoutException
+	 * Returns the result of reducing this formula to a hitting-set instance without using guards.
 	 */
 	public Hypergraph reduceToHsWoGuard(boolean mute, long reduction_timeout, boolean timeout_active)
 			throws TimeoutException {
@@ -349,7 +342,10 @@ public class Formula {
 		hyp.formula_name = this.formula_name;
 		return hyp;
 	}
-
+	
+	/**
+	 * Returns the result of reducing this formula to a hitting-set instance with using guards.
+	 */
 	public Hypergraph reduceToHsWithGuard(boolean mute, long reduction_timeout, boolean timeout_active)
 			throws TimeoutException {
 		// Edges of the hypergraph are found while checking clauses
@@ -471,12 +467,9 @@ public class Formula {
 	}
 
 	/**
-	 * Returns weather this formula has a solution of size k_par. Initially, the
+	 * Returns weather this formula has a solution of size k_par using a search tree approach. Initially, the
 	 * solution should be empty, the last_index should be 0 and the last assignment
 	 * an array containing c_par times the first element of the universe.
-	 * 
-	 * @param st_timeout
-	 * @throws TimeoutException
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index,
 			long st_timeout, boolean timeout_active) throws TimeoutException {
@@ -653,52 +646,8 @@ public class Formula {
 	}
 
 	/**
-	 * Saves this Formula to a file.
+	 * Returns the identifier which is used for tracking this instances' results.
 	 */
-	public void saveToFile() {
-		try {
-			File out_file = new File("saves" + File.separator + this.formula_name + "-save.txt");
-			BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
-			// Name
-			bw.write(formula_name + "\n");
-			// Universe
-			for (int i = 0; i < universe.length; i++) {
-				if (i + 1 != universe.length)
-					bw.write(universe[i] + ",");
-				else
-					bw.write(universe[i] + "\n");
-			}
-			// Relations
-			Iterator<Entry<String, Relation>> it = relation_map.entrySet().iterator();
-			while (it.hasNext()) {
-				bw.write(it.next().getValue().toOutputString());
-				if (it.hasNext())
-					bw.write(";");
-			}
-			bw.write("\n");
-			// Parameter k
-			bw.write("\n");
-			// Bound vars
-			for (int i = 0; i < bound_variables.length; i++) {
-				if (i < bound_variables.length - 1)
-					bw.write(bound_variables[i] + ",");
-				else
-					bw.write(bound_variables[i]);
-			}
-			bw.write("\n");
-			// Formula in clauses
-			for (String[] c : clauses) {
-				for (String l : c) {
-					bw.write(l + " ");
-				}
-				bw.write("\n");
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public String getIdentifier() {
 		return this.graph_name + "," + this.formula_name;
 	}

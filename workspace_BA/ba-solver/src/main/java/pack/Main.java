@@ -289,11 +289,11 @@ public class Main {
 					else {
 						// Kernelize
 						Hypergraph curr_redu_graph = reduced_graphs.get(j);
-						Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph, j);
+						Hypergraph curr_kernel = startKernelizer(k_par, curr_redu_graph);
 
 						// If kernelization was successful, go to HS Search
 						if (curr_kernel != null) {
-							startHiSeSearchTree(k_par, j, curr_kernel);
+							startHiSeSearchTree(k_par, curr_kernel);
 						}
 					} // End of Kernelization
 						// When all graphs are done, leave
@@ -446,6 +446,11 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Processes formula files into Formula-Objects which are added to the forms-ArrayList.
+	 * If the internal flag is set, the logical structures from within the formula files are used,
+	 * otherwise the provided graph-files will be collected. 
+	 */
 	private static void constructForms(File[] graph_files, File[] form_files) {
 		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
@@ -482,6 +487,10 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Reduces the formulas from the "forms"-list to hypergraphs and saves them to the "reduced_graphs"-list.
+	 * If the "internal" flag is set, the internal logical structures are reduces, otherwise the graphs that are connected to the formula-Objects. 
+	 */ 
 	private static void reduceFormsToHyps() {
 		for (Formula curr_formula : forms) {
 			// Reducing Formula to Hypergraph
@@ -573,6 +582,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Returns the result of the naive searchTree approach solving the given formula for given k.
+	 */
 	private static boolean startNormalSearchTree(int k_par, Formula curr_form) {
 		boolean st_result = false;
 		String curr_name = curr_form.getIdentifier();
@@ -630,7 +642,10 @@ public class Main {
 		return st_result;
 	}
 
-	private static Hypergraph startKernelizer(int k_par, Hypergraph curr_redu_graph, int graph_index) {
+	/**
+	 * Returns the kernel of the given hypergraph with respect to given k. Depending on global settings, this can use the Bevern-Kernel as well as the normal Sunflower-Kernel.
+	 */
+	private static Hypergraph startKernelizer(int k_par, Hypergraph curr_redu_graph) {
 		String curr_name = curr_redu_graph.getIdentifier();
 		if (k_par < first_relevant_k) {
 			// Save the first k we used for later (result printing)
@@ -730,7 +745,10 @@ public class Main {
 		return curr_kernel;
 	}
 
-	private static void startHiSeSearchTree(int k_par, int graph_index, Hypergraph curr_kernel) {
+	/**
+	 * Executes the HS-SearchTree approach on the given hypergraph with given k.
+	 */
+	private static void startHiSeSearchTree(int k_par, Hypergraph curr_kernel) {
 		String curr_name = curr_kernel.getIdentifier();
 		// If there were previous results, add to them
 		if (kernel_edges.get(curr_name) != null) {
@@ -846,6 +864,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Collects all results and prints them to one result file per instance.
+	 */
 	private static void collectResults(String timestamp) {
 		if (!mute)
 			System.out.println("\n------------------------------------");
@@ -977,7 +998,7 @@ public class Main {
 	}
 
 	/**
-	 * Returns the number of nodes the given PACE-formatted graph has.
+	 * Returns the number of nodes a given PACE-formatted graph has.
 	 */
 	private static int graphSize(String graph_path) {
 		int size = 0;
@@ -1001,6 +1022,9 @@ public class Main {
 		System.out.println("- Time elapsed:  " + formatTimeInSeconds(time) + " sec");
 	}
 
+	/**
+	 * Returns the given time in millis in a nice format.
+	 */
 	private static String formatTimeInSeconds(long time) {
 		return String.format("%.3f", (double) time / (double) 1000).replace(',', '.');
 	}

@@ -20,6 +20,9 @@ public class Hypergraph {
 	// A hyperedge is a Tuple, which contains an array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 
+	/**
+	 * Constructs a Hypergraph containing the specified nodes and hyperedges. 
+	 */
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
