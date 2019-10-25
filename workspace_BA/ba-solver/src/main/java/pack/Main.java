@@ -22,7 +22,8 @@ public class Main {
 	static boolean call_from_cmd = true;
 	// Set this to mute debug output
 	static boolean mute = true;
-	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1 min: 60000
+	// Set timeout, 30 min: 1800000, 10 min: 600000, 5 min: 300000, 3 min: 180000, 1
+	// min: 60000
 	static long timeout_value = 60000;
 	// Set to activate timeouts
 	static boolean timeout_active = false;
@@ -46,13 +47,11 @@ public class Main {
 	static boolean skip_pipe_1 = true;
 	// Set to abandon branches of HS ST that contain a big matching
 	static boolean use_branch_and_bound = false;
-	// Set this to use heuristics on the result of kernelization to improve HS ST
-	// runtime
+	// Set this to use heuristics on the result of kernelization to improve HS ST runtime
 	static boolean use_heuristics_after_reduction = false;
-	// Set to use the sf kernel (after the bevern kernel, if that is also set)
-	static boolean use_sf_kernel = false;
-	// Set to use the bevern kernel (before using the SF kernel, if that is also
-	// set)
+	// Set to use the erdoes-rado kernel (after the bevern kernel, if that is also set)
+	static boolean use_er_kernel = false;
+	// Set to use the bevern kernel (before using the SF kernel, if that is also set)
 	static boolean use_bevern_kernel = false;
 	// Set to use guarded logic if possible
 	static boolean use_guard = false;
@@ -142,7 +141,7 @@ public class Main {
 		File graph_folder = null;
 		File[] graph_files = null;
 		// Only collect graphs if needed
-		if(!internal) {
+		if (!internal) {
 			graph_folder = new File(path_to_graph_set);
 			graph_files = graph_folder.listFiles();
 		}
@@ -220,7 +219,7 @@ public class Main {
 						return file_1.getName().compareTo(file_2.getName());
 					}
 				});
-			} 
+			}
 		}
 		// Prints
 		System.out.println("> Constructing formulas with instances and reducing them to hypergraphs.");
@@ -369,16 +368,17 @@ public class Main {
 		bevern_opt.setRequired(false);
 		options.addOption(bevern_opt);
 
-		Option sf_opt = new Option("sf", "sf-kernel", false,
-				"use the bevern kernel before going into the normal kernel");
+		Option sf_opt = new Option("er", "ER-kernel", false,
+				"use the erdoes-rado kernel before going into the normal kernel");
 		sf_opt.setRequired(false);
 		options.addOption(sf_opt);
 
 		Option guard_opt = new Option("gu", "guard", false, "use guarded logic to speed up reduction if possible");
 		guard_opt.setRequired(false);
 		options.addOption(guard_opt);
-		
-		Option internal_opt = new Option("int", "internal", false, "use structures inside formula files provided by -f");
+
+		Option internal_opt = new Option("int", "internal", false,
+				"use structures inside formula files provided by -f");
 		internal_opt.setRequired(false);
 		options.addOption(internal_opt);
 
@@ -435,8 +435,8 @@ public class Main {
 		if (cmd.hasOption("bevern-kernel")) {
 			use_bevern_kernel = true;
 		}
-		if (cmd.hasOption("sf-kernel")) {
-			use_sf_kernel = true;
+		if (cmd.hasOption("ER-kernel")) {
+			use_er_kernel = true;
 		}
 		if (cmd.hasOption("guard")) {
 			use_guard = true;
@@ -447,21 +447,23 @@ public class Main {
 	}
 
 	/**
-	 * Processes formula files into Formula-Objects which are added to the forms-ArrayList.
-	 * If the internal flag is set, the logical structures from within the formula files are used,
-	 * otherwise the provided graph-files will be collected. 
+	 * Processes formula files into Formula-Objects which are added to the
+	 * forms-ArrayList. If the internal flag is set, the logical structures from
+	 * within the formula files are used, otherwise the provided graph-files will be
+	 * collected.
 	 */
 	private static void constructForms(File[] graph_files, File[] form_files) {
 		for (int i = 0; i < form_files.length; i++) {
 			String form_path = form_files[i].getAbsolutePath();
 			// If internal logical structures should be used
-			if(internal) {
+			if (internal) {
 				Formula curr_formula = new Formula(form_path);
 				forms.add(curr_formula);
-				System.out.println("  Accepted formula \"" + curr_formula.formula_name + "\" wit internal logical structure.");
+				System.out.println(
+						"  Accepted formula \"" + curr_formula.formula_name + "\" wit internal logical structure.");
 			}
 			// Else use provided graph files
-			else {				
+			else {
 				for (int j = 0; j < graph_files.length; j++) {
 					String curr_graph_path = graph_files[j].getAbsolutePath();
 					int curr_graph_size = graphSize(curr_graph_path);
@@ -488,9 +490,11 @@ public class Main {
 	}
 
 	/**
-	 * Reduces the formulas from the "forms"-list to hypergraphs and saves them to the "reduced_graphs"-list.
-	 * If the "internal" flag is set, the internal logical structures are reduces, otherwise the graphs that are connected to the formula-Objects. 
-	 */ 
+	 * Reduces the formulas from the "forms"-list to hypergraphs and saves them to
+	 * the "reduced_graphs"-list. If the "internal" flag is set, the internal
+	 * logical structures are reduces, otherwise the graphs that are connected to
+	 * the formula-Objects.
+	 */
 	private static void reduceFormsToHyps() {
 		for (Formula curr_formula : forms) {
 			// Reducing Formula to Hypergraph
@@ -583,7 +587,8 @@ public class Main {
 	}
 
 	/**
-	 * Returns the result of the naive searchTree approach solving the given formula for given k.
+	 * Returns the result of the naive searchTree approach solving the given formula
+	 * for given k.
 	 */
 	private static boolean startNormalSearchTree(int k_par, Formula curr_form) {
 		boolean st_result = false;
@@ -643,7 +648,9 @@ public class Main {
 	}
 
 	/**
-	 * Returns the kernel of the given hypergraph with respect to given k. Depending on global settings, this can use the Bevern-Kernel as well as the normal Sunflower-Kernel.
+	 * Returns the kernel of the given hypergraph with respect to given k. Depending
+	 * on global settings, this can use the Bevern-Kernel as well as the normal
+	 * Sunflower-Kernel.
 	 */
 	private static Hypergraph startKernelizer(int k_par, Hypergraph curr_redu_graph) {
 		String curr_name = curr_redu_graph.getIdentifier();
@@ -656,7 +663,7 @@ public class Main {
 		}
 		// Construct print about kernels
 		String attachment = "";
-		if (use_sf_kernel) {
+		if (use_er_kernel) {
 			attachment += " sf";
 		}
 		if (use_bevern_kernel) {
@@ -700,8 +707,8 @@ public class Main {
 			if (use_bevern_kernel) {
 				curr_kernel = curr_kernel.kernelizeBevern(k_par, mute, kernel_timeout, timeout_active);
 			}
-			if (use_sf_kernel) {
-				curr_kernel = curr_kernel.kernelizeUniform(k_par, mute, kernel_timeout, timeout_active);
+			if (use_er_kernel) {
+				curr_kernel = curr_kernel.kernelizeER(k_par, mute, kernel_timeout, timeout_active);
 			}
 		} catch (TimeoutException e) {
 			long timeout_stop = System.currentTimeMillis();

@@ -234,22 +234,23 @@ public class Formula {
 						int elem = Integer.parseInt(element_split[j].replaceAll("[()]", ""));
 						elements[i][j] = elem;
 						// Check for min and max
-						if(elem < uni_min || uni_min == -1) {
+						if (elem < uni_min || uni_min == -1) {
 							uni_min = elem;
 						}
-						if(elem > uni_max || uni_max == -1) {
+						if (elem > uni_max || uni_max == -1) {
 							uni_max = elem;
 						}
 					}
 					// Convert int[] to Tuple and add to relation set
 					relation_set.add(new Tuple(elements[i]));
 				}
-				// Add Relation to relation map, mapping from identifier (E) to the Relation Object
+				// Add Relation to relation map, mapping from identifier (E) to the Relation
+				// Object
 				relation_map.put(identifier, new Relation(identifier, arity, relation_set));
 			}
 			// Construct universe from min and max
-			universe = new int[uni_max-uni_min];
-			for(int i = 0; i < (uni_max-uni_min); i++) {
+			universe = new int[uni_max - uni_min];
+			for (int i = 0; i < (uni_max - uni_min); i++) {
 				universe[i] = uni_min + i;
 			}
 			// Guard Relation
@@ -283,7 +284,8 @@ public class Formula {
 	}
 
 	/**
-	 * Returns the result of reducing this formula to a hitting-set instance without using guards.
+	 * Returns the result of reducing this formula to a hitting-set instance without
+	 * using guards.
 	 */
 	public Hypergraph reduceToHsWoGuard(boolean mute, long reduction_timeout, boolean timeout_active)
 			throws TimeoutException {
@@ -342,9 +344,10 @@ public class Formula {
 		hyp.formula_name = this.formula_name;
 		return hyp;
 	}
-	
+
 	/**
-	 * Returns the result of reducing this formula to a hitting-set instance with using guards.
+	 * Returns the result of reducing this formula to a hitting-set instance with
+	 * using guards.
 	 */
 	public Hypergraph reduceToHsWithGuard(boolean mute, long reduction_timeout, boolean timeout_active)
 			throws TimeoutException {
@@ -375,7 +378,8 @@ public class Formula {
 					}
 				} else {
 					// This should not occur, no clause should be fulfilled
-					System.out.println("Paramter d of relation and assignment does not match. You probably need to fix the input file.");
+					System.out.println(
+							"Paramter d of relation and assignment does not match. You probably need to fix the input file.");
 					System.exit(0);
 				}
 			}
@@ -467,9 +471,10 @@ public class Formula {
 	}
 
 	/**
-	 * Returns weather this formula has a solution of size k_par using a search tree approach. Initially, the
-	 * solution should be empty, the last_index should be 0 and the last assignment
-	 * an array containing c_par times the first element of the universe.
+	 * Returns weather this formula has a solution of size k_par using a search tree
+	 * approach. Initially, the solution should be empty, the last_index should be 0
+	 * and the last assignment an array containing c_par times the first element of
+	 * the universe.
 	 */
 	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index,
 			long st_timeout, boolean timeout_active) throws TimeoutException {

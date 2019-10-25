@@ -21,7 +21,7 @@ public class Hypergraph {
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 
 	/**
-	 * Constructs a Hypergraph containing the specified nodes and hyperedges. 
+	 * Constructs a Hypergraph containing the specified nodes and hyperedges.
 	 */
 	public Hypergraph(int[] nodes, ArrayList<Tuple> edges) {
 		this.nodes = nodes;
@@ -256,10 +256,9 @@ public class Hypergraph {
 	}
 
 	/**
-	 * @throws TimeoutException
-	 * 
+	 * Returns the kernel of this Hypergraph using the approach by Erdoes and Rado.
 	 */
-	public Hypergraph kernelizeUniform(int k_par, boolean mute, long kernel_timeout, boolean timeout_active)
+	public Hypergraph kernelizeER(int k_par, boolean mute, long kernel_timeout, boolean timeout_active)
 			throws TimeoutException {
 		// Check Timeout
 		if (System.currentTimeMillis() > kernel_timeout && timeout_active) {
@@ -390,6 +389,9 @@ public class Hypergraph {
 		return kernel;
 	}
 
+	/**
+	 * Returns the kernel of this Hypergraph using the approach by Bevern.
+	 */
 	public Hypergraph kernelizeBevern(int k_par, boolean mute, long kernel_timeout, boolean timeout_active)
 			throws TimeoutException {
 		// Check Timeout
@@ -739,9 +741,7 @@ public class Hypergraph {
 
 	/**
 	 * Returns the size of a maximal matching on the not covered edges of this.
-	 * 
-	 * @param sol The nodes that are part of the current solution and shall be
-	 *            ignored.
+	 * Expects solution set to know which edges are already covered.
 	 */
 	private int calcMaxMatchSize(HashSet<Integer> sol) {
 		HashSet<Integer> matching_nodes = new HashSet<Integer>();
@@ -787,13 +787,17 @@ public class Hypergraph {
 		return matching_size;
 	}
 
+	/**
+	 * Removes dangliing nodes from this and returns the number of removed dangling
+	 * nodes.
+	 */
 	public int removeDanglingNodes(boolean mute, long kernel_timeout, boolean timeout_active) throws TimeoutException {
 		// Check for timeout
 		if (System.currentTimeMillis() > kernel_timeout && timeout_active) {
 			throw new TimeoutException();
 		}
 		int node_counter = 0;
-		HashMap<Integer, ArrayList<Tuple>> node_occurences = this.getNodeOccurences();
+		HashMap<Integer, ArrayList<Tuple>> node_occurences = this.getNodeOccurrences();
 		// Check for dangling nodes and singletons
 		Iterator<Entry<Integer, ArrayList<Tuple>>> it = node_occurences.entrySet().iterator();
 		while (it.hasNext()) {
@@ -826,6 +830,9 @@ public class Hypergraph {
 		return node_counter;
 	}
 
+	/**
+	 * Removes singleton edges and returns the number of edges removed.
+	 */
 	public int removeSingletons(boolean mute, long kernel_timeout) {
 		int number_of_singletons_removed = 0;
 		HashSet<Tuple> singletons_to_remove = new HashSet<Tuple>();
@@ -877,7 +884,10 @@ public class Hypergraph {
 		return number_of_singletons_removed;
 	}
 
-	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurences() {
+	/**
+	 * Returns a map hashing nodes to the number of occurrences in edges of this.
+	 */
+	private HashMap<Integer, ArrayList<Tuple>> getNodeOccurrences() {
 		HashMap<Integer, ArrayList<Tuple>> node_occurences = new HashMap<Integer, ArrayList<Tuple>>();
 		// Init map by looking through nodes
 		for (int node : this.nodes) {
@@ -910,9 +920,7 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Returns a copy of this Hypergraph.
-	 * 
-	 * @return
+	 * Returns a copy of this Hypergraph with a different hash code.
 	 */
 	public Hypergraph copyThis() {
 		// Copy nodes

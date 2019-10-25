@@ -12,8 +12,8 @@ echo "------------"
 java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -heu -bo
 echo "------------"
 # Dom-Set sf + heu + bound (dom_set_sf_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -sf -heu -bo
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -er -heu -bo
 echo "------------"
 # Dom-Set bev + sf + heu + bound (dom_set_both_opt)
-java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -sf -heu -bo
+java -jar target/ba-solver-0.0.1-SNAPSHOT.jar -g C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/input_graphs/d_reg_graphs -f C:/Users/falko/Documents/Eigenes/Uni/6_Semester/Bachelorarbeit/Bachelorarbeit_Code/workspace_BA/instances/dom_set -t 30 -ke -be -er -heu -bo
 echo "------------"

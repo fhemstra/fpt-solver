@@ -49,7 +49,9 @@ public class Tuple {
 	}
 
 	/**
-	 * Returns the result of removing "-1"-entries from the given array. The size of the resulting array is the same as given in the second parameter to enable re-adding elements. 
+	 * Returns the result of removing "-1"-entries from the given array. The size of
+	 * the resulting array is the same as given in the second parameter to enable
+	 * re-adding elements.
 	 */
 	private int[] trimArray(int[] arr, int common_size) {
 		int[] res = new int[common_size];
@@ -72,8 +74,8 @@ public class Tuple {
 	public int hashCode() {
 		String content = "";
 		for (int i : elements) {
-			if(i != -1) {
-				content += Integer.toString(i);				
+			if (i != -1) {
+				content += Integer.toString(i);
 			}
 		}
 		return content.hashCode();
@@ -104,7 +106,8 @@ public class Tuple {
 	}
 
 	/**
-	 * Retuns weather this Tuple intersects with the given Tuple. Therefore, if this returns false, the Tuples are disjoint.
+	 * Retuns weather this Tuple intersects with the given Tuple. Therefore, if this
+	 * returns false, the Tuples are disjoint.
 	 */
 	public boolean intersectsWith(Tuple f) {
 		for (int i = 0; i < this.elements.length; i++) {
@@ -150,6 +153,9 @@ public class Tuple {
 		return false;
 	}
 
+	/**
+	 * Removes an element from this tuple completely if it exists.
+	 */
 	public void removeElement(int edge_node) {
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i] == edge_node) {
@@ -157,7 +163,7 @@ public class Tuple {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the number of elements in the given array that are not -1.
 	 */
@@ -169,18 +175,18 @@ public class Tuple {
 		}
 		return counter;
 	}
-	
+
 	public Tuple copyThis() {
 		int[] elements_copy = new int[this.elements.length];
-		for(int i = 0; i < elements_copy.length; i++) {
+		for (int i = 0; i < elements_copy.length; i++) {
 			elements_copy[i] = this.elements[i];
 		}
 		Tuple tuple_copy = new Tuple(elements_copy);
 		try {
-			if(tuple_copy.hashCode() != this.hashCode()) {
+			if (tuple_copy.hashCode() != this.hashCode()) {
 				throw new Exception();
-			}			
-		} catch(Exception e) {
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return tuple_copy;
