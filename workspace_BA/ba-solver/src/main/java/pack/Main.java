@@ -103,6 +103,8 @@ public class Main {
 	static HashMap<String, Integer> pipe_1_solution_k = new HashMap<String, Integer>();
 	// Save the smallest k that solved a graph in pipe 2
 	static HashMap<String, Integer> pipe_2_solution_k = new HashMap<String, Integer>();
+	// Saves the actual hitting-sets per graph
+	static HashMap<String, HashSet<Integer>> pipe_2_actual_solution_set = new HashMap<String, HashSet<Integer>>();
 	// Check lower bounds of graphs (kernels) so we don't waste time with k = 1
 	static int first_relevant_k = stop_k;
 	static HashMap<String, Integer> lower_bounds_per_graph = new HashMap<String, Integer>();
@@ -540,15 +542,19 @@ public class Main {
 					long heuristic_timeout = heur_start_time + timeout_value - redu_time_long;
 					boolean done = false;
 					int k_decrease = 0;
+					HashSet<Integer> curr_solution = new HashSet<Integer>();
 					try {
 						while (!done) {
 							// Remove dangling nodes
 							int nodes_removed = 0;
 							nodes_removed = reduced_graph.removeDanglingNodes(mute, heuristic_timeout, timeout_active);
 							// Remove singletons
-							int singletons_removed = reduced_graph.removeSingletons(mute, heuristic_timeout);
-							k_decrease += singletons_removed;
-							if (singletons_removed == 0 && nodes_removed == 0)
+							HashSet<Integer> newly_removed_nodes = reduced_graph.removeSingletons(mute, heuristic_timeout);
+							for(int node : newly_removed_nodes) {
+								curr_solution.add(node);
+							}
+							k_decrease += newly_removed_nodes.size();
+							if (newly_removed_nodes.size() == 0 && nodes_removed == 0)
 								done = true;
 						}
 						System.out.println("k used: " + k_decrease);
@@ -557,6 +563,7 @@ public class Main {
 					}
 					// Add k_decrease to list
 					k_used_in_heuristics_per_graph.put(reduced_graph.getIdentifier(), k_decrease);
+					pipe_2_actual_solution_set.put(reduced_graph.getIdentifier(), curr_solution);
 
 					// If heuristics did not time out
 					if (done) {
@@ -820,11 +827,28 @@ public class Main {
 
 		// Start HS-SearchTree
 		try {
+			// Reset solution set
+			curr_kernel.global_solution = new HashSet<Integer>();
 			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout, use_branch_and_bound,
 					timeout_active);
 			if (!mute)
 				System.out.println("\n");
+			// If the solution was found
 			if (hs_result) {
+				// If heurstics already used some amount of k
+				HashSet<Integer> curr_solution = new HashSet<Integer>();
+				if(pipe_2_actual_solution_set.get(curr_name) != null) {
+					// Add both solution sets together
+					curr_solution = pipe_2_actual_solution_set.get(curr_name);
+					for(int node : curr_kernel.global_solution) {
+						curr_solution.add(node);						
+					}
+				} else {
+					// Else just use hs-st-solution
+					curr_solution = curr_kernel.global_solution;
+				}
+				// Get solution from kernel object and save it for results
+				pipe_2_actual_solution_set.put(curr_name, curr_solution);
 				// Calc total k used by heuristics
 				int k_used_by_heur = 0;
 				if (use_heuristics_after_reduction) {
@@ -939,6 +963,12 @@ public class Main {
 				}
 				if (pipe_2_solution_k.get(curr_id) != null) {
 					bw.write("pipe_2_sol_k: " + pipe_2_solution_k.get(curr_id) + "\n");
+					HashSet<Integer> sol_set = pipe_2_actual_solution_set.get(curr_id);
+					bw.write("pipe_2_sol_set: ");						
+					for(int node : sol_set) {
+						bw.write(node + ", ");
+					}
+					bw.write("\n");
 				}
 				if (search_tree_times.get(curr_id) != null) {
 					bw.write("pipe_1_times:");

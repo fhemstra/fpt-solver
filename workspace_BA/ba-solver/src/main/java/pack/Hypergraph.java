@@ -19,6 +19,9 @@ public class Hypergraph {
 	int[] nodes;
 	// A hyperedge is a Tuple, which contains an array of nodes (int)
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
+	// A solution set which can be used to return not only true or false but also
+	// get the actual hitting-set
+	HashSet<Integer> global_solution = new HashSet<Integer>();
 
 	/**
 	 * Constructs a Hypergraph containing the specified nodes and hyperedges.
@@ -719,6 +722,8 @@ public class Hypergraph {
 							continue;
 						// Try adding current element
 						sol.add(curr_edge.elements[j]);
+						// Also add to global solution
+						global_solution.add(curr_edge.elements[j]);
 						// print
 						if (!mute)
 							System.out.print("  sol: " + sol + "\r");
@@ -728,6 +733,7 @@ public class Hypergraph {
 						} else {
 							// This branch failed, remove element again, to clean up for next branch
 							sol.remove((Object) curr_edge.elements[j]);
+							global_solution.remove((Object) curr_edge.elements[j]);
 						}
 					}
 					return flag;
@@ -831,10 +837,9 @@ public class Hypergraph {
 	}
 
 	/**
-	 * Removes singleton edges and returns the number of edges removed.
+	 * Removes singleton edges and returns removed nodes.
 	 */
-	public int removeSingletons(boolean mute, long kernel_timeout) {
-		int number_of_singletons_removed = 0;
+	public HashSet<Integer> removeSingletons(boolean mute, long kernel_timeout) {
 		HashSet<Tuple> singletons_to_remove = new HashSet<Tuple>();
 		// Look for singletons
 		for (Tuple edge : this.edges) {
@@ -855,17 +860,6 @@ public class Hypergraph {
 				}
 			}
 		}
-		// Remove the node contained in a singleton edge from the node set
-		for (int solution_node : solution_nodes) {
-			int nodes_hash_before = this.nodes.hashCode();
-			// Remove solution nodes
-			this.nodes = arrWithout(this.nodes, solution_node);
-			int nodes_hash_after = this.nodes.hashCode();
-			// Make sure the nodes set actually changed
-			if (nodes_hash_before != nodes_hash_after) {
-				number_of_singletons_removed++;
-			}
-		}
 		// Now there are still edges that are covered by solution nodes, remove them as
 		// well
 		ArrayList<Tuple> covered_edges = new ArrayList<Tuple>();
@@ -881,7 +875,7 @@ public class Hypergraph {
 		for (Tuple covered_edge : covered_edges) {
 			this.edges.remove(covered_edge);
 		}
-		return number_of_singletons_removed;
+		return solution_nodes;
 	}
 
 	/**
