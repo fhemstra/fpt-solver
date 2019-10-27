@@ -21,7 +21,7 @@ public class Hypergraph {
 	ArrayList<Tuple> edges = new ArrayList<Tuple>();
 	// A solution set which can be used to return not only true or false but also
 	// get the actual hitting-set
-	HashSet<Integer> global_solution = new HashSet<Integer>();
+	HashSet<Integer> solution = new HashSet<Integer>();
 
 	/**
 	 * Constructs a Hypergraph containing the specified nodes and hyperedges.
@@ -674,9 +674,9 @@ public class Hypergraph {
 
 	/**
 	 * Returns weather there is a hitting-set of size k_par in the given Hypergraph
-	 * or not. Initially the solution sol is supposed to be empty.
+	 * or not.
 	 */
-	public boolean hsSearchTree(int k_par, HashSet<Integer> sol, boolean mute, long hs_timeout,
+	public boolean hsSearchTree(int k_par, boolean mute, long hs_timeout,
 			boolean use_branch_and_bound, boolean timeout_active) throws TimeoutException {
 		// TODO return solution
 		// If heuristics used more than k_par nodes
@@ -687,8 +687,8 @@ public class Hypergraph {
 		if (use_branch_and_bound) {
 			// If there is a matching left which is bigger than what we can afford, return
 			// false
-			int max_match_size = calcMaxMatchSize(sol);
-			int k_left = k_par - sol.size();
+			int max_match_size = calcMaxMatchSize(solution);
+			int k_left = k_par - solution.size();
 			if (k_left < max_match_size) {
 				return false;
 			}
@@ -708,32 +708,29 @@ public class Hypergraph {
 			}
 			boolean edge_is_covered = false;
 			for (int j = 0; j < curr_edge.elements.length; j++) {
-				if (sol.contains(curr_edge.elements[j])) {
+				if (solution.contains(curr_edge.elements[j])) {
 					edge_is_covered = true;
 				}
 			}
 			if (!edge_is_covered) {
 				boolean flag = false;
-				if (sol.size() < k_par) {
+				if (solution.size() < k_par) {
 					// branch into (at most) d branches, adding every element of the edge
 					for (int j = 0; j < curr_edge.elements.length; j++) {
 						// Don't add -1
 						if (curr_edge.elements[j] == -1)
 							continue;
 						// Try adding current element
-						sol.add(curr_edge.elements[j]);
-						// Also add to global solution
-						global_solution.add(curr_edge.elements[j]);
+						solution.add(curr_edge.elements[j]);
 						// print
 						if (!mute)
-							System.out.print("  sol: " + sol + "\r");
-						flag = flag || hsSearchTree(k_par, sol, mute, hs_timeout, use_branch_and_bound, timeout_active);
+							System.out.print("  sol: " + solution + "\r");
+						flag = flag || hsSearchTree(k_par, mute, hs_timeout, use_branch_and_bound, timeout_active);
 						if (flag) {
 							return true;
 						} else {
 							// This branch failed, remove element again, to clean up for next branch
-							sol.remove((Object) curr_edge.elements[j]);
-							global_solution.remove((Object) curr_edge.elements[j]);
+							solution.remove((Object) curr_edge.elements[j]);
 						}
 					}
 					return flag;

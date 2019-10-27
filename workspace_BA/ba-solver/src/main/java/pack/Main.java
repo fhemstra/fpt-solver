@@ -831,8 +831,8 @@ public class Main {
 		// Start HS-SearchTree
 		try {
 			// Reset solution set
-			curr_kernel.global_solution = new HashSet<Integer>();
-			hs_result = curr_kernel.hsSearchTree(k_par, new HashSet<Integer>(), mute, hs_timeout, use_branch_and_bound,
+			curr_kernel.solution = new HashSet<Integer>();
+			hs_result = curr_kernel.hsSearchTree(k_par, mute, hs_timeout, use_branch_and_bound,
 					timeout_active);
 			if (!mute)
 				System.out.println("\n");
@@ -843,12 +843,12 @@ public class Main {
 				if(pipe_2_actual_solution_set.get(curr_name) != null) {
 					// Add both solution sets together
 					curr_solution = pipe_2_actual_solution_set.get(curr_name);
-					for(int node : curr_kernel.global_solution) {
+					for(int node : curr_kernel.solution) {
 						curr_solution.add(node);						
 					}
 				} else {
 					// Else just use hs-st-solution
-					curr_solution = curr_kernel.global_solution;
+					curr_solution = curr_kernel.solution;
 				}
 				// Get solution from kernel object and save it for results
 				pipe_2_actual_solution_set.put(curr_name, curr_solution);
