@@ -27,6 +27,8 @@ public class Formula {
 	ArrayList<String[]> clauses;
 	long nr_of_assignments;
 
+	HashSet<Integer> solution = new HashSet<Integer>();
+
 	// TODO make a format-file.
 	/**
 	 * Constructs a Formula from just a formula-file located at the given path. The
@@ -292,7 +294,7 @@ public class Formula {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
-		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
+		HashSet<Integer> empty_sol = new HashSet<Integer>();
 		int[] curr_assignment = new int[c_par];
 		// generate first assignment
 		for (int i = 0; i < c_par; i++) {
@@ -354,7 +356,7 @@ public class Formula {
 		// Edges of the hypergraph are found while checking clauses
 		ArrayList<Tuple> hyp_edges = new ArrayList<Tuple>();
 		// The solution S is always empty in this reduction
-		ArrayList<Integer> empty_sol = new ArrayList<Integer>();
+		HashSet<Integer> empty_sol = new HashSet<Integer>();
 		int cntr = 0;
 		Relation guard_relation = relation_map.get(guard_rel_id);
 		for (Tuple assignment : guard_relation.elements) {
@@ -472,16 +474,15 @@ public class Formula {
 
 	/**
 	 * Returns weather this formula has a solution of size k_par using a search tree
-	 * approach. Initially, the solution should be empty, the last_index should be 0
-	 * and the last assignment an array containing c_par times the first element of
-	 * the universe.
+	 * approach. Initially, the last_index should be 0 and the last assignment an
+	 * array containing c_par times the first element of the universe.
 	 */
-	public boolean searchTree(int k_par, ArrayList<Integer> sol, boolean mute, int[] last_assignment, long last_index,
-			long st_timeout, boolean timeout_active) throws TimeoutException {
+	public boolean searchTree(int k_par, boolean mute, int[] last_assignment, long last_index, long st_timeout,
+			boolean timeout_active) throws TimeoutException {
 		// TODO return solution
 
 		// Return if |S| > k
-		if (sol.size() > k_par) {
+		if (solution.size() > k_par) {
 			return false;
 		}
 		// Copy last assignment
@@ -499,16 +500,16 @@ public class Formula {
 			}
 			for (int j = 0; j < clauses.size(); j++) {
 				// If a clause is false, branch over relevant candidates of current assignment
-				if (!checkClause(clauses.get(j), curr_assignment, sol, false)) {
+				if (!checkClause(clauses.get(j), curr_assignment, solution, false)) {
 					// Only branch if there is still space in sol
-					if (sol.size() == k_par) {
+					if (solution.size() == k_par) {
 						return false;
 					}
 					HashSet<Integer> f = new HashSet<Integer>();
 					// Find variables that are bound to S in this clause
 					Tuple candidates = findCandidates(clauses.get(j), curr_assignment);
 					for (int c : candidates.elements) {
-						if (!sol.contains(c)) {
+						if (!solution.contains(c)) {
 							f.add(c);
 						}
 					}
@@ -518,26 +519,26 @@ public class Formula {
 						// Construct branches with each branch adding one literal to S respectively
 						for (int y : f) {
 							// Try adding y to solution
-							sol.add(y);
+							solution.add(y);
 							// print
 							if (!mute) {
 								String prnt = "  ";
 								prnt += "S: ";
-								for (int s : sol)
+								for (int s : solution)
 									prnt += s + " ";
 								prnt += "                                 \r";
 								System.out.print(prnt);
 							}
 							// if one branch is successful we win, else go back through recursion.
-							flag = flag || searchTree(k_par, sol, mute, curr_assignment, i, st_timeout, timeout_active);
+							flag = flag || searchTree(k_par, mute, curr_assignment, i, st_timeout, timeout_active);
 							if (flag) {
 								if (!mute) {
-									System.out.println(sol);
+									System.out.println(solution);
 								}
 								return true;
 							} else {
 								// Branch failed, remove y again to clean up sol for next branch.
-								sol.remove((Object) y);
+								solution.remove((Object) y);
 							}
 						}
 						return flag;
@@ -559,7 +560,7 @@ public class Formula {
 	 * This is useful for Reduction, because there S stays empty and is therefore
 	 * unnecessary to check.
 	 */
-	private boolean checkClause(String[] clause, int[] assignment, ArrayList<Integer> sol, boolean ignore_S) {
+	private boolean checkClause(String[] clause, int[] assignment, HashSet<Integer> sol, boolean ignore_S) {
 		// Evaluate literals one at a time
 		for (String literal : clause) {
 			int negation_offset = (literal.charAt(0) == '~') ? 1 : 0;

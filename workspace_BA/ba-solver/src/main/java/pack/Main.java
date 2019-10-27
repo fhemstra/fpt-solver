@@ -101,6 +101,8 @@ public class Main {
 	static HashSet<String> timed_out_graphs = new HashSet<String>();
 	// Save the smallest k that solved a graph in pipe 1
 	static HashMap<String, Integer> pipe_1_solution_k = new HashMap<String, Integer>();
+	// Saves the actual solution per formula
+	static HashMap<String, HashSet<Integer>> pipe_1_actual_solution_set = new HashMap<String, HashSet<Integer>>();
 	// Save the smallest k that solved a graph in pipe 2
 	static HashMap<String, Integer> pipe_2_solution_k = new HashMap<String, Integer>();
 	// Saves the actual hitting-sets per graph
@@ -620,7 +622,7 @@ public class Main {
 		}
 		// SearchTree
 		try {
-			st_result = curr_form.searchTree(k_par, new ArrayList<Integer>(), mute, start_assignment, 0, st_timeout,
+			st_result = curr_form.searchTree(k_par, mute, start_assignment, 0, st_timeout,
 					timeout_active);
 			pipe_1_timeouts.put(curr_name, false);
 		} catch (TimeoutException e) {
@@ -637,6 +639,7 @@ public class Main {
 		// Process results
 		if (st_result) {
 			pipe_1_solution_k.put(curr_name, k_par);
+			pipe_1_actual_solution_set.put(curr_name, curr_form.solution);
 			System.out.println("  TRUE");
 		}
 		search_tree_results.put(curr_name, st_result);
@@ -960,6 +963,12 @@ public class Main {
 				}
 				if (pipe_1_solution_k.get(curr_id) != null) {
 					bw.write("pipe_1_sol_k: " + pipe_1_solution_k.get(curr_id) + "\n");
+					HashSet<Integer> sol_set = pipe_1_actual_solution_set.get(curr_id);
+					bw.write("pipe_1_sol_set: ");						
+					for(int node : sol_set) {
+						bw.write(node + ", ");
+					}
+					bw.write("\n");
 				}
 				if (pipe_2_solution_k.get(curr_id) != null) {
 					bw.write("pipe_2_sol_k: " + pipe_2_solution_k.get(curr_id) + "\n");
