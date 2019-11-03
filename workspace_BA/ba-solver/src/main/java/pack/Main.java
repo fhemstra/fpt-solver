@@ -124,6 +124,7 @@ public class Main {
 		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		// Process input args
 		if (call_from_cmd) {
+//			String[] tmp_args = {"-f", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\instances\\vc", "-g", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\input_graphs\\gnm_graphs"};
 			handleInputArgs(args);
 		} else {
 			System.out.println(
@@ -146,6 +147,10 @@ public class Main {
 		File[] graph_files = null;
 		// Only collect graphs if needed
 		if (!internal) {
+			if(path_to_graph_set == null) {
+				System.out.println("Either -int or -g must be given.");
+				System.exit(0);
+			}
 			graph_folder = new File(path_to_graph_set);
 			graph_files = graph_folder.listFiles();
 		}
@@ -395,13 +400,15 @@ public class Main {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
-			formatter.printHelp("", options);
+			formatter.printHelp("Bla", options);
 			// Leave if there was an error
 			System.exit(1);
 		}
 
 		// Process inputs
-		path_to_graph_set = cmd.getOptionValue("graph-set");
+		if (cmd.getOptionValue("graph-set") != null) {
+			path_to_graph_set = cmd.getOptionValue("graph-set");
+		}
 		if (cmd.getOptionValue("formula-set") != null) {
 			path_to_formula_set = cmd.getOptionValue("formula-set");
 		}
@@ -905,18 +912,11 @@ public class Main {
 		if (!mute)
 			System.out.println("\n------------------------------------");
 		// Loop over all formulas
+		String result_dir_path = "";
+		result_dir_path = "output_" + timestamp;
 		for (Formula curr_form : forms) {
 			String curr_id = curr_form.getIdentifier();
 			// Construct dir path
-			String result_dir_path = "";
-			if (call_from_cmd) {
-				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
-						+ "output_" + timestamp;
-			} else {
-				// TODO Könnte mitlerweile falsch sein
-				result_dir_path = ".." + File.separator + ".." + File.separator + "matlab_plots" + File.separator
-						+ "output_" + timestamp;
-			}
 			// Create the directory
 			new File(result_dir_path).mkdirs();
 			// Contruct file path
@@ -1036,11 +1036,11 @@ public class Main {
 					bw.write("pipe_2_timeout: " + pipe_2_timeouts.get(curr_id) + "\n");
 				}
 				bw.close();
-				System.out.println("Printed results to " + result_dir_path + ".");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Printed results to " + result_dir_path + ".");
 	}
 
 	/**
