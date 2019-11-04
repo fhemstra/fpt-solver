@@ -20,8 +20,8 @@ Either of the above can be decorated with multiple flags. To use the supposed-to
 java -jar ba-solver-1.0.jar -f path/to/formula -g path/to/graphs -gu -ke -be -bo -heu -t 5
 ```
 ## Given instances
+To test if the software works on your machine, you can run `test_this.sh`.
 Multiple sets of graphs can be found in `workspace_BA/input_graphs`.
-
 Some formulas are located in `workspace_BA/instances`.
 
 
