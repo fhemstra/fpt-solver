@@ -124,7 +124,6 @@ public class Main {
 		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		// Process input args
 		if (call_from_cmd) {
-//			String[] tmp_args = {"-f", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\instances\\vc", "-g", "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\input_graphs\\gnm_graphs"};
 			handleInputArgs(args);
 		} else {
 			System.out.println(
