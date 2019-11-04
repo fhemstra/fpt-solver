@@ -130,16 +130,7 @@ public class Main {
 			System.out.println(
 					"These binaries were built for use in the eclipse console. Recompile with updated settings.");
 			// Collect new default values for debugging
-			skip_pipe_1 = true;
-			skip_pipe_2 = false;
-			use_heuristics_after_reduction = true;
-			timeout_active = true;
-			timeout_value = 1000;
-			only_first_x_graphs = true;
-			number_of_graphs_to_test = 3;
-			path_to_graph_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\input_graphs\\reference_vc";
-			path_to_formula_set = "C:\\Users\\falko\\Documents\\Eigenes\\Uni\\6_Semester\\Bachelorarbeit\\Bachelorarbeit_Code\\workspace_BA\\ba-solver\\src\\main\\resources\\instances\\internal_hyps";
-			internal = true;
+			
 		}
 
 		// Collect and sort files
