@@ -9,11 +9,11 @@ From there on, the help dialog of the tool will list all flags and optional valu
 ## Common use-cases
 Testing a set of formulas on their internal logical structures using the naive searchtree approach:
 ```
-java -jar ba-solver-1.0.jar -f path/to/formula -int -st
+java -jar ba-solver-1.0.jar -f path/to/formulas -int -st
 ```
-Testing a set of fourmulas on graphs you want to supply externally using the naive searchtree approach:
+Testing a set of fourmulas on graphs you want to supply externally using the naive search tree approach:
 ```
-java -jar ba-solver-1.0.jar -f path/to/formula -g path/to/graphs -st
+java -jar ba-solver-1.0.jar -f path/to/formulas -g path/to/graphs -st
 ```
 Either of the above can be decorated with multiple flags. To use the supposed-to-be optimal setup with a timeout of 5 seconds, use:
 ```
