@@ -5,7 +5,7 @@ variance_count = 2
 
 # create directory if it does not exist yet
 dir_path = os.path.dirname(os.path.realpath(__file__))
-dest_dir = dir_path + os.sep + 'workspace_BA' + os.sep + 'ba-solver' + os.sep + 'src' + os.sep + 'main' + os.sep + 'resources'+ os.sep + 'input_graphs' + os.sep + 'gnm_graphs'
+dest_dir = dir_path + os.sep + 'gnm_graphs'
 if not os.path.exists(dest_dir):
 	os.makedirs(dest_dir) 
 for n in range(10,100,10):

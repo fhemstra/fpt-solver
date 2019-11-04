@@ -1,9 +1,0 @@
-Name: vertex-cover
-Universum: v1,v2,v3,v4,v5,v6,v7
-Signatur (Bezeichner + Stelligkeit): E2 = {(v1|v2),(v2|v3)}; ...
-Lösungsrelation: S1
-Parameter k: 3
-Gebundene Variablen: x,y
-Formel, Klauseln zeilenweise: ~E(x,y) S(x) S(y)
-...
-...
