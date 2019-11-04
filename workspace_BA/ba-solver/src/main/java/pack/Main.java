@@ -160,11 +160,11 @@ public class Main {
 
 		// Return if we want to use graphs but can't find any
 		if (!internal && graph_files == null) {
-			System.out.println("No graph files found.");
+			System.out.println("No graph files found at " + path_to_graph_set);
 			return;
 		}
 		if (form_files == null) {
-			System.out.println("No formula files found.");
+			System.out.println("No formula files found at " + path_to_formula_set);
 			return;
 		}
 
@@ -330,11 +330,11 @@ public class Main {
 	private static void handleInputArgs(String[] args) {
 		Options options = new Options();
 
-		Option dataset_opt = new Option("g", "graph-set", true, "path to the directory containing graphs");
+		Option dataset_opt = new Option("g", "graph-set", true, "path/to/directory containing graphs");
 		dataset_opt.setRequired(false);
 		options.addOption(dataset_opt);
 
-		Option form_set_opt = new Option("f", "formula-set", true, "path to the directory containing formulas");
+		Option form_set_opt = new Option("f", "formula-set", true, "path/to/directory containing formulas");
 		form_set_opt.setRequired(true);
 		options.addOption(form_set_opt);
 
