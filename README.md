@@ -15,7 +15,7 @@ Testing a set of fourmulas on graphs you want to supply externally using the nai
 ```
 java -jar ba-solver-1.0.jar -f path/to/formula -g path/to/graphs -st
 ```
-Either of the above can be decorated with multiple flags. To use the supposed to be optimal setup with a timeout of 5 seconds, use:
+Either of the above can be decorated with multiple flags. To use the supposed-to-be optimal setup with a timeout of 5 seconds, use:
 ```
 java -jar ba-solver-1.0.jar -f path/to/formula -g path/to/graphs -gu -ke -be -bo -heu -t 5
 ```
