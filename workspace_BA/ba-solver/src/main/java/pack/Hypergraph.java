@@ -155,7 +155,6 @@ public class Hypergraph {
 	 * non-uniform graphs this does not exactly use the Sunflower-Lemma correctly.
 	 */
 	public Hypergraph kernelizeNonUniform(Hypergraph local_hyp, int k_par, boolean mute) {
-		// TODO handle this better
 		if (k_par < 1)
 			return null;
 		// "Clone" hyp
@@ -170,7 +169,7 @@ public class Hypergraph {
 			if (!mute)
 				System.out.println("Initial sunflower is already null, nothing to kernelize.");
 		}
-		while (sun != null) { // TODO not sure if this is right
+		while (sun != null) {
 			if (!mute)
 				System.out.println("KERNELIZE received a SUNFLOWER of size " + sun.petals.size() + ":");
 			if (!mute) {
@@ -296,7 +295,7 @@ public class Hypergraph {
 					System.out.println("Initial sunflower is already null, nothing to kernelize.");
 			}
 
-			while (sun != null) { // TODO not sure if this is right
+			while (sun != null) {
 				// Check timeout
 				if (System.currentTimeMillis() > kernel_timeout) {
 					throw new TimeoutException();
@@ -678,7 +677,6 @@ public class Hypergraph {
 	 */
 	public boolean hsSearchTree(int k_par, boolean mute, long hs_timeout,
 			boolean use_branch_and_bound, boolean timeout_active) throws TimeoutException {
-		// TODO return solution
 		// If heuristics used more than k_par nodes
 		if (k_par < 0) {
 			return false;

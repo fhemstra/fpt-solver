@@ -29,7 +29,6 @@ public class Formula {
 
 	HashSet<Integer> solution = new HashSet<Integer>();
 
-	// TODO make a format-file.
 	/**
 	 * Constructs a Formula from just a formula-file located at the given path. The
 	 * file must contain all information and must be formatted as can be seen in .
@@ -39,7 +38,6 @@ public class Formula {
 		nr_of_assignments = (long) Math.pow(universe.length, c_par);
 	}
 
-	// TODO make PACE-format file.
 	/**
 	 * Constructs a Formula for a graph problem. The formula itself must be
 	 * specified in a formula file located at the first path. The graph must be
@@ -479,7 +477,6 @@ public class Formula {
 	 */
 	public boolean searchTree(int k_par, boolean mute, int[] last_assignment, long last_index, long st_timeout,
 			boolean timeout_active) throws TimeoutException {
-		// TODO return solution
 
 		// Return if |S| > k
 		if (solution.size() > k_par) {

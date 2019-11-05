@@ -404,7 +404,7 @@ public class Main {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
-			formatter.printHelp("Bla", options);
+			formatter.printHelp("java -jar <jar-file> <options>", options);
 			// Leave if there was an error
 			System.exit(1);
 		}
@@ -990,7 +990,6 @@ public class Main {
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(out_file));
 				bw.write("file: " + curr_id + "\n");
-				// TODO Only use single formula and print it
 				bw.write("formula: " + curr_form.formula_name + "\n");
 				bw.write("universe_size: " + curr_form.universe.length + "\n");
 				bw.write("c_par: " + curr_form.c_par + "\n");
