@@ -36,7 +36,7 @@
             </goals>
             <configuration>
               <includeScope>runtime</includeScope>
-              <outputDirectory>C:\Users\falko\Documents\Eigenes\Uni\6_Semester\Bachelorarbeit\Bachelorarbeit_Code\workspace_BA\ba-solver\target\dependency-jars\</outputDirectory>
+              <outputDirectory>targetdependency-jars</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -44,8 +44,8 @@
     </plugins>
   </build>
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
 </project>
 

@@ -58,7 +58,7 @@
 						<configuration>
 							<!-- exclude junit, we need runtime dependency only -->
 							<includeScope>runtime</includeScope>
-							<outputDirectory>C:\Users\falko\Documents\Eigenes\Uni\6_Semester\Bachelorarbeit\Bachelorarbeit_Code\workspace_BA\ba-solver\target\dependency-jars\</outputDirectory>
+							<outputDirectory>targetdependency-jars</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
